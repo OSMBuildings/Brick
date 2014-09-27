@@ -1,6 +1,5 @@
 iD.ui.Save = function(context) {
-    var history = context.history(),
-        key = iD.ui.cmd('⌘S');
+    var history = context.history();
 
     function saving() {
         return context.mode().id === 'save';
