@@ -7,8 +7,8 @@
     <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="stylesheet" href="leaflet-0.8/leaflet.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="js/lib/leaflet-0.8/leaflet.css">
+    <!--link rel="stylesheet" href="style.css"-->
     <style type="text/css">
     html, body {
       border: 0;
@@ -21,23 +21,60 @@
     #map {
       height: 100%;
     }
+    #form {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 50%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      z-index: 10;
+      background-color: rgba(255,255,255,0.7);
+    }
     </style>
-    <script src="leaflet-0.8/leaflet-src.js"></script>
-    <script src="Brick.js"></script>
-    <script src="State.js"></script>
-    <script src="Map.js"></script>
+    <script src="js/lib/leaflet-0.8/leaflet-src.js"></script>
+    <script src="js/lib/OSMBuildings-Leaflet.js"></script>
+    <script src="js/Brick.js"></script>
+    <script src="js/State.js"></script>
+    <script src="js/Map.js"></script>
     <!--script src="loader.js"></script-->
   </head>
 
   <body>
     <div id="map"></div>
-    <div id="form"></div>
+    <div id="form">
+      <!-- handle building parts -->
+      <label>Type</label><br>
+      <select name="building"></select><br>
+
+      <label>Height</label><br>
+      <input type="number" min="0" name="height" value=""><select name="height-unit">m/ft/levels</select><br>
+
+      <label>Above ground</label><br>
+      <input type="number" min="0" name="min_height" value=""><select name="min_height-unit">m/ft/levels</select><br>
+
+      <label>Color</label><br>
+      <select name="color-choice">Palette/Materiallist/Photo</select><br>
+
+      <label>Shape</label><br>
+      <select name="building:shape">Pyramid/Dome/Sphere</select><br>
+
+      <label>Roof Type</label><br>
+      <select name="roof:type"></select><br>
+
+      <label>Roof Height</label><br>
+      <input type="number" min="0" name="roof:height" value=""><select name="roof:height-unit">m/ft/levels</select><br>
+
+      <label>Roof Color</label><br>
+      <select name="roof:color-choice">Palette/Materiallist/Photo</select><br>
+    </div>
 
     <script>
     var map;
     document.addEventListener('DOMContentLoaded', function() {
       new Brick();
-      map = new Brick.Maop('map');
+      map = new Brick.Map('map');
     });
     </script>
   </body>
