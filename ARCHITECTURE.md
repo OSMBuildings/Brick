@@ -1,21 +1,3 @@
-## d3
-
-[d3](http://d3js.org/) is the primary library used by iD. It is used for
-rendering the map data as well as many sorts of general DOM manipulation tasks
-for which jQuery would often be used.
-
-Notable features of d3 that are used by iD include
-[d3.xhr](https://github.com/mbostock/d3/wiki/Requests#wiki-d3_xhr), which is
-used to make the API requests to download data from openstreetmap.org and save
-changes;
-[d3.dispatch](https://github.com/mbostock/d3/wiki/Internals#wiki-d3_dispatch),
-which provides a callback-based [Observer
-pattern](http://en.wikipedia.org/wiki/Observer_pattern) between different
-parts of iD;
-[d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#wiki-path), which
-generates SVG paths for lines and areas; and
-[d3.behavior.zoom](https://github.com/mbostock/d3/wiki/Zoom-Behavior#wiki-zoom),
-which implements map panning and zooming.
 
 ## Core
 
