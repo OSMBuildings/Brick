@@ -1,42 +1,42 @@
-iD.Entity = function(attrs) {
+Brick.Entity = function(attrs) {
     // For prototypal inheritance.
-    if (this instanceof iD.Entity) return;
+    if (this instanceof Brick.Entity) return;
 
     // Create the appropriate subtype.
     if (attrs && attrs.type) {
-        return iD.Entity[attrs.type].apply(this, arguments);
+        return Brick.Entity[attrs.type].apply(this, arguments);
     } else if (attrs && attrs.id) {
-        return iD.Entity[iD.Entity.id.type(attrs.id)].apply(this, arguments);
+        return Brick.Entity[Brick.Entity.id.type(attrs.id)].apply(this, arguments);
     }
 
     // Initialize a generic Entity (used only in tests).
-    return (new iD.Entity()).initialize(arguments);
+    return (new Brick.Entity()).initialize(arguments);
 };
 
-iD.Entity.id = function(type) {
-    return iD.Entity.id.fromOSM(type, iD.Entity.id.next[type]--);
+Brick.Entity.id = function(type) {
+    return Brick.Entity.id.fromOSM(type, Brick.Entity.id.next[type]--);
 };
 
-iD.Entity.id.next = {node: -1, way: -1, relation: -1};
+Brick.Entity.id.next = {node: -1, way: -1, relation: -1};
 
-iD.Entity.id.fromOSM = function(type, id) {
+Brick.Entity.id.fromOSM = function(type, id) {
     return type[0] + id;
 };
 
-iD.Entity.id.toOSM = function(id) {
+Brick.Entity.id.toOSM = function(id) {
     return id.slice(1);
 };
 
-iD.Entity.id.type = function(id) {
+Brick.Entity.id.type = function(id) {
     return {'n': 'node', 'w': 'way', 'r': 'relation'}[id[0]];
 };
 
 // A function suitable for use as the second argument to d3.selection#data().
-iD.Entity.key = function(entity) {
+Brick.Entity.key = function(entity) {
     return entity.id + 'v' + (entity.v || 0);
 };
 
-iD.Entity.prototype = {
+Brick.Entity.prototype = {
     tags: {},
 
     initialize: function(sources) {
@@ -50,10 +50,10 @@ iD.Entity.prototype = {
         }
 
         if (!this.id && this.type) {
-            this.id = iD.Entity.id(this.type);
+            this.id = Brick.Entity.id(this.type);
         }
 
-        if (iD.debug) {
+        if (Brick.debug) {
             Object.freeze(this);
             Object.freeze(this.tags);
 
@@ -66,7 +66,7 @@ iD.Entity.prototype = {
     },
 
     osmId: function() {
-        return iD.Entity.id.toOSM(this.id);
+        return Brick.Entity.id.toOSM(this.id);
     },
 
     isNew: function() {
@@ -74,7 +74,7 @@ iD.Entity.prototype = {
     },
 
     update: function(attrs) {
-        return iD.Entity(this, attrs, {v: 1 + (this.v || 0)});
+        return Brick.Entity(this, attrs, {v: 1 + (this.v || 0)});
     },
 
     mergeTags: function(tags) {
@@ -120,7 +120,7 @@ iD.Entity.prototype = {
         var tags = _.pairs(this.tags);
         var deprecated = {};
 
-        iD.data.deprecated.forEach(function(d) {
+        Brick.data.deprecated.forEach(function(d) {
             var match = _.pairs(d.old)[0];
             tags.forEach(function(t) {
                 if (t[0] === match[0] &&

@@ -39,22 +39,6 @@ Brick.Map = function(elId) {
 };
 
 /***
-function ajax(url, callback) {
-  var req = new XMLHttpRequest();
-  req.onreadystatechange = function() {
-    if (req.readyState !== 4) {
-      return;
-    }
-    if (!req.status || req.status < 200 || req.status > 299) {
-      return;
-    }
-
-    callback(JSON.parse(req.responseText));
-  };
-  req.open('GET', url);
-  req.send(null);
-}
-
 var popup;
 osmb.click(function(e) {
   popup = L.popup({ maxHeight:200, autoPanPaddingTopLeft:[50,50] })

@@ -1,84 +1,56 @@
-Brick.Relation = Brick.Entity.relation = function iD_Relation() {
-    if (!(this instanceof iD_Relation)) {
-        return (new iD_Relation()).initialize(arguments);
-    } else if (arguments.length) {
-        this.initialize(arguments);
-    }
+
+Brick.Relation = function(properties) {
+  Brick.Entity.prototype.constructor.call(this, properties);
 };
 
-Brick.Relation.prototype = Object.create(Brick.Entity.prototype);
+var proto = Brick.Relation.prototype = Brick.Entity.prototype;
 
-Brick.Relation.creationOrder = function(a, b) {
-    var aId = parseInt(Brick.Entity.id.toOSM(a.id), 10);
-    var bId = parseInt(Brick.Entity.id.toOSM(b.id), 10);
+proto.type = 'relation';
 
-    if (aId < 0 || bId < 0) return aId - bId;
-    return bId - aId;
-};
 
-_.extend(Brick.Relation.prototype, {
-    type: 'relation',
-    members: [],
 
-    extent: function(resolver, memo) {
-        return resolver.transient(this, 'extent', function() {
-            if (memo && memo[this.id]) return Brick.geo.Extent();
-            memo = memo || {};
-            memo[this.id] = true;
-            return this.members.reduce(function(extent, member) {
-                member = resolver.hasEntity(member.id);
-                if (member) {
-                    return extent.extend(member.extent(resolver, memo));
-                } else {
-                    return extent;
-                }
-            }, Brick.geo.Extent());
-        });
-    },
 
-    geometry: function(graph) {
+proto.members: [],
+
+proto.geometry: function(graph) {
         return graph.transient(this, 'geometry', function() {
             return this.isMultipolygon() ? 'area' : 'relation';
         });
     },
 
-    isDegenerate: function() {
-        return this.members.length === 0;
-    },
+// Return an array of members, each extended with an 'index' property whose value
+// is the member index.
+proto.indexedMembers: function() {
+    var result = new Array(this.members.length);
+    for (var i = 0; i < this.members.length; i++) {
+        result[i] = _.extend({}, this.members[i], {index: i});
+    }
+    return result;
+},
 
-    // Return an array of members, each extended with an 'index' property whose value
-    // is the member index.
-    indexedMembers: function() {
-        var result = new Array(this.members.length);
-        for (var i = 0; i < this.members.length; i++) {
-            result[i] = _.extend({}, this.members[i], {index: i});
+// Return the first member with the given role. A copy of the member object
+// is returned, extended with an 'index' property whose value is the member index.
+proto.memberByRole: function(role) {
+    for (var i = 0; i < this.members.length; i++) {
+        if (this.members[i].role === role) {
+            return _.extend({}, this.members[i], {index: i});
         }
-        return result;
-    },
+    }
+},
 
-    // Return the first member with the given role. A copy of the member object
-    // is returned, extended with an 'index' property whose value is the member index.
-    memberByRole: function(role) {
-        for (var i = 0; i < this.members.length; i++) {
-            if (this.members[i].role === role) {
-                return _.extend({}, this.members[i], {index: i});
-            }
+// Return the first member with the given id. A copy of the member object
+// is returned, extended with an 'index' property whose value is the member index.
+proto.memberById: function(id) {
+    for (var i = 0; i < this.members.length; i++) {
+        if (this.members[i].id === id) {
+            return _.extend({}, this.members[i], {index: i});
         }
-    },
-
-    // Return the first member with the given id. A copy of the member object
-    // is returned, extended with an 'index' property whose value is the member index.
-    memberById: function(id) {
-        for (var i = 0; i < this.members.length; i++) {
-            if (this.members[i].id === id) {
-                return _.extend({}, this.members[i], {index: i});
-            }
-        }
-    },
+    }
+},
 
     // Return the first member with the given id and role. A copy of the member object
     // is returned, extended with an 'index' property whose value is the member index.
-    memberByIdAndRole: function(id, role) {
+proto.memberByIdAndRole: function(id, role) {
         for (var i = 0; i < this.members.length; i++) {
             if (this.members[i].id === id && this.members[i].role === role) {
                 return _.extend({}, this.members[i], {index: i});
@@ -86,26 +58,9 @@ _.extend(Brick.Relation.prototype, {
         }
     },
 
-    addMember: function(member, index) {
-        var members = this.members.slice();
-        members.splice(index === undefined ? members.length : index, 0, member);
-        return this.update({members: members});
-    },
-
-    updateMember: function(member, index) {
+proto.updateMember: function(member, index) {
         var members = this.members.slice();
         members.splice(index, 1, _.extend({}, members[index], member));
-        return this.update({members: members});
-    },
-
-    removeMember: function(index) {
-        var members = this.members.slice();
-        members.splice(index, 1);
-        return this.update({members: members});
-    },
-
-    removeMembersWithID: function(id) {
-        var members = _.reject(this.members, function(m) { return m.id === id; });
         return this.update({members: members});
     },
 
@@ -113,7 +68,7 @@ _.extend(Brick.Relation.prototype, {
     // with id `replacement.id`, type `replacement.type`, and the original role,
     // unless a member already exists with that id and role. Return an updated
     // relation.
-    replaceMember: function(needle, replacement) {
+proto.replaceMember: function(needle, replacement) {
         if (!this.memberById(needle.id))
             return this;
 
@@ -131,7 +86,7 @@ _.extend(Brick.Relation.prototype, {
         return this.update({members: members});
     },
 
-    asJXON: function(changeset_id) {
+proto.asJXON: function(changeset_id) {
         var r = {
             relation: {
                 '@id': this.osmId(),
@@ -148,7 +103,7 @@ _.extend(Brick.Relation.prototype, {
         return r;
     },
 
-    asGeoJSON: function(resolver) {
+proto.asGeoJSON: function(resolver) {
         return resolver.transient(this, 'GeoJSON', function () {
             if (this.isMultipolygon()) {
                 return {
@@ -167,12 +122,6 @@ _.extend(Brick.Relation.prototype, {
         });
     },
 
-    area: function(resolver) {
-        return resolver.transient(this, 'area', function() {
-            return d3.geo.area(this.asGeoJSON(resolver));
-        });
-    },
-
     isMultipolygon: function() {
         return this.tags.type === 'multipolygon';
     },
@@ -184,10 +133,6 @@ _.extend(Brick.Relation.prototype, {
             }
         }
         return true;
-    },
-
-    isRestriction: function() {
-        return !!(this.tags.type && this.tags.type.match(/^restriction:?/));
     },
 
     // Returns an array [A0, ... An], each Ai being an array of node arrays [Nds0, ... Ndsm],

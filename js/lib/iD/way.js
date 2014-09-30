@@ -1,4 +1,4 @@
-iD.Way = iD.Entity.way = function iD_Way() {
+Brick.Way = Brick.Entity.way = function iD_Way() {
     if (!(this instanceof iD_Way)) {
         return (new iD_Way()).initialize(arguments);
     } else if (arguments.length) {
@@ -6,9 +6,9 @@ iD.Way = iD.Entity.way = function iD_Way() {
     }
 };
 
-iD.Way.prototype = Object.create(iD.Entity.prototype);
+Brick.Way.prototype = Object.create(Brick.Entity.prototype);
 
-_.extend(iD.Way.prototype, {
+_.extend(Brick.Way.prototype, {
     type: 'way',
     nodes: [],
 
@@ -21,7 +21,7 @@ _.extend(iD.Way.prototype, {
                 } else {
                     return extent;
                 }
-            }, iD.geo.Extent());
+            }, Brick.geo.Extent());
         });
     },
 
@@ -72,7 +72,7 @@ _.extend(iD.Way.prototype, {
 
         // implied oneway tag..
         for (var key in this.tags) {
-            if (key in iD.oneWayTags && (this.tags[key] in iD.oneWayTags[key]))
+            if (key in Brick.oneWayTags && (this.tags[key] in Brick.oneWayTags[key]))
                 return true;
         }
         return false;
@@ -93,7 +93,7 @@ _.extend(iD.Way.prototype, {
             var o = coords[(i+1) % coords.length],
                 a = coords[i],
                 b = coords[(i+2) % coords.length],
-                res = iD.geo.cross(o, a, b);
+                res = Brick.geo.cross(o, a, b);
 
             curr = (res > 0) ? 1 : (res < 0) ? -1 : 0;
             if (curr === 0) {
@@ -112,7 +112,7 @@ _.extend(iD.Way.prototype, {
         if (!this.isClosed() || this.tags.area === 'no')
             return false;
         for (var key in this.tags)
-            if (key in iD.areaKeys && !(this.tags[key] in iD.areaKeys[key]))
+            if (key in Brick.areaKeys && !(this.tags[key] in Brick.areaKeys[key]))
                 return true;
         return false;
     },
@@ -186,7 +186,7 @@ _.extend(iD.Way.prototype, {
                 '@id': this.osmId(),
                 '@version': this.version || 0,
                 nd: _.map(this.nodes, function(id) {
-                    return { keyAttributes: { ref: iD.Entity.id.toOSM(id) } };
+                    return { keyAttributes: { ref: Brick.Entity.id.toOSM(id) } };
                 }),
                 tag: _.map(this.tags, function(v, k) {
                     return { keyAttributes: { k: k, v: v } };

@@ -54,13 +54,18 @@
 
     </style>
 
-    <script src="config.js"></script>
     <script src="js/lib/osm-auth/osmauth.js"></script>
     <script src="js/lib/leaflet-0.8/leaflet-src.js"></script>
     <script src="js/lib/OSMBuildings-Leaflet.js"></script>
-    <script src="js/Brick.js"></script>
-    <script src="js/State.js"></script>
-    <script src="js/Map.js"></script>
+
+    <script src="config.js"></script>
+    <script src="js/Brick/util.js"></script>
+    <script src="js/Brick/Brick.js"></script>
+    <script src="js/Brick/Entity.js"></script>
+    <script src="js/Brick/Node.js"></script>
+    <script src="js/Brick/OSMAPI.js"></script>
+    <script src="js/Brick/State.js"></script>
+    <script src="js/Brick/Map.js"></script>
 
     <!--script src="loader.js"></script-->
   </head>
@@ -102,10 +107,6 @@
     </div>
 
     <script>
-    function $(q) {
-      return document.querySelector(q);
-    }
-
     function showAuthStatus() {
       if (auth.authenticated()) {
         $('#login').className = 'hidden';
@@ -129,7 +130,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       auth = osmAuth({
-        landing: 'authcomplete.html',
+        landing: 'auth.html',
         oauth_secret: config.osmAuth.oauthSecret,
         oauth_consumer_key: config.osmAuth.oauthConsumerKey
       });
@@ -148,6 +149,11 @@
       $('#logout').addEventListener('click', function() {
         auth.logout();
         showAuthStatus();
+      });
+
+      var osmApi = Brick.OSMAPI();
+      osmApi.loadEntity('way', 23723115, function(res) {
+        console.log(res);
       });
     });
     </script>
