@@ -126,16 +126,35 @@
       }
     }
 
+    function stringQs(str) {
+      return str.split('&').filter(function (pair) {
+        return pair !== '';
+      }).reduce(function(obj, pair){
+        var parts = pair.split('=');
+        obj[decodeURIComponent(parts[0])] = (null === parts[1]) ?
+          '' : decodeURIComponent(parts[1]);
+        return obj;
+      }, {});
+    }
+
     var map, auth;
 
     document.addEventListener('DOMContentLoaded', function() {
       auth = osmAuth({
-        landing: 'auth.html',
+        singlepage: true,
+        landing: 'index.html',
         oauth_secret: config.osmAuth.oauthSecret,
         oauth_consumer_key: config.osmAuth.oauthConsumerKey
       });
 
       showAuthStatus();
+
+      var oauthToken = stringQs(location.href.split('?')[1]).oauth_token;
+      if (oauthToken) {
+        auth.bootstrapToken(oauthToken, function() {
+          showAuthStatus();
+        });
+      }
 
       new Brick();
       map = new Brick.Map('map');
