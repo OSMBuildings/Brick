@@ -7,6 +7,7 @@
     <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link rel="stylesheet" href="js/lib/leaflet-0.8/leaflet.css">
     <!--link rel="stylesheet" href="style.css"-->
     <style type="text/css">
@@ -18,9 +19,11 @@
       height: 100%;
       overflow: hidden;
     }
+
     #map {
       height: 100%;
     }
+
     #form {
       position: absolute;
       left: 0;
@@ -32,17 +35,45 @@
       z-index: 10;
       background-color: rgba(255,255,255,0.7);
     }
+
+    #user {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 50%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      z-index: 15;
+      background-color: rgba(255,255,255,0.7);
+    }
+
+    .hidden {
+      display: none;
+    }
+
     </style>
+
+    <script src="config.js"></script>
+    <script src="js/lib/osm-auth/osmauth.js"></script>
     <script src="js/lib/leaflet-0.8/leaflet-src.js"></script>
     <script src="js/lib/OSMBuildings-Leaflet.js"></script>
     <script src="js/Brick.js"></script>
     <script src="js/State.js"></script>
     <script src="js/Map.js"></script>
+
     <!--script src="loader.js"></script-->
   </head>
 
   <body>
     <div id="map"></div>
+
+    <div id="user">
+      <button id="login">Login</button>
+      <button id="logout">Logout</button>
+      <h1 id="user-name"></h1>
+    </div>
+
     <div id="form">
       <!-- handle building parts -->
       <label>Type</label><br>
@@ -71,10 +102,53 @@
     </div>
 
     <script>
-    var map;
+    function $(q) {
+      return document.querySelector(q);
+    }
+
+    function showAuthStatus() {
+      if (auth.authenticated()) {
+        $('#login').className = 'hidden';
+        $('#logout').className = '';
+        auth.xhr({
+          method: 'GET',
+          path: '/api/0.6/user/details'
+        }, function(err, res) {
+          var u = res.getElementsByTagName('user')[0];
+          $('#user-name').innerText = u.getAttribute('display_name');
+          $('#user-name').className = '';
+        });
+      } else {
+        $('#login').className = '';
+        $('#logout').className = 'hidden';
+        $('#user-name').className = 'hidden';
+      }
+    }
+
+    var map, auth;
+
     document.addEventListener('DOMContentLoaded', function() {
+      auth = osmAuth({
+        landing: 'authcomplete.html',
+        oauth_secret: config.osmAuth.oauthSecret,
+        oauth_consumer_key: config.osmAuth.oauthConsumerKey
+      });
+
+      showAuthStatus();
+
       new Brick();
       map = new Brick.Map('map');
+
+      $('#login').addEventListener('click', function() {
+        auth.authenticate(function() {
+          showAuthStatus();
+        });
+      });
+
+      $('#logout').addEventListener('click', function() {
+        auth.logout();
+        showAuthStatus();
+      });
     });
     </script>
   </body>
