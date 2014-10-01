@@ -9,71 +9,32 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <link rel="stylesheet" href="js/lib/leaflet-0.8/leaflet.css">
-    <!--link rel="stylesheet" href="style.css"-->
-    <style type="text/css">
-    html, body {
-      border: 0;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    #map {
-      height: 100%;
-    }
-
-    #form {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 50%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      z-index: 10;
-      background-color: rgba(255,255,255,0.7);
-    }
-
-    #user {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      width: 100%;
-      height: 50%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      z-index: 15;
-      background-color: rgba(255,255,255,0.7);
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
 
     <script src="js/lib/osm-auth/osmauth.js"></script>
     <script src="js/lib/leaflet-0.8/leaflet-src.js"></script>
     <script src="js/lib/OSMBuildings-Leaflet.js"></script>
 
     <script src="config.js"></script>
-    <script src="js/Brick/util.js"></script>
-    <script src="js/Brick/Brick.js"></script>
-    <script src="js/Brick/Entity.js"></script>
-    <script src="js/Brick/Node.js"></script>
-    <script src="js/Brick/OSMAPI.js"></script>
-    <script src="js/Brick/State.js"></script>
-    <script src="js/Brick/Map.js"></script>
+    <script src="js/util.js"></script>
 
-    <!--script src="loader.js"></script-->
+    <script src="js/Brick.js"></script>
+    <script src="js/Events.js"></script>
+    <script src="js/State.js"></script>
+    <script src="js/Session.js"></script>
+    <script src="js/Provider.js"></script>
+    <script src="js/Map.js"></script>
+
+    <script src="js/Entity.js"></script>
+    <script src="js/Node.js"></script>
+    <script src="js/lib/jxon.js"></script>
+    <script src="js/OSMAPI.js"></script>
   </head>
 
   <body>
     <div id="map"></div>
 
-    <div id="user">
+    <div id="session">
       <button id="login">Login</button>
       <button id="logout">Logout</button>
       <h1 id="user-name"></h1>
@@ -107,73 +68,18 @@
     </div>
 
     <script>
-    function showAuthStatus() {
-      if (auth.authenticated()) {
-        $('#login').className = 'hidden';
-        $('#logout').className = '';
-        auth.xhr({
-          method: 'GET',
-          path: '/api/0.6/user/details'
-        }, function(err, res) {
-          var u = res.getElementsByTagName('user')[0];
-          $('#user-name').innerText = u.getAttribute('display_name');
-          $('#user-name').className = '';
-        });
-      } else {
-        $('#login').className = '';
-        $('#logout').className = 'hidden';
-        $('#user-name').className = 'hidden';
-      }
-    }
-
-    function stringQs(str) {
-      return str.split('&').filter(function (pair) {
-        return pair !== '';
-      }).reduce(function(obj, pair){
-        var parts = pair.split('=');
-        obj[decodeURIComponent(parts[0])] = (null === parts[1]) ?
-          '' : decodeURIComponent(parts[1]);
-        return obj;
-      }, {});
-    }
-
-    var map, auth;
-
     document.addEventListener('DOMContentLoaded', function() {
-      auth = osmAuth({
-        singlepage: true,
-        landing: 'index.html',
-        oauth_secret: config.osmAuth.oauthSecret,
-        oauth_consumer_key: config.osmAuth.oauthConsumerKey
+      new Brick({
+        oauthLandingPage: 'auth.html',
+        oauthConsumerKey: config.oauth.consumerKey,
+        oauthSecret: config.oauth.secret,
+        mapId: 'map'
       });
 
-      showAuthStatus();
-
-      var oauthToken = stringQs(location.href.split('?')[1]).oauth_token;
-      if (oauthToken) {
-        auth.bootstrapToken(oauthToken, function() {
-          showAuthStatus();
-        });
-      }
-
-      new Brick();
-      map = new Brick.Map('map');
-
-      $('#login').addEventListener('click', function() {
-        auth.authenticate(function() {
-          showAuthStatus();
-        });
-      });
-
-      $('#logout').addEventListener('click', function() {
-        auth.logout();
-        showAuthStatus();
-      });
-
-      var osmApi = Brick.OSMAPI();
-      osmApi.loadEntity('way', 23723115, function(res) {
-        console.log(res);
-      });
+//      var osmApi = Brick.OSMAPI();
+//      osmApi.loadEntity('way', 23723115, function(res) {
+//        console.log(res);
+//      });
     });
     </script>
   </body>
