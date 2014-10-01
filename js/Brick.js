@@ -44,6 +44,13 @@ var Brick = function(config) {
   //*******************************************************
 
   provider.on('featureLoaded', map.showPopup, map);
+
+  //*******************************************************
+
+  var osm = Brick.OSMAPI(session.auth);
+  osm.loadEntity('way', 23723115, function(res) {
+console.log(res);
+  });
 };
 
 Brick.VERSION = '0.1.0';

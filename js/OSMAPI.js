@@ -1,5 +1,5 @@
 
-Brick.OSMAPI = function() {
+Brick.OSMAPI = function(auth) {
 
   var
     url = 'http://www.openstreetmap.org',
@@ -8,12 +8,8 @@ Brick.OSMAPI = function() {
     loadedTiles = {},
     tileZoom = 16,
     oauth = auth,
-    ndStr = 'nd',
     tagStr = 'tag',
     memberStr = 'member',
-    nodeStr = 'node',
-    wayStr = 'way',
-    relationStr = 'relation',
     off;
 
   connection.changesetURL = function(changesetId) {
