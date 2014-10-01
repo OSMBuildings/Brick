@@ -24,7 +24,7 @@ Brick.Session = function(config) {
   });
 };
 
-var proto = Brick.Session.prototype = new Brick.Events();
+var proto = Brick.Session.prototype = Brick.Events.prototype;
 
 proto.getUserInfo = function(callback, scope) {
   this.auth.xhr({
@@ -40,12 +40,14 @@ proto.login = function() {
   var scope = this;
   this.auth.authenticate(function() {
     scope.render();
+    scope.emit('login');
   });
 };
 
 proto.logout = function() {
   this.auth.logout();
   this.render();
+  this.emit('logout');
 };
 
 proto.render = function() {

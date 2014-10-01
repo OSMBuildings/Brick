@@ -48,8 +48,14 @@ var Brick = function(config) {
   //*******************************************************
 
   var osm = Brick.OSMAPI(session.auth);
-  osm.loadEntity('way', 23723115, function(res) {
-console.log(res);
+
+  map.on('featureSelected', function(e) {
+//    osm.loadEntity('way', e, function(res) {
+//console.log('WAY', res);
+//    });
+    osm.loadEntity('relation', e, function(res) {
+console.log('REL', res);
+    });
   });
 };
 

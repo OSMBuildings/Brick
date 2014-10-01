@@ -18,7 +18,7 @@ function loadJSON(url, callback, scope) {
   req.send(null);
 };
 
-function loadXml(url, callback, scope) {
+function loadXML(url, callback, scope) {
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
     if (req.readyState !== 4) {

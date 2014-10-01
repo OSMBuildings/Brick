@@ -1,8 +1,8 @@
 
-Brick.Entity = function(properties) {
-  for (var p in properties) {
-    if (properties.hasOwnProperty(p)) {
-      this[p] = properties[p];
+Brick.Entity = function(prop) {
+  for (var p in prop) {
+    if (prop.hasOwnProperty(p)) {
+      this[p] = prop[p];
     }
   }
 };
@@ -31,9 +31,4 @@ proto.mergeTags = function(tags) {
     }
   }
   return changed ? this.update({tags: merged}) : this;
-};
-
-proto.isUsed = function(resolver) {
-  return _.without(Object.keys(this.tags), 'area').length > 0 ||
-    resolver.parentRelations(this).length > 0;
 };

@@ -32,7 +32,7 @@ Brick.Map = function(config) {
     }, this);
 };
 
-var proto = Brick.Map.prototype = new Brick.Events();
+var proto = Brick.Map.prototype = Brick.Events.prototype;
 
 proto.showPopup = function(json) {
   var e = this.currentSelection;

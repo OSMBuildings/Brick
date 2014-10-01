@@ -5,7 +5,7 @@ Brick.State = function() {
   }
 };
 
-var proto = Brick.State.prototype = new Brick.Events();
+var proto = Brick.State.prototype = Brick.Events.prototype;
 
   // http://mathiasbynens.be/notes/localstorage-pattern#comment-9
   var storage;

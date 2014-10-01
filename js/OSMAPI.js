@@ -3,57 +3,55 @@ Brick.OSMAPI = function(auth) {
 
   var
     url = 'http://www.openstreetmap.org',
-    connection = {},
     inflight = {},
     loadedTiles = {},
     tileZoom = 16,
     oauth = auth,
-    tagStr = 'tag',
-    memberStr = 'member',
     off;
 
-  connection.changesetURL = function(changesetId) {
-    return url + '/changeset/' + changesetId;
-  };
+  var parsers = {
+    node: function(node) {
+      var attr = node.attributes;
+      return new Brick.Node({
+        id: attr.id.value,
+        lat: attr.lat.value,
+        lon: attr.lon.value,
+        version: attr.version.value,
+        user: attr.user && attr.user.value,
+        tags: getTags(node)
+      });
+    },
 
-  connection.changesetsURL = function(center, zoom) {
-    var precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
-    return url + '/history#map=' +
-      Math.floor(zoom) + '/' +
-      center[1].toFixed(precision) + '/' +
-      center[0].toFixed(precision);
-  };
+    way: function(node) {
+      var attr = node.attributes;
+      return new Brick.Way({
+        id: attr.id.value,
+        version: attr.version.value,
+        user: attr.user && attr.user.value,
+        tags: getTags(node),
+        nodes: getNodes(node)
+      });
+    },
 
-  connection.entityURL = function(entity) {
-    return url + '/' + entity.type + '/' + entity.osmId();
-  };
-
-  connection.userURL = function(username) {
-    return url + '/user/' + username;
-  };
-
-
-
-
-  connection.loadFromURL = function(url, callback) {
-    return xml(url, function(dom) {
-      return callback(null, parseEntity(dom));
-    });
-  };
-
-  connection.loadEntity = function(type, id, callback) {
-    loadXml(url +'/api/0.6/'+ type +'/'+ id + (type !== 'node' ? '/full' : ''), function(xml) {
-      if (callback) {
-        callback(parseEntity(xml));
-      }
-    });
+    relation: function(node) {
+      var attr = node.attributes;
+      return new Brick.Relation({
+        id: attr.id.value,
+        version: attr.version.value,
+        user: attr.user && attr.user.value,
+        tags: getTags(node),
+        members: getMembers(node)
+      });
+    }
   };
 
   function parseEntity(xml) {
     if (!xml || !xml.childNodes) {
       return;
     }
-    var root = xml.childNodes[0],
+
+    var
+      root = xml.firstChild,
       children = root.childNodes,
       entities = [],
       child,
@@ -69,42 +67,52 @@ Brick.OSMAPI = function(auth) {
     return entities;
   }
 
-  var parsers = {
-    node: function(obj) {
-      var attrs = obj.attributes;
-
-      return new Brick.Node({
-        id: attrs.id.value,
-        loc: [parseFloat(attrs.lon.value), parseFloat(attrs.lat.value)],
-        version: attrs.version.value,
-        user: attrs.user && attrs.user.value,
-        tags: getTags(obj)
-      });
-    },
-
-    way: function(obj) {
-      var attrs = obj.attributes;
-
-      return new Brick.Way({
-        id: attrs.id.value,
-        version: attrs.version.value,
-        user: attrs.user && attrs.user.value,
-        tags: getTags(obj),
-        nodes: getNodes(obj)
-      });
-    },
-
-    relation: function(obj) {
-      var attrs = obj.attributes;
-
-      return new Brick.Relation({
-        id: attrs.id.value,
-        version: attrs.version.value,
-        user: attrs.user && attrs.user.value,
-        tags: getTags(obj),
-        members: getMembers(obj)
-      });
+  function getTags(node) {
+    var
+      tags = node.getElementsByTagName('tag'),
+      attr,
+      res = {};
+    for (var i = 0, il = tags.length; i < il; i++) {
+      attr = tags[i].attributes;
+      res[attr.k.value] = attr.v.value;
     }
+    return res;
+  }
+
+  function getNodes(node) {
+    var
+      nodes = node.getElementsByTagName('nd'),
+      res = new Array(nodes.length);
+    for (var i = 0, il = nodes.length; i < il; i++) {
+      res[i] = nodes[i].attributes.ref.value;
+    }
+    return res;
+  }
+
+  function getMembers(node) {
+    var
+      members = node.getElementsByTagName('member'),
+      attr,
+      res = new Array(members.length);
+    for (var i = 0, il = members.length; i < il; i++) {
+      attr = members[i].attributes;
+      res[i] = {
+        id: attr.ref.value,
+        type: attr.type.value,
+        role: attr.role.value
+      };
+    }
+    return res;
+  }
+
+  var proto = {};
+
+  proto.loadEntity = function(type, id, callback, scope) {
+    loadXML(url +'/api/0.6/'+ type +'/'+ id + (type !== 'node' ? '/full' : ''), function(xml) {
+      if (callback) {
+        callback.call(scope, parseEntity(xml));
+      }
+    });
   };
 
 
@@ -113,36 +121,50 @@ Brick.OSMAPI = function(auth) {
 
 
 
-  function getNodes(obj) {
-  }
 
-  function getTags(obj) {
-    var elems = obj.getElementsByTagName(tagStr),
-      tags = {};
-    for (var i = 0, l = elems.length; i < l; i++) {
-      var attrs = elems[i].attributes;
-      tags[attrs.k.value] = attrs.v.value;
-    }
-    return tags;
-  }
 
-  function getMembers(obj) {
-    var elems = obj.getElementsByTagName(memberStr),
-      members = new Array(elems.length);
-    for (var i = 0, l = elems.length; i < l; i++) {
-      var attrs = elems[i].attributes;
-      members[i] = {
-        id: attrs.type.value[0] + attrs.ref.value,
-        type: attrs.type.value,
-        role: attrs.role.value
-      };
-    }
-    return members;
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+  proto.changesetURL = function(changesetId) {
+    return url + '/changeset/' + changesetId;
+  };
+
+  proto.changesetsURL = function(center, zoom) {
+    var precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+    return url + '/history#map=' +
+      Math.floor(zoom) + '/' +
+      center[1].toFixed(precision) + '/' +
+      center[0].toFixed(precision);
+  };
+
+  proto.entityURL = function(entity) {
+    return url + '/' + entity.type + '/' + entity.osmId();
+  };
+
+  proto.userURL = function(username) {
+    return url + '/user/' + username;
+  };
+
+  proto.loadFromURL = function(url, callback) {
+    return xml(url, function(dom) {
+      return callback(null, parseEntity(dom));
+    });
+  };
+
 
 
   // Generate Changeset XML. Returns a string.
-  connection.changesetJXON = function(tags) {
+  proto.changesetJXON = function(tags) {
     return {
       osm: {
         changeset: {
@@ -158,7 +180,7 @@ Brick.OSMAPI = function(auth) {
 
   // Generate [osmChange](http://wiki.openstreetmap.org/wiki/OsmChange)
   // XML. Returns a string.
-  connection.osmChangeJXON = function(changeset_id, changes) {
+  proto.osmChangeJXON = function(changeset_id, changes) {
     function nest(x, order) {
       var groups = {};
       for (var i = 0; i < x.length; i++) {
@@ -188,7 +210,7 @@ Brick.OSMAPI = function(auth) {
     };
   };
 
-  connection.changesetTags = function(comment, imageryUsed) {
+  proto.changesetTags = function(comment, imageryUsed) {
     var tags = {
       imagery_used: imageryUsed.join(';').substr(0, 255),
       created_by: 'iD ' + version
@@ -201,19 +223,19 @@ Brick.OSMAPI = function(auth) {
     return tags;
   };
 
-  connection.putChangeset = function(changes, comment, imageryUsed, callback) {
+  proto.putChangeset = function(changes, comment, imageryUsed, callback) {
     oauth.xhr({
         method: 'PUT',
         path: '/api/0.6/changeset/create',
         options: { header: { 'Content-Type': 'text/xml' } },
-        content: JXON.stringify(connection.changesetJXON(connection.changesetTags(comment, imageryUsed)))
+        content: JXON.stringify(proto.changesetJXON(proto.changesetTags(comment, imageryUsed)))
       }, function(err, changeset_id) {
         if (err) return callback(err);
         oauth.xhr({
           method: 'POST',
           path: '/api/0.6/changeset/' + changeset_id + '/upload',
           options: { header: { 'Content-Type': 'text/xml' } },
-          content: JXON.stringify(connection.osmChangeJXON(changeset_id, changes))
+          content: JXON.stringify(proto.osmChangeJXON(changeset_id, changes))
         }, function(err) {
           if (err) return callback(err);
           oauth.xhr({
@@ -228,7 +250,7 @@ Brick.OSMAPI = function(auth) {
 
   var userDetails;
 
-  connection.userDetails = function(callback) {
+  proto.userDetails = function(callback) {
     if (userDetails) {
       callback(undefined, userDetails);
       return;
@@ -257,7 +279,7 @@ Brick.OSMAPI = function(auth) {
     oauth.xhr({ method: 'GET', path: '/api/0.6/user/details' }, done);
   };
 
-  connection.status = function(callback) {
+  proto.status = function(callback) {
     function done(capabilities) {
       var apiStatus = capabilities.getElementsByTagName('status');
       callback(undefined, apiStatus[0].getAttribute('api'));
@@ -269,13 +291,13 @@ Brick.OSMAPI = function(auth) {
 
   function abortRequest(i) { i.abort(); }
 
-  connection.tileZoom = function(_) {
+  proto.tileZoom = function(_) {
     if (!arguments.length) return tileZoom;
     tileZoom = _;
-    return connection;
+    return proto;
   };
 
-  connection.loadTiles = function(projection, dimensions) {
+  proto.loadTiles = function(projection, dimensions) {
 
     if (off) return;
 
@@ -324,7 +346,7 @@ Brick.OSMAPI = function(auth) {
         event.loading();
       }
 
-      inflight[id] = connection.loadFromURL(bboxUrl(tile), function(err, parsed) {
+      inflight[id] = proto.loadFromURL(bboxUrl(tile), function(err, parsed) {
         loadedTiles[id] = true;
         delete inflight[id];
 
@@ -337,39 +359,39 @@ Brick.OSMAPI = function(auth) {
     });
   };
 
-  connection.switch = function(options) {
+  proto.switch = function(options) {
     url = options.url;
     oauth.options(_.extend({}, options));
     event.auth();
-    connection.flush();
-    return connection;
+    proto.flush();
+    return proto;
   };
 
-  connection.toggle = function(_) {
+  proto.toggle = function(_) {
     off = !_;
-    return connection;
+    return proto;
   };
 
-  connection.flush = function() {
+  proto.flush = function() {
     _.forEach(inflight, abortRequest);
     loadedTiles = {};
     inflight = {};
-    return connection;
+    return proto;
   };
 
-  connection.loadedTiles = function(_) {
+  proto.loadedTiles = function(_) {
     if (!arguments.length) return loadedTiles;
     loadedTiles = _;
-    return connection;
+    return proto;
   };
 
-  connection.logout = function() {
+  proto.logout = function() {
     oauth.logout();
     event.auth();
-    return connection;
+    return proto;
   };
 
-  connection.authenticate = function(callback) {
+  proto.authenticate = function(callback) {
     function done(err, res) {
       event.auth();
       if (callback) callback(err, res);
@@ -377,6 +399,6 @@ Brick.OSMAPI = function(auth) {
     return oauth.authenticate(done);
   };
 
-  return connection;
+  return proto;
 
 };
