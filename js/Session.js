@@ -15,16 +15,16 @@ Brick.Session = function(config) {
 
   this.render();
 
-  $('#login').addEventListener('click', function() {
+  Brick.dom.find('#login').addEventListener('click', function() {
     scope.login();
   });
 
-  $('#logout').addEventListener('click', function() {
+  Brick.dom.find('#logout').addEventListener('click', function() {
     scope.logout();
   });
 };
 
-var proto = Brick.Session.prototype = Brick.Events.prototype;
+var proto = Brick.Session.prototype = Object.create(Brick.Events.prototype);
 
 proto.getUserInfo = function(callback, scope) {
   this.auth.xhr({
@@ -52,17 +52,17 @@ proto.logout = function() {
 
 proto.render = function() {
   if (!this.auth.authenticated()) {
-    $('#login').className = '';
-    $('#logout').className = 'hidden';
-    $('#user-name').innerText = '';
-    $('#user-name').className = 'hidden';
+    Brick.dom.removeClass(Brick.dom.find('#login'), 'hidden');
+    Brick.dom.addClass(Brick.dom.find('#logout'), 'hidden');
+    Brick.dom.find('#user-name').innerText = '';
+    Brick.dom.addClass(Brick.dom.find('#user-name'), 'hidden');
     return;
   }
 
   this.getUserInfo(function(user) {
-    $('#login').className = 'hidden';
-    $('#logout').className = '';
-    $('#user-name').innerText = user['@display_name'];
-    $('#user-name').className = '';
+    Brick.dom.addClass(Brick.dom.find('#login'), 'hidden');
+    Brick.dom.removeClass(Brick.dom.find('#logout'), 'hidden');
+    Brick.dom.find('#user-name').innerText = user['@display_name'];
+    Brick.dom.removeClass(Brick.dom.find('#user-name'), 'hidden');
   });
 };

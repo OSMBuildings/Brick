@@ -4,7 +4,7 @@ Brick.Provider = function(config) {
   this.url = config.url;
 };
 
-var proto = Brick.Provider.prototype = Brick.Events.prototype;
+var proto = Brick.Provider.prototype = Object.create(Brick.Events.prototype);
 
 proto.loadFeature = function(id) {
   loadJSON(this.url.replace('{id}', id), function(json) {

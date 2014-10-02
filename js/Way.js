@@ -3,7 +3,7 @@ Brick.Way = function(prop) {
   Brick.Entity.prototype.constructor.call(this, prop);
 };
 
-var proto = Brick.Way.prototype = Brick.Entity.prototype;
+var proto = Brick.Way.prototype = Object.create(Brick.Entity.prototype);
 
 proto.type = 'way';
 

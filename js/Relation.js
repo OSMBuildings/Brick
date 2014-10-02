@@ -3,7 +3,7 @@ Brick.Relation = function(prop) {
   Brick.Entity.prototype.constructor.call(this, prop);
 };
 
-var proto = Brick.Relation.prototype = Brick.Entity.prototype;
+var proto = Brick.Relation.prototype = Object.create(Brick.Entity.prototype);
 
 proto.type = 'relation';
 

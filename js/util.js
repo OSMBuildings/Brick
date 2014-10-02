@@ -1,6 +1,3 @@
-function $(q) {
-  return document.querySelector(q);
-}
 
 function loadJSON(url, callback, scope) {
   var req = new XMLHttpRequest();

@@ -9,7 +9,9 @@ var Brick = function(config) {
 
   //*******************************************************
 
-  var provider = new Brick.Provider({ url: 'http://data.osmbuildings.org/0.2/rkc8ywdl/feature/{id}.json' });
+  var provider = new Brick.Provider({
+    url: config.providerURL
+  });
 
   //*******************************************************
 
@@ -43,20 +45,30 @@ var Brick = function(config) {
 
   //*******************************************************
 
-  provider.on('featureLoaded', map.showPopup, map);
+  var selection = new Brick.Selection({
+    container: config.listContainer,
+    renderer: function(item) {
+      return item.id + (item.properties.tags && item.properties.tags.name ? ' ('+ item.properties.tags.name +')' : '');
+    }
+  });
+
+  provider.on('featureLoaded', function(collection) {
+    selection.populate(collection);
+    editor.clear();
+  }, selection);
+
+  var editor = new Brick.Editor({
+    container: config.editorContainer
+  });
+
+  selection.on('selectPart', function(part) {
+    editor.populate(part);
+  }, editor);
 
   //*******************************************************
 
-  var osm = Brick.OSMAPI(session.auth);
+//  var osm = Brick.OSMAPI(session.auth);
 
-  map.on('featureSelected', function(e) {
-//    osm.loadEntity('way', e, function(res) {
-//console.log('WAY', res);
-//    });
-    osm.loadEntity('relation', e, function(res) {
-console.log('REL', res);
-    });
-  });
 };
 
 Brick.VERSION = '0.1.0';

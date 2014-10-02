@@ -1,13 +1,7 @@
 
-Brick.OSMAPI = function(auth) {
+Brick.OSMAPI = function(oauth) {
 
-  var
-    url = 'http://www.openstreetmap.org',
-    inflight = {},
-    loadedTiles = {},
-    tileZoom = 16,
-    oauth = auth,
-    off;
+  var url = 'http://www.openstreetmap.org';
 
   var parsers = {
     node: function(node) {
@@ -248,37 +242,6 @@ Brick.OSMAPI = function(auth) {
       });
   };
 
-  var userDetails;
-
-  proto.userDetails = function(callback) {
-    if (userDetails) {
-      callback(undefined, userDetails);
-      return;
-    }
-
-    function done(err, user_details) {
-      if (err) return callback(err);
-
-      var u = user_details.getElementsByTagName('user')[0],
-        img = u.getElementsByTagName('img'),
-        image_url = '';
-
-      if (img && img[0] && img[0].getAttribute('href')) {
-        image_url = img[0].getAttribute('href');
-      }
-
-      userDetails = {
-        display_name: u.attributes.display_name.value,
-        image_url: image_url,
-        id: u.attributes.id.value
-      };
-
-      callback(undefined, userDetails);
-    }
-
-    oauth.xhr({ method: 'GET', path: '/api/0.6/user/details' }, done);
-  };
-
   proto.status = function(callback) {
     function done(capabilities) {
       var apiStatus = capabilities.getElementsByTagName('status');
@@ -287,116 +250,6 @@ Brick.OSMAPI = function(auth) {
     d3.xml(url + '/api/capabilities').get()
       .on('load', done)
       .on('error', callback);
-  };
-
-  function abortRequest(i) { i.abort(); }
-
-  proto.tileZoom = function(_) {
-    if (!arguments.length) return tileZoom;
-    tileZoom = _;
-    return proto;
-  };
-
-  proto.loadTiles = function(projection, dimensions) {
-
-    if (off) return;
-
-    var s = projection.scale() * 2 * Math.PI,
-      z = Math.max(Math.log(s) / Math.log(2) - 8, 0),
-      ts = 256 * Math.pow(2, z - tileZoom),
-      origin = [
-        s / 2 - projection.translate()[0],
-        s / 2 - projection.translate()[1]];
-
-    var tiles = d3.geo.tile()
-      .scaleExtent([tileZoom, tileZoom])
-      .scale(s)
-      .size(dimensions)
-      .translate(projection.translate())()
-      .map(function(tile) {
-        var x = tile[0] * ts - origin[0],
-          y = tile[1] * ts - origin[1];
-
-        return {
-          id: tile.toString(),
-          extent: geo.Extent(
-            projection.invert([x, y + ts]),
-            projection.invert([x + ts, y]))
-        };
-      });
-
-    function bboxUrl(tile) {
-      return url + '/api/0.6/map?bbox=' + tile.extent.toParam();
-    }
-
-    _.filter(inflight, function(v, i) {
-      var wanted = _.find(tiles, function(tile) {
-        return i === tile.id;
-      });
-      if (!wanted) delete inflight[i];
-      return !wanted;
-    }).map(abortRequest);
-
-    tiles.forEach(function(tile) {
-      var id = tile.id;
-
-      if (loadedTiles[id] || inflight[id]) return;
-
-      if (_.isEmpty(inflight)) {
-        event.loading();
-      }
-
-      inflight[id] = proto.loadFromURL(bboxUrl(tile), function(err, parsed) {
-        loadedTiles[id] = true;
-        delete inflight[id];
-
-        event.load(err, _.extend({data: parsed}, tile));
-
-        if (_.isEmpty(inflight)) {
-          event.loaded();
-        }
-      });
-    });
-  };
-
-  proto.switch = function(options) {
-    url = options.url;
-    oauth.options(_.extend({}, options));
-    event.auth();
-    proto.flush();
-    return proto;
-  };
-
-  proto.toggle = function(_) {
-    off = !_;
-    return proto;
-  };
-
-  proto.flush = function() {
-    _.forEach(inflight, abortRequest);
-    loadedTiles = {};
-    inflight = {};
-    return proto;
-  };
-
-  proto.loadedTiles = function(_) {
-    if (!arguments.length) return loadedTiles;
-    loadedTiles = _;
-    return proto;
-  };
-
-  proto.logout = function() {
-    oauth.logout();
-    event.auth();
-    return proto;
-  };
-
-  proto.authenticate = function(callback) {
-    function done(err, res) {
-      event.auth();
-      if (callback) callback(err, res);
-    }
-    return oauth.authenticate(done);
   };
 
   return proto;

@@ -29,7 +29,11 @@ html, body {
   width: 100%;
 }
 
-.form {
+.selection {
+  width: 100%;
+}
+
+.details {
   width: 100%;
 }
 

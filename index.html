@@ -22,10 +22,13 @@
 
     <script src="js/Brick.js"></script>
     <script src="js/Events.js"></script>
+    <script src="js/dom.js"></script>
     <script src="js/State.js"></script>
     <script src="js/Session.js"></script>
     <script src="js/Provider.js"></script>
     <script src="js/Map.js"></script>
+    <script src="js/Selection.js"></script>
+    <script src="js/Editor.js"></script>
 
     <script src="js/OSMAPI.js"></script>
     <script src="js/Entity.js"></script>
@@ -44,31 +47,54 @@
         <h1 id="user-name"></h1>
       </div>
 
-      <div class="form">
-        <!-- handle building parts -->
+      <div class="selection"></div>
+
+      <div class="details">
         <label>Type</label><br>
-        <select name="building"></select><br>
+        <select name="building" class="input">
+          <option>house</option>
+          <option>apartments</option>
+          <option>commercial</option>
+          <option>industrial</option>
+          <option>residential</option>
+          <option></option>
+        </select><br>
 
         <label>Height</label><br>
-        <input type="number" min="0" name="height" value=""><select name="height-unit">m/ft/levels</select><br>
+        <input type="number" min="0" name="height" value="" class="input">
+        <select name="height-unit" class="input">
+          <option>levels</option>
+          <option>m</option>
+          <option>ft</option>
+        </select><br>
 
         <label>Above ground</label><br>
-        <input type="number" min="0" name="min_height" value=""><select name="min_height-unit">m/ft/levels</select><br>
+        <input type="number" min="0" name="min_height" value="" class="input">
+        <select name="min_height-unit" class="input">
+          <option>levels</option>
+          <option>m</option>
+          <option>ft</option>
+        </select><br>
 
         <label>Color</label><br>
-        <select name="color-choice">Palette/Materiallist/Photo</select><br>
+        <select name="color-choice" class="input">Palette/Materiallist/Photo</select><br>
 
         <label>Shape</label><br>
-        <select name="building:shape">Pyramid/Dome/Sphere</select><br>
+        <select name="building:shape" class="input">Pyramid/Dome/Sphere</select><br>
 
         <label>Roof Type</label><br>
-        <select name="roof:type"></select><br>
+        <select name="roof:type" class="input"></select><br>
 
         <label>Roof Height</label><br>
-        <input type="number" min="0" name="roof:height" value=""><select name="roof:height-unit">m/ft/levels</select><br>
+        <input type="number" min="0" name="roof:height" value="" class="input">
+        <select name="roof:height-unit" class="input">
+          <option>levels</option>
+          <option>m</option>
+          <option>ft</option>
+        </select><br>
 
         <label>Roof Color</label><br>
-        <select name="roof:color-choice">Palette/Materiallist/Photo</select><br>
+        <select name="roof:color-choice" class="input">Palette/Materiallist/Photo</select><br>
 
         <!-- OTHER TAGS HERE -->
       </div>
@@ -80,7 +106,10 @@
         oauthLandingPage: 'auth.html',
         oauthConsumerKey: config.oauth.consumerKey,
         oauthSecret: config.oauth.secret,
-        mapId: 'map'
+        mapId: 'map',
+        providerURL: config.providerURL,
+        listContainer: Brick.dom.find('.selection'),
+        editorContainer: Brick.dom.find('.editor')
       });
     });
     </script>
