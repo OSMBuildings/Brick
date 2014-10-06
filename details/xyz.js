@@ -1,20 +1,16 @@
 
-var xyz = (function(window) {
-
-	var
-    CAM_Z = 600,
-		FLOOR_height = 10,
-		WALL_COLOR = 'rgba(240, 220, 200, 0.6)';
+var XYZ = (function() {
 
   var
-    sin = Math.sin,
-    cos = Math.cos,
-    rad = Math.PI/180,
-		transformMatrix,
     context,
-    width = 0, height = 0,
-    halfWidth = 0, halfHeight = 0,
-    data;
+    WIDTH = 0, HEIGHT = 0,
+    CENTER_X = 0, CENTER_Y = 0,
+		transformMatrix;
+
+	var
+    CAM_X = 0, CAM_Y = 0,
+    CAM_Z = 450,
+    RAD = Math.PI/180;
 
 	function identityMatrix() {
 		return [
@@ -60,7 +56,7 @@ var xyz = (function(window) {
 			return transformMatrix;
 		}
 
-		var transform = getRotationMatrix(x*rad, y*rad, z*rad);
+		var transform = getRotationMatrix(x*RAD, y*RAD, z*RAD);
 		return multiplyMatrix(transformMatrix, transform);
 	}
 
@@ -70,8 +66,8 @@ var xyz = (function(window) {
 			rSin, rCos, transform;
 
 		if (z) {
-			rCos = cos(-z);
-			rSin = sin(-z);
+			rCos = Math.cos(-z);
+			rSin = Math.sin(-z);
 			transform = [
 				rCos, -rSin, 0, 0,
 				rSin,  rCos, 0, 0,
@@ -82,8 +78,8 @@ var xyz = (function(window) {
 		}
 
 		if (y) {
-			rCos = cos(-y);
-			rSin = sin(-y);
+			rCos = Math.cos(-y);
+			rSin = Math.sin(-y);
 			transform = [
 				 rCos, 0, rSin, 0,
 					0, 1,    0, 0,
@@ -94,8 +90,8 @@ var xyz = (function(window) {
 		}
 
 		if (x) {
-			rCos = cos(-x);
-			rSin = sin(-x);
+			rCos = Math.cos(-x);
+			rSin = Math.sin(-x);
 			transform = [
 				1,    0,     0, 0,
 				0, rCos, -rSin, 0,
@@ -138,235 +134,218 @@ var xyz = (function(window) {
 		];
 	}
 
-	//*************************************************************************
+
+
+	//***************************************************************************
 
 	function render() {
-		var
-      item,
-			a, b, c, d,
-			poly;
-
-    context.clearRect(0, 0, width, height);
-
-		if (!data) {
-      return;
-    }
-
-    var
-      i, il,
-      j, jl;
-    for (i = 0, il = data.length; i < il; i++) {
-			item = data[i];
-			poly = [];
-			for (j = 0, jl = item.poly.length; j < jl; j++) {
-				poly.push(project(item.poly[j], 0));
-      }
-			context.fillStyle = data[i].style.fill;
-			drawShape(poly);
-    }
-
-		context.fillStyle = WALL_COLOR;
-
-    for (i = 0, il = data.length; i < il; i++) {
-			item = data[i];
-			for (j = 0, jl = item.poly.length-1; j < jl; j++) {
-				a = project(item.poly[j],   0),
-				b = project(item.poly[j+1], 0),
-				d = project(item.poly[j+1], FLOOR_height),
-				c = project(item.poly[j],   FLOOR_height)
-				if ((a.x-c.x) * (b.y-c.y) > (b.x-c.x) * (b.y-c.y)) {
-					drawShape([a, b, d, c]);
-				}
-      }
-    }
+    requestAnimFrame(function() {
+      context.clearRect(0, 0, WIDTH, HEIGHT);
+      Shadows.render();
+      Buildings.render();
+      Hitareas.render();
+    });
   }
 
-	function drawShape(points, stroke) {
-		context.beginPath();
-		context.moveTo(points[0].x, points[0].y);
-		for (var i = 1, il = points.length; i < il; i++) {
-			context.lineTo(points[i].x, points[i].y);
-		}
-		context.closePath();
-		(stroke && context.stroke());
-		context.fill();
-	}
+  function createContext(container) {
+    var canvas = doc.createElement('CANVAS');
+    canvas.style.webkitTransform = 'translate3d(0,0,0)'; // turn on hw acceleration
+    canvas.style.imageRendering  = 'optimizeSpeed';
+    canvas.style.position = 'absolute';
+    canvas.style.left = 0;
+    canvas.style.top  = 0;
 
-  function project(p, z) {
-    var t = transformVector(p.x, p.y, z);
-		return {
-			x: t[0]*CAM_Z / (CAM_Z - t[2]) + halfWidth  <<0,
-			y: t[1]*CAM_Z / (CAM_Z - t[2]) + halfHeight <<0
-		}
+    var context = canvas.getContext('2d');
+    context.lineCap   = 'round';
+    context.lineJoin  = 'round';
+    context.lineWidth = 1;
+
+    context.mozImageSmoothingEnabled    = false;
+    context.webkitImageSmoothingEnabled = false;
+
+    if (container) {
+      container.appendChild(canvas);
+    }
+
+    return context;
   }
 
-	//*****************************************************************************
+	//***************************************************************************
 
-	var
-		hasTouch = ('ontouchstart' in window),
-		DRAG_START_EVENT = hasTouch ? 'touchstart' : 'mousedown',
-		DRAG_MOVE_EVENT  = hasTouch ? 'touchmove'  : 'mousemove',
-		DRAG_END_EVENT   = hasTouch ? 'touchend'   : 'mouseup',
-
-		x0 = 0, y0 = 0,
-		rotation0 = 0, scale0 = 0,
-		a0 = 0, b0 = 0, c0 = 0
-	;
-
-	function on(type, func) {
-		document.addEventListener(type, func, false);
-	}
-
-	function off(type, fn) {
-		document.removeEventListener(type, fn, false);
-	}
-
-	function cancel(e) {
-		(e.preventDefault && e.preventDefault());
-		e.returnValue = false;
-	}
-
-	//*****************************************************************************
-
-	function onDragStart(e) {}
-
-	function onDragMove(e) {
-		transformMatrix = translateMatrix(e.x, e.y, 0);
-		if (hasTouch) {
-			transformMatrix = translateMatrix(200, 200, 0);
-			transformMatrix = rotateMatrix(0, 0, e.rotation);
-			transformMatrix = translateMatrix(-200, -200, 0);
-		}
-		render();
-	}
-
-	function onDragEnd(e) {
-		render();
-	}
-
-	function onMouseWheel(e) {
-		transformMatrix = translateMatrix(200, 200, 0);
-		transformMatrix = rotateMatrix(0, 0, e.deltaY / 10);
-		transformMatrix = translateMatrix(-200, -200, 0);
-		render();
-	}
-
-	//*****************************************************************************
-
-	on(DRAG_START_EVENT, dragStartEvent);
-
-	if (hasTouch) {
-		on('gesturechange', gestureChangeEvent);
-	} else {
-		on('mousewheel',     mouseWheelEvent);
-		on('DOMMouseScroll', mouseWheelEvent);
-	}
-
-	//*****************************************************************************
-
-	function dragStartEvent(e) {
-		cancel(e);
-
-		if (hasTouch) {
-			if (e.touches.length > 1) return;
-			e = e.touches[0];
-			rotation1 = 0;
-		}
-
-		on(DRAG_MOVE_EVENT, dragMoveEvent);
-		on(DRAG_END_EVENT,  dragEndEvent);
-
-		x0 = e.clientX;
-		y0 = e.clientY;
-
-		onDragStart({ x:x0, y:y0 });
-	}
-
-	function dragMoveEvent(e) {
-		cancel(e);
-		if (hasTouch) {
-			if (e.touches.length > 1) return;
-			e = e.touches[0];
-		}
-
-		var
-			x = e.clientX,
-			y = e.clientY
-		;
-
-		onDragMove({ x: x - x0, y: y - y0 });
-
-		x0 = x;
-		y0 = y;
-	}
-
-	function dragEndEvent(e) {
-		off(DRAG_MOVE_EVENT, dragMoveEvent);
-		off(DRAG_END_EVENT,  dragEndEvent);
-		onDragEnd();
-	}
-
-	function gestureChangeEvent(e) {
-		cancel(e);
-		var
-			r = e.rotation - rotation0,
-			s = e.scale - scale0
-		;
-		if (e > 5 || e < -5) {
-			s = 0;
-		}
-
-		onDragMove({ rotation: r, scale: s });
-
-		rotation0 = e.rotation;
-		scale0 = e.scale;
-	}
-
-	function mouseWheelEvent(e) {
-		cancel(e);
-		var
-			deltaX = e.wheelDeltaX || 0,
-			deltaY = e.wheelDeltaY || 0;
-
-		onMouseWheel({ deltaX: deltaX, deltaY: deltaY });
-	}
-
-
-
-
-
- 	function init (canvas) {
+ 	function XYZ(canvas) {
     context = canvas.getContext('2d');
 
-    width  = win.innerWidth;
-    height = win.innerHeight;
-    halfWidth  = width / 2;
-    halfHeight = height / 2;
+    WIDTH  = canvas.width;
+    HEIGHT = canvas.height;
 
-		canvas.width  = width;
-		canvas.height = height;
+    CENTER_X = WIDTH /2;
+    CENTER_Y = HEIGHT/2;
+
+    CAM_X = CENTER_X;
+    CAM_Y = height;
 
     transformMatrix = identityMatrix();
 
-		context.fillStyle = WALL_COLOR;
+    var container = document.createElement('DIV');
+    container.style.pointerEvents = 'none';
+
+    Shadows.context   = createContext(container);
+    Buildings.context = Shadows.context;
+    HitAreas.context  = createContext();
 	}
 
-  return {
-    init: init,
+  var proto = XYZ.prototype;
 
-    render: render,
+  proto.render = render,
 
-    scale: function (x, y, z) {
-      transformMatrix = scaleMatrix(x, y, z);
-    },
-
-    translate: function (x, y, z) {
-      transformMatrix = translateMatrix(x, y, z);
-    },
-
-    rotate: function (x, y, z) {
-      transformMatrix = rotateMatrix(x, y, z);
-    }
+  proto.scale = function (x, y, z) {
+    transformMatrix = scaleMatrix(x, y, z);
   };
 
-}(this));
+  proto.translate = function (x, y, z) {
+    transformMatrix = translateMatrix(x, y, z);
+  };
+
+  proto.rotate = function (x, y, z) {
+    transformMatrix = rotateMatrix(x, y, z);
+  };
+
+  return proto;
+
+}());
+
+
+
+
+function renderX() {
+  var
+    round = Math.round,
+    i, il,
+    v = mesh.vertices,
+    f = mesh.faces,
+    t = mesh.tilts,
+    offX = pos.x-tl.x,
+    offY = pos.y-tl.y,
+    vertices = [],
+    A, B, C,
+    isRoof;
+
+  context.fillStyle = "rgb(250,200,0)";
+
+  for (i = 0, il = v.length-2; i < il; i+=3) {
+    vertices.push(project(v[i], v[i+1], v[i+2]));
+  }
+
+  for (i = 0, il = f.length-2; i < il; i+=3) {
+    A = vertices[ f[i  ] ];
+    B = vertices[ f[i+1] ];
+    C = vertices[ f[i+2] ];
+
+    if ((B[0]-A[0])*(C[1]-A[1]) > (C[0]-A[0])*(B[1]-A[1])) {
+      //isRoof = t[ f[i] ]*1;
+      isRoof = t[i/3]*1;
+      context.fillStyle = isRoof ? "rgba(230,210,220,0.75)" : "rgba(150,180,190,0.75)";
+      context.beginPath();
+      context.moveTo(A[0]+offX, -A[1]+offY);
+      context.lineTo(B[0]+offX, -B[1]+offY);
+      context.lineTo(C[0]+offX, -C[1]+offY);
+      context.closePath();
+      //isRoof && context.stroke();
+      context.fill();
+
+      if (!isRoof) {
+        var az = round(v[ f[i  ]*3+2 ]);
+        var bz = round(v[ f[i+1]*3+2 ]);
+        var cz = round(v[ f[i+2]*3+2 ]);
+        if (az === bz) {
+          context.beginPath();
+          context.moveTo(A[0]+offX, -A[1]+offY);
+          context.lineTo(B[0]+offX, -B[1]+offY);
+          context.stroke();
+        } else if (bz === cz) {
+          context.beginPath();
+          context.moveTo(B[0]+offX, -B[1]+offY);
+          context.lineTo(C[0]+offX, -C[1]+offY);
+          context.stroke();
+        } else if (cz === az) {
+          context.beginPath();
+          context.moveTo(C[0]+offX, -C[1]+offY);
+          context.lineTo(A[0]+offX, -A[1]+offY);
+          context.stroke();
+        }
+
+        var ax = round(v[ f[i  ]*3   ]);
+        var ay = round(v[ f[i  ]*3+1 ]);
+        var bx = round(v[ f[i+1]*3   ]);
+        var by = round(v[ f[i+1]*3+1 ]);
+        var cx = round(v[ f[i+2]*3   ]);
+        var cy = round(v[ f[i+2]*3+1 ]);
+
+        if (ax === bx && ay === by) {
+          context.beginPath();
+          context.moveTo(A[0]+offX, -A[1]+offY);
+          context.lineTo(B[0]+offX, -B[1]+offY);
+          context.stroke();
+        } else if (bx === cx && by === cy) {
+          context.beginPath();
+          context.moveTo(B[0]+offX, -B[1]+offY);
+          context.lineTo(C[0]+offX, -C[1]+offY);
+          context.stroke();
+        } else if (cx === ax && cy === ay) {
+          context.beginPath();
+          context.moveTo(C[0]+offX, -C[1]+offY);
+          context.lineTo(A[0]+offX, -A[1]+offY);
+          context.stroke();
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var animTimer;
+
+function fadeIn() {
+  if (animTimer) {
+    return;
+  }
+
+  animTimer = setInterval(function() {
+    var dataItems = Data.items,
+      isNeeded = false;
+
+    for (var i = 0, il = dataItems.length; i < il; i++) {
+      if (dataItems[i].scale < 1) {
+        dataItems[i].scale += 0.5*0.2; // amount*easing
+        if (dataItems[i].scale > 1) {
+          dataItems[i].scale = 1;
+        }
+        isNeeded = true;
+      }
+    }
+
+    Layers.render();
+
+    if (!isNeeded) {
+      clearInterval(animTimer);
+      animTimer = null;
+    }
+  }, 33);
+}
+
+

@@ -1,29 +1,36 @@
 
-Brick.Selection = function(options) {
+Brick.ui.PartSelection = function(options) {
   Brick.Events.prototype.constructor.call(this);
 
   this.items = [];
   this.selectedIndex = -1;
 
-  this.container = options.container;
+  this.$container = options.container;
 
   this.renderer = options.renderer || function(data) {
     return JSON.stringify(data);
   };
 
   var scope = this;
-  this.container.addEventListener('mousedown', function(e) {
-    for (var i = 0, il = scope.container.childNodes.length; i < il; i++) {
-      if (Brick.dom.contains(scope.container.childNodes[i], e.target)) {
+  this.$container.click(function(e) {
+    scope.$container.children().each(function(i, child) {
+      if (e.target === child) {
         scope.selectIndex(i);
-        scope.emit('selectPart', scope.items[i].data);
-        break;
+        scope.emit('partSelected', scope.items[i].data);
       }
-    }
+    });
   });
 };
 
-var proto = Brick.Selection.prototype = Object.create(Brick.Events.prototype);
+var proto = Brick.ui.PartSelection.prototype = Object.create(Brick.Events.prototype);
+
+proto.show = function() {
+  this.$container.show().animate({ left:0 }, 300);
+};
+
+proto.hide = function() {this._isHidden = true;
+  this.$container.animate({ left:'-100%' }, 300, null, this.$container.hide);
+};
 
 proto.selectIndex = function(index) {
   if (this.selectedIndex === index) {
@@ -31,7 +38,7 @@ proto.selectIndex = function(index) {
   }
 
   // unselect old item
-  this.items[this.selectedIndex] && Brick.dom.removeClass(this.items[this.selectedIndex].el, 'selected');
+  this.items[this.selectedIndex] && this.items[this.selectedIndex].$node.removeClass('selected');
 
   // no new selection
   if (index === -1) {
@@ -46,26 +53,24 @@ proto.selectIndex = function(index) {
   // set new selection
   this.selectedIndex = index;
 
-  Brick.dom.addClass(this.items[this.selectedIndex].el, 'selected');
+  this.items[this.selectedIndex].$node.addClass('selected');
 };
 
 proto.addItem = function(data) {
-  var el = document.createElement('DIV');
-  el.innerHTML = this.renderer(data);
+  var $node = $('<div class="list-item">' + this.renderer(data) +'</div>')
+    .appendTo(this.$container);
 
   this.items.push({
-    el: el,
+    $node: $node,
     data: data
   });
-
-  this.container.appendChild(el);
 };
 
 proto.clear = function() {
   this.selectedIndex = -1;
-  this.container.innerHTML = '';
+  this.$container.empty();
   this.items = [];
-  this.container.scrollTop = 0;
+  this.$container.scrollTop = 0;
 };
 
 proto.populate = function(collection) {
@@ -76,6 +81,6 @@ proto.populate = function(collection) {
 
   if (collection.features.length === 1) {
     this.selectIndex(0);
-    this.emit('selectPart', this.items[0].data);
+    this.emit('partSelected', this.items[0].data);
   }
 };

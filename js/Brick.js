@@ -41,29 +41,48 @@ var Brick = function(config) {
     }
   });
 
-  map.on('featureSelected', provider.loadFeature, provider);
+  var overlay = new Brick.ui.Overlay({ container: config.overlayContainer });
+  map.on('featureSelected', function(e) {
+    provider.loadFeature(e.feature);
+
+    var mapEngine = map.getEngine();
+    var p = mapEngine.latLngToContainerPoint(L.latLng(e.lat, e.lon));
+    p.y += innerHeight*0.375; // put it vertically in center of the topmost quarter of the screen
+    var geo = mapEngine.containerPointToLatLng(p);
+
+    mapEngine.once('moveend', function() {
+      tagEditor.hide();
+      overlay.show();
+    });
+
+    mapEngine.panTo(geo);
+
+  }, provider);
 
   //*******************************************************
 
-  var selection = new Brick.Selection({
-    container: config.listContainer,
+  var partSelection = new Brick.ui.PartSelection({
+    container: config.partSelectionContainer,
     renderer: function(item) {
       return item.id + (item.properties.tags && item.properties.tags.name ? ' ('+ item.properties.tags.name +')' : '');
     }
   });
 
   provider.on('featureLoaded', function(collection) {
-    selection.populate(collection);
-    editor.clear();
-  }, selection);
+    //tagEditor.clear();
+    partSelection.populate(collection);
+    partSelection.show();
+  }, partSelection);
 
-  var editor = new Brick.Editor({
-    container: config.editorContainer
+  var tagEditor = new Brick.ui.TagEditor({
+    container: config.tagEditorContainer
   });
 
-  selection.on('selectPart', function(part) {
-    editor.populate(part);
-  }, editor);
+  partSelection.on('partSelected', function(part) {
+    partSelection.hide();
+    tagEditor.populate(part);
+    tagEditor.show();
+  }, tagEditor);
 
   //*******************************************************
 

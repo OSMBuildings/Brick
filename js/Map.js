@@ -7,7 +7,7 @@ Brick.Map = function(config) {
     pos = [config.lat, config.lon];
   }
 
-  var map = this.map = new L.Map(config.mapId).setView(pos, config.zoom || 18);
+  var map = this._engine = new L.Map(config.mapId).setView(pos, config.zoom || 18);
 
   map.on('moveend zoomend', function() {
     var center = map.getCenter();
@@ -18,15 +18,19 @@ Brick.Map = function(config) {
     });
   }, this);
 
-  new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', { maxNativeZoom: 19, maxZoom: 21 }).addTo(this.map);
-  //new L.TileLayer('http://{s}.tiles.mapbox.com/v3/osmbuildings.gm744p3p/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(this.map);
+  new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', { maxNativeZoom: 19, maxZoom: 21 }).addTo(map);
+  //new L.TileLayer('http://{s}.tiles.mapbox.com/v3/osmbuildings.gm744p3p/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
+  var scope = this;
   new OSMBuildings(map)
     .load()
     .click(function(e) {
-      this.emit('featureSelected', e.feature);
-      this.currentSelection = e;
+      scope.emit('featureSelected', e);
     }, this);
 };
 
 var proto = Brick.Map.prototype = Object.create(Brick.Events.prototype);
+
+proto.getEngine = function() {
+  return this._engine;
+};

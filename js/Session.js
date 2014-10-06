@@ -15,11 +15,11 @@ Brick.Session = function(config) {
 
   this.render();
 
-  Brick.dom.find('#login').addEventListener('click', function() {
+  $('#login').click(function() {
     scope.login();
   });
 
-  Brick.dom.find('#logout').addEventListener('click', function() {
+  $('#logout').click(function() {
     scope.logout();
   });
 };
@@ -52,17 +52,15 @@ proto.logout = function() {
 
 proto.render = function() {
   if (!this.auth.authenticated()) {
-    Brick.dom.removeClass(Brick.dom.find('#login'), 'hidden');
-    Brick.dom.addClass(Brick.dom.find('#logout'), 'hidden');
-    Brick.dom.find('#user-name').innerText = '';
-    Brick.dom.addClass(Brick.dom.find('#user-name'), 'hidden');
+    $('#login').show();
+    $('#logout').hide();
+    $('#user-name').hide().empty();
     return;
   }
 
   this.getUserInfo(function(user) {
-    Brick.dom.addClass(Brick.dom.find('#login'), 'hidden');
-    Brick.dom.removeClass(Brick.dom.find('#logout'), 'hidden');
-    Brick.dom.find('#user-name').innerText = user['@display_name'];
-    Brick.dom.removeClass(Brick.dom.find('#user-name'), 'hidden');
+    $('#login').hide();
+    $('#logout').show();
+    $('#user-name').text(user['@display_name']).show();
   });
 };

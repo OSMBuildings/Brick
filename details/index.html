@@ -19,19 +19,16 @@
     <script src="config.js"></script>
     <script src="js/util.js"></script>
     <script src="js/lib/jxon.js"></script>
-    <script src="js/lib/jquery-2.1.1.min.js"></script>
 
     <script src="js/Brick.js"></script>
     <script src="js/Events.js"></script>
+    <script src="js/dom.js"></script>
     <script src="js/State.js"></script>
     <script src="js/Session.js"></script>
     <script src="js/Provider.js"></script>
-
     <script src="js/Map.js"></script>
-    <script src="js/ui/ui.js"></script>
-    <script src="js/ui/Overlay.js"></script>
-    <script src="js/ui/PartSelection.js"></script>
-    <script src="js/ui/TagEditor.js"></script>
+    <script src="js/Selection.js"></script>
+    <script src="js/Editor.js"></script>
 
     <script src="js/OSMAPI.js"></script>
     <script src="js/Entity.js"></script>
@@ -43,18 +40,17 @@
   <body>
     <div id="map"></div>
 
-    <div class="overlay hidden">
-      <button class="close-button">✕</button>
+    <div class="overlay" class="hidden">
 
-      <div class="session-info hidden">
+      <div class="session"  class="hidden">
         <button id="login">Login</button>
         <button id="logout">Logout</button>
         <h1 id="user-name"></h1>
       </div>
 
-      <div class="part-selection hidden"></div>
+      <div class="parts" class="hidden"></div>
 
-      <div class="tag-editor hidden">
+      <div class="details" class="hidden">
         <label>Type</label><br>
         <select name="building" class="input">
           <option>house</option>
@@ -108,16 +104,39 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       new Brick({
-        mapId: 'map',
         oauthLandingPage: 'auth.html',
         oauthConsumerKey: config.oauth.consumerKey,
         oauthSecret: config.oauth.secret,
+        mapId: 'map',
         providerURL: config.providerURL,
-        overlayContainer: $('.overlay'),
-        partSelectionContainer: $('.part-selection'),
-        tagEditorContainer: $('.tag-editor')
+        partsContainer: Brick.dom.find('.parts'),
+        detailsContainer: Brick.dom.find('.details')
       });
     });
     </script>
+
+
+
+
+<script src="details/geometry/Block.js"></script>
+<script src="details/geometry/Cylinder.js"></script>
+<script src="details/geometry/Pyramid.js"></script>
+<script src="details/layers/Shadows.js"></script>
+<script src="details/layers/Buildings.js"></script>
+<script src="details/layers/HitAreas.js"></script>
+<script src="details/xyz.js"></script>
+<canvas id="viewer" width="400" height="400"></canvas>
+<script>
+var xyz = new XYZ(document.querySelector('#viewer'));
+
+xyz.add(part1, part2, part3);
+xyz.explode();
+
+xyz.translate(-200, -200, 100);
+xyz.rotate(45, 0, 0);
+xyz.render();
+
+</script>
+
   </body>
 </html>
