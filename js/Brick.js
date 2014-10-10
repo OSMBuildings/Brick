@@ -35,13 +35,27 @@ var Brick = function(config) {
 
   var map = new Brick.Map(mapConfig);
 
-  map.on('mapChanged', function(e) {
-    for (var p in e) {
-      state.get(p, e[p]);
+  var overlay = new Brick.ui.Overlay({ container: config.overlayContainer });
+
+  var partSelection = new Brick.ui.PartSelection({
+    container: config.partSelectionContainer,
+    renderer: function(item) {
+      return 'Part #'+ item.id + (item.properties.tags && item.properties.tags.name ? ' ('+ item.properties.tags.name +')' : '');
     }
   });
 
-  var overlay = new Brick.ui.Overlay({ container: config.overlayContainer });
+  var tagEditor = new Brick.ui.TagEditor({
+    container: config.tagEditorContainer
+  });
+
+  //*******************************************************
+
+  map.on('mapChanged', function(e) {
+    for (var p in e) {
+      state.set(p, e[p]);
+    }
+  });
+
   map.on('featureSelected', function(e) {
     provider.loadFeature(e.feature);
 
@@ -51,36 +65,27 @@ var Brick = function(config) {
     var geo = mapEngine.containerPointToLatLng(p);
 
     mapEngine.once('moveend', function() {
-      tagEditor.hide();
       overlay.show();
     });
 
     mapEngine.panTo(geo);
-
   }, provider);
 
-  //*******************************************************
-
-  var partSelection = new Brick.ui.PartSelection({
-    container: config.partSelectionContainer,
-    renderer: function(item) {
-      return item.id + (item.properties.tags && item.properties.tags.name ? ' ('+ item.properties.tags.name +')' : '');
+  provider.on('featureLoaded', function(parts) {
+    partSelection.populate(parts);
+    if (parts.features.length > 1) {
+      tagEditor.hide();
+      partSelection.show();
+    } else {
+      tagEditor.populate(parts.features[0]);
+      partSelection.hide();
+      tagEditor.show();
     }
-  });
-
-  provider.on('featureLoaded', function(collection) {
-    //tagEditor.clear();
-    partSelection.populate(collection);
-    partSelection.show();
   }, partSelection);
 
-  var tagEditor = new Brick.ui.TagEditor({
-    container: config.tagEditorContainer
-  });
-
   partSelection.on('partSelected', function(part) {
-    partSelection.hide();
     tagEditor.populate(part);
+    partSelection.hide();
     tagEditor.show();
   }, tagEditor);
 

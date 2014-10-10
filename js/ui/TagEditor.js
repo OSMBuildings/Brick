@@ -11,9 +11,10 @@ Brick.ui.TagEditor = function(config) {
 var proto = Brick.ui.TagEditor.prototype = Object.create(Brick.Events.prototype);
 
 proto.populate = function(data) {
-  var tags = data.properties.tags;
+  var tags = data.properties && data.properties.tags || {};
 
   this.clear();
+  $('.overlay-title').text('Part #'+ data.id + (tags.name ? ' ('+ tags.name +')' : ''));
 
   this.$items.each(function(i, item) {
     if (item.name && tags[ item.name ] !== undefined) {
@@ -38,9 +39,17 @@ proto.clear = function() {
 };
 
 proto.show = function() {
-  this.$container.show().animate({ left:0 }, 300);
+  if (this.$container.is(':hidden')) {
+//    $('.overlay-title').text('Feature Part XYZ');
+    this.$container.show().animate({ left:0 }, 300);
+  }
 };
 
 proto.hide = function() {this._isHidden = true;
-  this.$container.animate({ left:'100%' }, 300, null, this.$container.hide);
+  if (!this.$container.is(':hidden')) {
+    var scope = this;
+    this.$container.animate({ left:'100%' }, 300, null, function() {
+      scope.$container.hide();
+    });
+  }
 };

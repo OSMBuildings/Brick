@@ -43,19 +43,21 @@
   <body>
     <div id="map"></div>
 
-    <div class="overlay hidden">
-      <button class="close-button">✕</button>
+    <div class="session-info">
+      <button id="login">Login</button>
+      <button id="logout">Logout</button>
+      <div id="user-name"></div>
+    </div>
 
-      <div class="session-info hidden">
-        <button id="login">Login</button>
-        <button id="logout">Logout</button>
-        <h1 id="user-name"></h1>
+    <div class="overlay hidden">
+      <h2 class="overlay-title">Select Feature Part</h2>
+
+      <div class="part-selection hidden">
+        <ul class="list"></ul>
       </div>
 
-      <div class="part-selection hidden"></div>
-
       <div class="tag-editor hidden">
-        <label>Type</label><br>
+        <label>Type</label>
         <select name="building" class="input">
           <option>house</option>
           <option>apartments</option>
@@ -65,7 +67,7 @@
           <option></option>
         </select><br>
 
-        <label>Height</label><br>
+        <label>Height</label>
         <input type="number" min="0" name="height" value="" class="input">
         <select name="height-unit" class="input">
           <option>levels</option>
@@ -73,7 +75,7 @@
           <option>ft</option>
         </select><br>
 
-        <label>Above ground</label><br>
+        <label>Above ground</label>
         <input type="number" min="0" name="min_height" value="" class="input">
         <select name="min_height-unit" class="input">
           <option>levels</option>
@@ -81,16 +83,16 @@
           <option>ft</option>
         </select><br>
 
-        <label>Color</label><br>
+        <label>Color</label>
         <select name="color-choice" class="input">Palette/Materiallist/Photo</select><br>
 
-        <label>Shape</label><br>
+        <label>Shape</label>
         <select name="building:shape" class="input">Pyramid/Dome/Sphere</select><br>
 
-        <label>Roof Type</label><br>
+        <label>Roof Type</label>
         <select name="roof:type" class="input"></select><br>
 
-        <label>Roof Height</label><br>
+        <label>Roof Height</label>
         <input type="number" min="0" name="roof:height" value="" class="input">
         <select name="roof:height-unit" class="input">
           <option>levels</option>
@@ -98,11 +100,14 @@
           <option>ft</option>
         </select><br>
 
-        <label>Roof Color</label><br>
+        <label>Roof Color</label>
         <select name="roof:color-choice" class="input">Palette/Materiallist/Photo</select><br>
 
-        <!-- OTHER TAGS HERE -->
+        <!-- GENERIC TAGS HERE -->
       </div>
+
+      <!-- button class="back-button">&laquo;</button -->
+      <button class="close-button">✕</button>
     </div>
 
     <script>
