@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <video id="preview"></video>
+    <button id="shoot">TAKE PHOTO</button>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="color" style="display:block;width:100px;height:100px;border: 1px solid #000000"></div>
+    <script>
+      var video;
+      var canvas;
+      function connect(stream) {
+        video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
+        video.play();
+      }
+      function error(e) {
+        console.error(e);
+      }
+      function captureImage() {
+        canvas.width = video.videoWidth/4;
+        canvas.height = video.videoHeight/4;
+        var context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        video = document.getElementById("preview");
+        video.style.width = 400;
+        video.style.Height = 400;
+        canvas = document.getElementById('canvas');
+        var button = document.getElementById("shoot");
+        button.addEventListener("click", captureImage, false);
+
+        canvas.addEventListener('click', function(e) {
+	var x = e.offsetX ? e.offsetX : e.pageX - this.offsetLeft;
+	var y = e.offsetY ? e.offsetY : e.pageY - this.offsetTop;
+
+          var context = canvas.getContext('2d');
+          var imgData = context.getImageData(x-10, y-10, 20, 20).data;
+
+          var r = 0;
+          var g = 0;
+          var b = 0;
+          var len = imgData.length;
+          for (var i = 0; i < len-3; i+=4) {
+            r += imgData[i  ];
+            g += imgData[i+1];
+            b += imgData[i+2];
+          }
+          var len4 = len/4;
+          document.getElementById('color').style.backgroundColor = 'rgb('+ (r/len4<<0) +','+ (g/len4<<0) +','+ (b/len4<<0) +')';
+        }, false);
+
+        navigator.myGetMedia = (navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia);
+        navigator.myGetMedia({ video: true }, connect, error);
+    });
+    </script>
+
+<script>
+function uploadFile() {
+  var files = document.getElementById('upload').files;
+  var formData = new FormData();
+  formData.append('upload', files[0]);
+
+  var xhr = new XMLHttpRequest();
+  xhr.upload.addEventListener("progress", uploadProgress, false);
+  xhr.addEventListener("load", uploadComplete, false);
+  xhr.open("POST", "upload.php");
+  xhr.send(formData);
+}
+
+function uploadProgress(e) {
+  var progress = document.getElementById('progress');
+  if (e.lengthComputable) {
+    var percentComplete = Math.round(e.loaded*100/e.total);
+    progress.innerText = percentComplete.toString() + '%';
+  } else {
+    progress.innerText = '???';
+  }
+}
+
+function uploadComplete(e) {
+  var img = new Image();
+  img.onload = function() {
+    canvas.width = this.width/4;
+    canvas.height = this.height/4;
+    var context = canvas.getContext('2d');
+    context.drawImage(this, 0, 0, canvas.width, canvas.height);
+  };
+  img.src = 'http://osmbuildings.org/brick/upload.php?show=1';
+}
+</script>
+
+    IOS
+    <input type="file" id="upload" onchange="uploadFile()" accept="image/*" capture="camera">
+    <div id="progress"></div>
+  </body>
+</html>

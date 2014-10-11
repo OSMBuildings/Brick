@@ -1,7 +1,7 @@
 
 var Brick = function(config) {
 
-  var session = new Brick.Session({
+  new Brick.Session({
     landingPage: config.oauthLandingPage,
     consumerKey: config.oauthConsumerKey,
     secret: config.oauthSecret
@@ -37,13 +37,6 @@ var Brick = function(config) {
 
   var overlay = new Brick.ui.Overlay({ container: config.overlayContainer });
 
-  var partSelection = new Brick.ui.PartSelection({
-    container: config.partSelectionContainer,
-    renderer: function(item) {
-      return 'Part #'+ item.id + (item.properties.tags && item.properties.tags.name ? ' ('+ item.properties.tags.name +')' : '');
-    }
-  });
-
   var tagEditor = new Brick.ui.TagEditor({
     container: config.tagEditorContainer
   });
@@ -72,22 +65,9 @@ var Brick = function(config) {
   }, provider);
 
   provider.on('featureLoaded', function(parts) {
-    partSelection.populate(parts);
-    if (parts.features.length > 1) {
-      tagEditor.hide();
-      partSelection.show();
-    } else {
-      tagEditor.populate(parts.features[0]);
-      partSelection.hide();
-      tagEditor.show();
-    }
-  }, partSelection);
-
-  partSelection.on('partSelected', function(part) {
-    tagEditor.populate(part);
-    partSelection.hide();
-    tagEditor.show();
-  }, tagEditor);
+//  if (parts.features.length > 1) {}
+    tagEditor.populate(parts.features[0]);
+  });
 
   //*******************************************************
 
