@@ -7,7 +7,7 @@ Brick.Map = function(config) {
     pos = [config.lat, config.lon];
   }
 
-  var map = this._engine = new L.Map(config.mapId).setView(pos, config.zoom || 18);
+  var map = this._engine = new L.Map('map').setView(pos, config.zoom || 18);
 
   map.on('moveend zoomend', function() {
     var center = map.getCenter();

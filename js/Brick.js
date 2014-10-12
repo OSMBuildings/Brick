@@ -15,14 +15,9 @@ var Brick = function(config) {
 
   //*******************************************************
 
-  var mapConfig = {
-    mapId: config.mapId
-  };
-
-  //*******************************************************
-
   var state = new Brick.State();
 
+  var mapConfig = {};
   if (state.get('lat') !== undefined && state.get('lon') !== undefined) {
     mapConfig.lat = parseFloat(state.get('lat'));
     mapConfig.lon = parseFloat(state.get('lon'));
@@ -34,12 +29,7 @@ var Brick = function(config) {
   //*******************************************************
 
   var map = new Brick.Map(mapConfig);
-
-  var overlay = new Brick.ui.Overlay({ container: config.overlayContainer });
-
-  var tagEditor = new Brick.ui.TagEditor({
-    container: config.tagEditorContainer
-  });
+  var tagEditor = new Brick.ui.TagEditor();
 
   //*******************************************************
 
@@ -58,7 +48,7 @@ var Brick = function(config) {
     var geo = mapEngine.containerPointToLatLng(p);
 
     mapEngine.once('moveend', function() {
-      overlay.show();
+      tagEditor.show();
     });
 
     mapEngine.panTo(geo);

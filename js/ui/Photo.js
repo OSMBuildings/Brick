@@ -1,86 +1,69 @@
 
-Brick.Photo = function() {
-  this.$colorPicker = $('#color-picker');
-  this.context = this.$colorPicker.getContext('2d');
+Brick.Photo = function(config) {
+  this.callback = config.callback;
+//  var canvas = document.createElement('CANVAS');
+//  this.context = this.$colorPicker.getContext('2d');
 
   navigator.myGetMedia = (navigator.getUserMedia ||
     navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia);
 
-  if (!isIOS) {
-    this.captureVideo();
+  if (isIOS) {
+    this.uploadImage();
   } else {
-    this.uploadFile();
+    this.captureVideo();
   }
-
-  var scope = this;
-  this.$colorPicker.click(function(e) {
-    var radius = 10;
-    var x = e.offsetX ? e.offsetX : e.pageX - scope.$colorPicker.attr('offsetLeft');
-    var y = e.offsetY ? e.offsetY : e.pageY - scope.$colorPicker.attr('offsetTop');
-    var imgData = scope.context.getImageData(x-radius, y-radius, 2*radius, 2*radius).data;
-    var r = 0, g = 0, b = 0;
-    var len = imgData.length;
-    for (var i = 0; i < len-3; i+=4) {
-      r += imgData[i  ];
-      g += imgData[i+1];
-      b += imgData[i+2];
-    }
-    var len4 = len/4;
-//  var hex = (b/len4) | (g/len4 <<8) | (r/len4<<16);
-//  '#'+ (0x1000000 + hex).toString(16).slice(1);
-  });
 };
 
 var proto = Brick.Photo.prototype;
 
 proto.captureVideo = function() {
-  var scope = this;
-  function showPreview(stream) {
-    var $cameraOverlay = $('#camera-overlay').show();
-    var $videoPreview = $('#video-preview')
+//  this.$colorPicker = $('#color-picker');
+//  this.context = this.$colorPicker.getContext('2d');
+
+//  var scope = this;
+  function showVideoPreview(stream) {
+    $('#camera-overlay').show();
+
+    $('#video-preview')
       .attr('src', window.URL ? window.URL.createObjectURL(stream) : stream)
       .attr.play();
 //    .attr('play')();
 
-    $('#capture').click(function() {
-      $cameraOverlay.hide();
-      scope.$colorPicker.show();
-      scope.context.drawImage($videoPreview, 0, 0, $videoPreview.width(), $videoPreview.height());
+    $('#capture-image').click(function() {
+      $('#camera-overlay').hide();
+//        scope.$colorPicker.show();
+//        scope.context.drawImage($('#video-preview'), 0, 0, $('#video-preview').width(), $('#video-preview').height());
     });
   }
 
-  navigator.myGetMedia({ video: true }, showPreview, function(err) {
-    alert(err);
-  });
+  navigator.myGetMedia({ video: true }, showVideoPreview, function(err) { alert(err); });
 };
 
-proto.uploadFile = function() {
-  var scope = this;
-
+proto.uploadImage = function() {
   function uploadProgress(e) {
-    var $progress = $('#progress');
     if (e.lengthComputable) {
       var percentComplete = Math.round(e.loaded*100/e.total);
-      $progress.text(percentComplete.toFixed(1) +'%');
-    } else {
-      $progress.text('');
+      $('#progress').text((percentComplete <<0) +'%');
     }
   }
 
+//  var scope = this;
   function uploadComplete(e) {
     var img = new Image();
     img.onload = function() {
-      scope.context.drawImage(this, 0, 0, img.width, img.height);
+//        scope.$colorPicker.show();
+//      scope.context.drawImage(this, 0, 0, img.width, img.height);
     };
     img.src = 'http://osmbuildings.org/brick/upload.php?show=1';
   }
 
-  var $upload = $('#upload').on('change', function() {
-    var files = $upload.attr('files');
+  $('#upload').on('change', function() {
+    var files = $('#upload').attr('files');
     var formData = new FormData();
     formData.append('upload', files[0]);
+    $('#progress').text('');
 
     var xhr = new XMLHttpRequest();
     xhr.upload.addEventListener('progress', uploadProgress, false);

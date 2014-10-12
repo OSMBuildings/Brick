@@ -29,8 +29,8 @@
 
     <script src="js/Map.js"></script>
     <script src="js/ui/ui.js"></script>
-    <script src="js/ui/Overlay.js"></script>
     <script src="js/ui/TagEditor.js"></script>
+    <script src="js/ui/Photo.js"></script>
 
     <script src="js/OSMAPI.js"></script>
     <script src="js/Entity.js"></script>
@@ -48,93 +48,106 @@
       <div id="user-name"></div>
     </div>
 
-    <div class="overlay hidden">
-      <h2 class="overlay-title">Select Feature Part</h2>
-
-      <div class="tag-editor hidden">
-        <label>Building Type</label>
-        <select name="building" class="input type">
-          <option></option>
-          <option>apartments</option>
-          <option>barn</option>
-          <option>bunker</option>
-          <option>cabin</option>
-          <option>cathedral</option>
-          <option>chapel</option>
-          <option>church</option>
-          <option>college</option>
-          <option>commercial</option>
-          <option>construction</option>
-          <option>detached</option>
-          <option>dormitory</option>
-          <option>entrance</option>
-          <option>garage</option>
-          <option>garages</option>
-          <option>greenhouse</option>
-          <option>hospital</option>
-          <option>hotel</option>
-          <option>house</option>
-          <option>hut</option>
-          <option>industrial</option>
-          <option>kindergarten</option>
-          <option>public</option>
-          <option>residential</option>
-          <option>retail</option>
-          <option>roof</option>
-          <option>school</option>
-          <option>shed</option>
-          <option>stable</option>
-          <option>static_caravan</option>
-          <option>terrace</option>
-          <option>train_station</option>
-          <option>university</option>
-          <option>warehouse</option>
-        </select><br>
-
-        <label>Building Use</label>
-        <select name="building" class="input type"></select><br>
-
-        <label>Number of building levels</label>
-        <input type="number" min="0" name="height" value="" class="input"><br>
-
-        <label>Number of roof levels</label>
-        <input type="number" min="0" name="roof:height" value="" class="input"><br>
-
-
-
-        <br><br>
-
-        <label>Building Color</label>
-        <input type="color" name="color-choice" class="input color"><br><br>
-
-        <label>Roof Shape</label>
-        <select name="roof:shape" class="input type">
-          <option selected></option>
-          <option>flat</option>
-          <option>skillion</option>
-          <option>gabled</option>
-          <option>half-hipped</option>
-          <option>hipped</option>
-          <option>pyramidal</option>
-          <option>gambrel</option>
-          <option>mansard</option>
-          <option>dome</option>
-          <option>onion</option>
-          <option>round</option>
-          <option>saltbox</option>
-        </select><br>
-
-        <label>Roof Color</label>
-        <input type="color" name="roof:color-choice" class="input color"><br>
-      </div>
-
-      <!-- button class="back-button">&laquo;</button -->
+    <div id="overlay" class="hidden">
       <button class="close-button">✕</button>
-    </div>
+
+      <h2 class="title"></h2>
+
+      <table class="layout">
+      <tr>
+        <td>
+          <label>Building Type</label>
+          <select name="building" class="input">
+            <option></option>
+            <option>apartments</option>
+            <option>barn</option>
+            <option>bunker</option>
+            <option>cabin</option>
+            <option>cathedral</option>
+            <option>chapel</option>
+            <option>church</option>
+            <option>college</option>
+            <option>commercial</option>
+            <option>construction</option>
+            <option>detached</option>
+            <option>dormitory</option>
+            <option>entrance</option>
+            <option>garage</option>
+            <option>garages</option>
+            <option>greenhouse</option>
+            <option>hospital</option>
+            <option>hotel</option>
+            <option>house</option>
+            <option>hut</option>
+            <option>industrial</option>
+            <option>kindergarten</option>
+            <option>public</option>
+            <option>residential</option>
+            <option>retail</option>
+            <option>roof</option>
+            <option>school</option>
+            <option>shed</option>
+            <option>stable</option>
+            <option>static_caravan</option>
+            <option>terrace</option>
+            <option>train_station</option>
+            <option>university</option>
+            <option>warehouse</option>
+          </select>
+        </td>
+        <td>
+          <label>Building Use</label>
+          <select name="building:use" class="input"></select>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label>Number of building levels</label>
+          <input type="number" min="0" name="height" value="" class="input">
+        </td>
+        <td>
+          <label>Building Color</label>
+          <input type="color" name="color-choice" class="input color">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label>Number of roof levels</label>
+          <input type="number" min="0" name="roof:height" value="" class="input">
+        </td>
+        <td>
+          <label>Roof Color</label>
+          <input type="color" name="roof:color-choice" class="input color">
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <label>Roof Shape</label>
+          <select name="roof:shape" class="input">
+            <option selected></option>
+            <option>flat</option>
+            <option>skillion</option>
+            <option>gabled</option>
+            <option>half-hipped</option>
+            <option>hipped</option>
+            <option>pyramidal</option>
+            <option>gambrel</option>
+            <option>mansard</option>
+            <option>dome</option>
+            <option>onion</option>
+            <option>round</option>
+            <option>saltbox</option>
+          </select>
+        </td>
+      </tr>
+    </table>
 
     <div id="camera-overlay" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none;">
       <div id="video-preview" style="width:100%;height:100%;position:absolute;left:0;top:0;"></div>
-      <button id="capture" style="position:absolute;left:0;bottom:0;margin:auto;"></button>
+      <button id="capture-image" style="position:absolute;left:0;bottom:0;margin:auto;"></button>
     </div>
 
     <div id="image-upload" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none;">
@@ -142,18 +155,15 @@
       <div id="progress" style="position:absolute;left:0;bottom:0;margin:auto;"></div>
     </div>
 
-    <canvas id="color-picker" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none"></canvas>
+    <canvas id="captured-image" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none"></canvas>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       new Brick({
-        mapId: 'map',
         oauthLandingPage: 'auth.html',
         oauthConsumerKey: config.oauth.consumerKey,
         oauthSecret: config.oauth.secret,
-        providerURL: config.providerURL,
-        overlayContainer: $('.overlay'),
-        tagEditorContainer: $('.tag-editor')
+        providerURL: config.providerURL
       });
     });
     </script>

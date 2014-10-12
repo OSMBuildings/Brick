@@ -19,27 +19,28 @@ h2 {
   height: 100%;
 }
 
-.overlay {
+.session-info {
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-width: 200px;
+  height: 50px;
+  z-index: 20;
+}
+#user-name {
+  font-weight: bold;
+}
+
+#overlay {
   position: absolute;
   left: 0;
   top: 100%;
   width: 100%;
   height: 75%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 20;
   background-color: rgba(255,255,255,0.7);
-  display: none;
-}
-
-.back-button {
-  position: absolute;
-  left: 0;
-  top: 0;
-  border: 0;
-  background: transparent;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
 }
 .close-button {
   position: absolute;
@@ -52,28 +53,13 @@ h2 {
   font-size: 24px;
 }
 
-
-.session-info {
-  position: absolute;
-  right: 0;
-  top: 0;
-  min-width: 200px;
-  height: 50px;
-  z-index: 20;
-}
-
-#user-name {
-  font-weight: bold;
-}
-
-.tag-editor {
-  width: 100%;
-  padding: 15px;
-}
-.tag-editor label {
+label {
   display: block;
-  margin: 10px 0 0 0;
   font-size: 12px;
+  margin: 10px 15px 0 15px;
+}
+.input {
+  margin: 5px 15px 10px 15px;
 }
 
 .input, option {
@@ -86,11 +72,11 @@ h2 {
 .input.color {
   width: 70px;
 }
-
-.input.type {
-  width: 154px;
+select[name=building],
+select[name='building:use'] {
+  width: 150px;
 }
 
-/*.hidden {
+.hidden {
   display: none;
-}*/
+}
