@@ -30,7 +30,7 @@
     <script src="js/Map.js"></script>
     <script src="js/ui/ui.js"></script>
     <script src="js/ui/TagEditor.js"></script>
-    <script src="js/ui/Photo.js"></script>
+    <script src="js/ui/PhotoColorPicker.js"></script>
 
     <script src="js/OSMAPI.js"></script>
     <script src="js/Entity.js"></script>
@@ -97,33 +97,71 @@
         </td>
         <td>
           <label>Building Use</label>
-          <select name="building:use" class="input"></select>
+          <select name="building:use" class="input">
+            <option></option>
+            <option>apartments</option>
+            <option>barn</option>
+            <option>bunker</option>
+            <option>cabin</option>
+            <option>cathedral</option>
+            <option>chapel</option>
+            <option>church</option>
+            <option>college</option>
+            <option>commercial</option>
+            <option>construction</option>
+            <option>detached</option>
+            <option>dormitory</option>
+            <option>entrance</option>
+            <option>garage</option>
+            <option>garages</option>
+            <option>greenhouse</option>
+            <option>hospital</option>
+            <option>hotel</option>
+            <option>house</option>
+            <option>hut</option>
+            <option>industrial</option>
+            <option>kindergarten</option>
+            <option>public</option>
+            <option>residential</option>
+            <option>retail</option>
+            <option>roof</option>
+            <option>school</option>
+            <option>shed</option>
+            <option>stable</option>
+            <option>static_caravan</option>
+            <option>terrace</option>
+            <option>train_station</option>
+            <option>university</option>
+          </select>
         </td>
       </tr>
 
       <tr>
         <td>
           <label>Number of building levels</label>
-          <input type="number" min="0" name="height" value="" class="input">
+          <input type="number" min="0" name="height" value="" class="input" autocomplete="false">
         </td>
         <td>
           <label>Building Color</label>
-          <input type="color" name="color-choice" class="input color">
+          <input type="text" name="building:color" value="" class="input color" autocomplete="false">
+          <button type="button" name="building:color-picker" class="input color-picker"></button>
         </td>
       </tr>
 
       <tr>
         <td>
           <label>Number of roof levels</label>
-          <input type="number" min="0" name="roof:height" value="" class="input">
+          <input type="number" min="0" name="roof:height" value="" class="input" autocomplete="false">
         </td>
         <td>
           <label>Roof Color</label>
-          <input type="color" name="roof:color-choice" class="input color">
+          <input type="text" name="roof:color" value="" class="input color" autocomplete="false">
+          <button type="button" name="roof:color-picker" class="input color-picker"></button>
         </td>
       </tr>
 
       <tr>
+        <td></td>
         <td>
           <label>Roof Shape</label>
           <select name="roof:shape" class="input">
@@ -143,19 +181,36 @@
           </select>
         </td>
       </tr>
-    </table>
-
-    <div id="camera-overlay" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none;">
-      <div id="video-preview" style="width:100%;height:100%;position:absolute;left:0;top:0;"></div>
-      <button id="capture-image" style="position:absolute;left:0;bottom:0;margin:auto;"></button>
+      </table>
     </div>
 
-    <div id="image-upload" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none;">
-      <input type="file" id="upload" accept="image/*" capture="camera">
-      <div id="progress" style="position:absolute;left:0;bottom:0;margin:auto;"></div>
-    </div>
+    <style>
+      #camera-overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        background: #333333;
+        display: none;
+      }
+      #camera-overlay video,
+      #camera-overlay canvas {
+        margin: auto;
+        width: 100%;
+        height: 100%;
+      }
+      #camera-overlay button,
+      #capture-image div {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0 auto;
+      }
+    </style>
 
-    <canvas id="captured-image" style="width:100%;height:100%;position:absolute;left:0;top:0;display:none"></canvas>
+    <div id="camera-overlay"></div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -12,8 +12,13 @@ Brick.ui.TagEditor = function(config) {
 
   this.$items = this.$container.find('.input');
 
-  this.$container.find('.color').each(function(i, item) {
-    new Brick.Photo({ container: item });
+var $container = this.$container;
+
+  this.$container.find('.color-picker').click(function(i, item) {
+    Brick.PhotoColorPicker.capture({ $container: $('#camera-overlay'), callback: function(color) {
+$container.find('.color').val(color);
+$container.find('.color-picker').css('backgroundColor', color);
+    }});
   });
 };
 

@@ -72,8 +72,24 @@ label {
 .input.color {
   width: 70px;
 }
+.color-picker {
+  width: 24px;
+  height: 24px;
+  background: url(img/camera-24x24.png) no-repeat;
+  border: 0;
+  cursor: pointer;
+  margin-left: -10px;
+}
+
+/*
+.input.color {
+  background: transparent;
+  border: 1px solid #cccccc;
+}
+*/
 select[name=building],
-select[name='building:use'] {
+select[name='building:use'],
+select[name='roof:shape'] {
   width: 150px;
 }
 
