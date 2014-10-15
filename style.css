@@ -19,17 +19,37 @@ h2 {
   height: 100%;
 }
 
-.session-info {
+#session {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
-  min-width: 200px;
-  height: 50px;
-  z-index: 20;
+  width: 100%;
+  z-index: 1000;
+  background-color: rgba(255,255,255,0.7);
+  text-align: right;
 }
-#user-name {
-  font-weight: bold;
+#session button {
+  padding: 0 15px;
+  min-width: 100px;
+  min-height: 50px;
 }
+#session label {
+  display: inline;
+  margin: 0;
+}
+#session img {
+  display: none;
+}
+#session.authenticated img {
+  display: inline;
+  vertical-align: middle;
+  width: 50px;
+  margin-left: 20px;
+}
+.leaflet-top {
+  top: 60px;
+}
+
 
 #overlay {
   position: absolute;
@@ -37,9 +57,9 @@ h2 {
   top: 100%;
   width: 100%;
   height: 75%;
+  z-index: 1000;
   overflow-x: hidden;
   overflow-y: auto;
-  z-index: 20;
   background-color: rgba(255,255,255,0.7);
 }
 .close-button {

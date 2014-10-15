@@ -1,11 +1,15 @@
 
 var Brick = function(config) {
 
-  new Brick.Session({
+  var bus = new Brick.Bus();
+
+  new Brick.Auth(bus, {
     landingPage: config.oauthLandingPage,
     consumerKey: config.oauthConsumerKey,
     secret: config.oauthSecret
   });
+
+  new Brick.ui.Session(bus);
 
   //*******************************************************
 
