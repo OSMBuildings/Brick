@@ -1,24 +1,19 @@
 
 Brick.Auth = function(bus, config) {
-  Brick.Events.prototype.constructor.call(this);
-
   this.bus = bus;
   var scope = this;
 
   this.oauth = osmAuth({
     landing: config.landingPage,
     oauth_consumer_key: config.consumerKey,
-    oauth_secret: config.secret,
-    done: function() {
-      /*
-      scope.getUserInfo();
-      if (!scope.oauth.authenticated()) {
-        bus.emit('AUTH_LOGOUT');
-      } else {
-        scope.getUserInfo();
-      }
-      */
-    }
+    oauth_secret: config.secret //,
+//    done: function() {
+//      if (!scope.oauth.authenticated()) {
+//        bus.emit('AUTH_LOGOUT');
+//      } else {
+//        scope.getUserInfo();
+//      }
+//    }
   });
 
   if (!this.oauth.authenticated()) {

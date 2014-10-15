@@ -1,13 +1,17 @@
 
-Brick.Provider = function(config) {
-  Brick.Events.prototype.constructor.call(this);
+Brick.Provider = function(bus, config) {
+  this.bus = bus;
   this.url = config.url;
+
+  bus.on('FEATURE_SLECTED', function(e) {
+    this.loadFeature(e.feature);
+  }, this);
 };
 
-var proto = Brick.Provider.prototype = Object.create(Brick.Events.prototype);
+Brick.Provider.prototype = {};
 
-proto.loadFeature = function(id) {
+Brick.Provider.prototype.loadFeature = function(id) {
   loadJSON(this.url.replace('{id}', id), function(json) {
-    this.emit('featureLoaded', json);
-  }, this);
+    this.bus.emit('FEATURE_LOADED', json);
+  });
 };

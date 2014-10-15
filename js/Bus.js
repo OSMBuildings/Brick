@@ -3,6 +3,8 @@ Brick.Bus = function() {
   this.listeners = {};
 };
 
+Brick.Bus.prototype = {};
+
 Brick.Bus.prototype.on = function(type, listener, scope) {
   var listeners = this.listeners[type] || (this.listeners[type] = []);
   listeners.push(function(payload) {

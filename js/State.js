@@ -1,5 +1,5 @@
 
-Brick.State = function() {
+Brick.State = function(bus, config) {
 
   // http://mathiasbynens.be/notes/localstorage-pattern#comment-9
   try {
@@ -19,22 +19,26 @@ Brick.State = function() {
   for (var key in this.storage){
     this.data[key] = this.storage.getItem(key);
   }
+
+  bus.on('MAP_CHANGED', function(e) {
+    for (var p in e) {
+      this.set(p, e[p]);
+    }
+  }, this);
 };
 
-var proto = Brick.State.prototype = Object.create(Brick.Events.prototype);
+Brick.State.prototype = {};
 
-proto.set = function(key, value) {
+Brick.State.prototype.set = function(key, value) {
   this.storage.setItem(key, (this.data[key] = value));
 };
 
-proto.get = function(key) {
+Brick.State.prototype.get = function(key) {
   return this.data[key];
 };
 
 
 /***
-Brick.State = (function() {
-
   var REPEAT_TIMEOUT = 500;
 
   function isStorable(n) {
@@ -75,6 +79,4 @@ Brick.State = (function() {
     }
     return dst;
   }
-
-}());
 ***/

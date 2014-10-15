@@ -16,6 +16,8 @@ Brick.ui.Session = function(bus, config) {
   this.render();
 };
 
+Brick.ui.Session.prototype = {};
+
 Brick.ui.Session.prototype.render = function(user) {
   var $container = this.$container;
   if (!user) {

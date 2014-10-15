@@ -11,15 +11,9 @@ var Brick = function(config) {
 
   new Brick.ui.Session(bus);
 
-  //*******************************************************
+  new Brick.Provider(bus, { url: config.providerURL });
 
-  var provider = new Brick.Provider({
-    url: config.providerURL
-  });
-
-  //*******************************************************
-
-  var state = new Brick.State();
+  var state = new Brick.State(bus);
 
   var mapConfig = {};
   if (state.get('lat') !== undefined && state.get('lon') !== undefined) {
@@ -30,43 +24,11 @@ var Brick = function(config) {
     mapConfig.zoom = state.get('zoom');
   }
 
-  //*******************************************************
+  new Brick.Map(bus, mapConfig);
 
-  var map = new Brick.Map(mapConfig);
-  var tagEditor = new Brick.ui.TagEditor();
-
-  //*******************************************************
-
-  map.on('mapChanged', function(e) {
-    for (var p in e) {
-      state.set(p, e[p]);
-    }
-  });
-
-  map.on('featureSelected', function(e) {
-    provider.loadFeature(e.feature);
-
-    var mapEngine = map.getEngine();
-    var p = mapEngine.latLngToContainerPoint(L.latLng(e.lat, e.lon));
-    p.y += innerHeight*0.375; // put it vertically in center of the topmost quarter of the screen
-    var geo = mapEngine.containerPointToLatLng(p);
-
-    mapEngine.once('moveend', function() {
-      tagEditor.show();
-    });
-
-    mapEngine.panTo(geo);
-  }, provider);
-
-  provider.on('featureLoaded', function(parts) {
-//  if (parts.features.length > 1) {}
-    tagEditor.populate(parts.features[0]);
-  });
-
-  //*******************************************************
+  new Brick.ui.TagEditor(bus);
 
 //  var osm = Brick.OSMAPI(session.auth);
-
 };
 
 Brick.VERSION = '0.1.0';

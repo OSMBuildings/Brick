@@ -1,7 +1,5 @@
 
-Brick.ui.TagEditor = function(config) {
-  Brick.Events.prototype.constructor.call(this);
-
+Brick.ui.TagEditor = function(bus, config) {
   this.$container = $('#overlay');
 
   var scope = this;
@@ -20,17 +18,26 @@ $container.find('.color').val(color);
 $container.find('.color-picker').css('backgroundColor', color);
     }});
   });
+
+  bus.on('FEATURES_LOADED', function(parts) {
+//  if (parts.features.length > 1) {}
+    this.populate(parts.features[0]);
+  }, this);
+
+  bus.on('FEATURE_FOCUSSED', function(e) {
+    this.show();
+  }, this);
 };
 
-var proto = Brick.ui.TagEditor.prototype = Object.create(Brick.Events.prototype);
+Brick.ui.TagEditor.prototype = {};
 
-proto.show = function() {
+Brick.ui.TagEditor.prototype.show = function() {
   if (this.$container.is(':hidden')) {
     this.$container.show().animate({ top:'25%' }, 300);
   }
 };
 
-proto.hide = function() {this._isHidden = true;
+Brick.ui.TagEditor.prototype.hide = function() {this._isHidden = true;
   if (!this.$container.is(':hidden')) {
     var scope = this;
     this.$container.animate({ top:'100%' }, 300, null, function() {
@@ -39,7 +46,7 @@ proto.hide = function() {this._isHidden = true;
   }
 };
 
-proto.populate = function(data) {
+Brick.ui.TagEditor.prototype.populate = function(data) {
   var tags = data.properties && data.properties.tags || {};
 
   this.clear();
@@ -82,7 +89,7 @@ proto.populate = function(data) {
 //  },
 
 
-proto.clear = function() {
+Brick.ui.TagEditor.prototype.clear = function() {
   this.$items.each(function(i, item) {
     item.value = '';
   });
