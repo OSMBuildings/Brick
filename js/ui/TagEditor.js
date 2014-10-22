@@ -19,7 +19,7 @@ $container.find('.color-picker').css('backgroundColor', color);
     }});
   });
 
-  bus.on('FEATURES_LOADED', function(parts) {
+  bus.on('FEATURE_LOADED', function(parts) {
 //  if (parts.features.length > 1) {}
     this.populate(parts.features[0]);
   }, this);
@@ -47,37 +47,36 @@ Brick.ui.TagEditor.prototype.hide = function() {this._isHidden = true;
 };
 
 Brick.ui.TagEditor.prototype.populate = function(data) {
-  var tags = data.properties && data.properties.tags || {};
+  var
+    tags = Brick.Data.alignTags(data.properties && data.properties.tags || {}),
+    value;
 
   this.clear();
   $('.title').text('OSM ID '+ data.id + (tags.name ? ' ('+ tags.name +')' : ''));
 
-  var value;
   this.$items.each(function(i, item) {
-    value = data[item.name];
+    value = tags[item.name];
     switch(item.name) {
       case 'building':
       case 'building:use':
-        value = (value === undefined || value === 'yes') ? '' : '='+ value;
-        $(item).find('option[value'+ value +']').attr('selected', 'selected');
+      case 'roof:shape':
+        value = value === undefined ? '' : value;
+        $(item).find('option').filter(function() {
+          return $(this).html() === value;
+        }).prop('selected', true);
       break;
 
       case 'building:levels':
       case 'roof:levels':
-        item.value = (value === undefined) ? '' : value;
-      break;
-
       case 'building:colour':
       case 'roof:colour':
         item.value = (value === undefined) ? '' : value;
       break;
-
-      case 'roof:shape':
-        value = (value === undefined || value === 'yes') ? '' : '='+ value;
-        $(item).find('option[value'+ value +']').attr('selected', 'selected');
-      break;
     }
   });
+
+  this.$container.find('#height').text(tags['height'] ? '('+ tags['height'] + 'm)' : '');
+  this.$container.find('#roof\\:height').text(tags['roof:height'] ? '('+ tags['roof:height'] + 'm)' : '');
 };
 
 //  getData: function() {

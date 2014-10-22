@@ -26,6 +26,7 @@
     <script src="js/State.js"></script>
     <script src="js/Auth.js"></script>
     <script src="js/Provider.js"></script>
+    <script src="js/Data.js"></script>
 
     <script src="js/Map.js"></script>
     <script src="js/ui/ui.js"></script>
@@ -46,9 +47,13 @@
     <div id="session"></div>
 
     <div id="overlay" class="hidden">
-      <button class="close-button">✕</button>
 
-      <h2 class="title"></h2>
+      <table class="layout fit-width">
+      <tr>
+        <td><h2 class="title"></h2></td>
+        <td align="right"><button class="close-button">✕</button></td>
+      </tr>
+      </table>
 
       <table class="layout">
       <tr>
@@ -135,25 +140,25 @@
 
       <tr>
         <td>
-          <label>Number of building levels</label>
-          <input type="number" min="0" name="height" value="" class="input" autocomplete="false">
+          <label>Number of building levels <div id="height"></div></label>
+          <input type="number" min="0" name="building:levels" value="" class="input" autocomplete="false">
         </td>
         <td>
           <label>Building Color</label>
-          <input type="text" name="building:color" value="" class="input color" autocomplete="false">
-          <button type="button" name="building:color-picker" class="input color-picker"></button>
+          <input type="text" name="building:colour" value="" class="input color" autocomplete="false">
+          <button type="button" name="building:colour-picker" class="input color-picker"></button>
         </td>
       </tr>
 
       <tr>
         <td>
-          <label>Number of roof levels</label>
-          <input type="number" min="0" name="roof:height" value="" class="input" autocomplete="false">
+          <label>Number of roof levels <div id="roof:height"></div></label>
+          <input type="number" min="0" name="roof:levels" value="" class="input" autocomplete="false">
         </td>
         <td>
           <label>Roof Color</label>
-          <input type="text" name="roof:color" value="" class="input color" autocomplete="false">
-          <button type="button" name="roof:color-picker" class="input color-picker"></button>
+          <input type="text" name="roof:colour" value="" class="input color" autocomplete="false">
+          <button type="button" name="roof:colour-picker" class="input color-picker"></button>
         </td>
       </tr>
 
