@@ -27,6 +27,7 @@ $container.find('.color-picker').css('backgroundColor', color);
   bus.on('FEATURE_FOCUSSED', function(e) {
     this.show();
   }, this);
+
 };
 
 Brick.ui.TagEditor.prototype = {};
@@ -51,7 +52,7 @@ Brick.ui.TagEditor.prototype.populate = function(data) {
     tags = Brick.Data.alignTags(data.properties && data.properties.tags || {}),
     value;
 
-  this.clear();
+//  this.clear();
   $('.title').text('OSM ID '+ data.id + (tags.name ? ' ('+ tags.name +')' : ''));
 
   this.$items.each(function(i, item) {
@@ -89,7 +90,10 @@ Brick.ui.TagEditor.prototype.populate = function(data) {
 
 
 Brick.ui.TagEditor.prototype.clear = function() {
+  $('.title').text('');
   this.$items.each(function(i, item) {
     item.value = '';
   });
+  this.$container.find('#height').text('');
+  this.$container.find('#roof\\:height').text('');
 };
