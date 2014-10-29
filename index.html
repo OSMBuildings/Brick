@@ -48,143 +48,120 @@
 
     <div id="overlay" class="hidden">
 
-      <table class="layout fit-width">
-      <tr>
-        <td><h2 class="title"></h2></td>
-        <td align="right"><button class="close-button">✕</button></td>
-      </tr>
-      </table>
+      <h2 class="title"></h2>
+      <button class="close-button">✕</button>
 
-      <table class="layout">
-      <tr>
-        <td>
-          <label>Building Type</label>
-          <select name="building" class="input">
-            <option></option>
-            <option>apartments</option>
-            <option>barn</option>
-            <option>bunker</option>
-            <option>cabin</option>
-            <option>cathedral</option>
-            <option>chapel</option>
-            <option>church</option>
-            <option>college</option>
-            <option>commercial</option>
-            <option>construction</option>
-            <option>detached</option>
-            <option>dormitory</option>
-            <option>entrance</option>
-            <option>garage</option>
-            <option>garages</option>
-            <option>greenhouse</option>
-            <option>hospital</option>
-            <option>hotel</option>
-            <option>house</option>
-            <option>hut</option>
-            <option>industrial</option>
-            <option>kindergarten</option>
-            <option>public</option>
-            <option>residential</option>
-            <option>retail</option>
-            <option>roof</option>
-            <option>school</option>
-            <option>shed</option>
-            <option>stable</option>
-            <option>static_caravan</option>
-            <option>terrace</option>
-            <option>train_station</option>
-            <option>university</option>
-            <option>warehouse</option>
-          </select>
-        </td>
-        <td>
-          <label>Building Use</label>
-          <select name="building:use" class="input">
-            <option></option>
-            <option>apartments</option>
-            <option>barn</option>
-            <option>bunker</option>
-            <option>cabin</option>
-            <option>cathedral</option>
-            <option>chapel</option>
-            <option>church</option>
-            <option>college</option>
-            <option>commercial</option>
-            <option>construction</option>
-            <option>detached</option>
-            <option>dormitory</option>
-            <option>entrance</option>
-            <option>garage</option>
-            <option>garages</option>
-            <option>greenhouse</option>
-            <option>hospital</option>
-            <option>hotel</option>
-            <option>house</option>
-            <option>hut</option>
-            <option>industrial</option>
-            <option>kindergarten</option>
-            <option>public</option>
-            <option>residential</option>
-            <option>retail</option>
-            <option>roof</option>
-            <option>school</option>
-            <option>shed</option>
-            <option>stable</option>
-            <option>static_caravan</option>
-            <option>terrace</option>
-            <option>train_station</option>
-            <option>university</option>
-          </select>
-        </td>
-      </tr>
+      <label>Building Type</label>
+      <select name="building" class="input">
+        <option></option>
+        <option>apartments</option>
+        <option>barn</option>
+        <option>bunker</option>
+        <option>cabin</option>
+        <option>cathedral</option>
+        <option>chapel</option>
+        <option>church</option>
+        <option>college</option>
+        <option>commercial</option>
+        <option>construction</option>
+        <option>detached</option>
+        <option>dormitory</option>
+        <option>entrance</option>
+        <option>garage</option>
+        <option>garages</option>
+        <option>greenhouse</option>
+        <option>hospital</option>
+        <option>hotel</option>
+        <option>house</option>
+        <option>hut</option>
+        <option>industrial</option>
+        <option>kindergarten</option>
+        <option>public</option>
+        <option>residential</option>
+        <option>retail</option>
+        <option>roof</option>
+        <option>school</option>
+        <option>shed</option>
+        <option>stable</option>
+        <option>static_caravan</option>
+        <option>terrace</option>
+        <option>train_station</option>
+        <option>university</option>
+        <option>warehouse</option>
+      </select>
 
-      <tr>
-        <td>
-          <label>Number of building levels <div id="height"></div></label>
-          <input type="number" min="0" name="building:levels" value="" class="input" autocomplete="false">
-        </td>
-        <td>
-          <label>Building Color</label>
-          <input type="text" name="building:colour" value="" class="input color" autocomplete="false">
-          <button type="button" name="building:colour-picker" class="color-picker"></button>
-        </td>
-      </tr>
+      <label>Building Use</label>
+      <select name="building:use" class="input">
+        <option></option>
+        <option>apartments</option>
+        <option>barn</option>
+        <option>bunker</option>
+        <option>cabin</option>
+        <option>cathedral</option>
+        <option>chapel</option>
+        <option>church</option>
+        <option>college</option>
+        <option>commercial</option>
+        <option>construction</option>
+        <option>detached</option>
+        <option>dormitory</option>
+        <option>entrance</option>
+        <option>garage</option>
+        <option>garages</option>
+        <option>greenhouse</option>
+        <option>hospital</option>
+        <option>hotel</option>
+        <option>house</option>
+        <option>hut</option>
+        <option>industrial</option>
+        <option>kindergarten</option>
+        <option>public</option>
+        <option>residential</option>
+        <option>retail</option>
+        <option>roof</option>
+        <option>school</option>
+        <option>shed</option>
+        <option>stable</option>
+        <option>static_caravan</option>
+        <option>terrace</option>
+        <option>train_station</option>
+        <option>university</option>
+      </select>
 
-      <tr>
-        <td>
-          <label>Number of roof levels <div id="roof:height"></div></label>
-          <input type="number" min="0" name="roof:levels" value="" class="input" autocomplete="false">
-        </td>
-        <td>
-          <label>Roof Color</label>
-          <input type="text" name="roof:colour" value="" class="input color" autocomplete="false">
-          <button type="button" name="roof:colour-picker" class="color-picker"></button>
-        </td>
-      </tr>
+      <label>Number of building levels<span id="height-hint" class="hint"></span></label>
+      <input type="number" min="0" name="building:levels" value="" class="input" autocomplete="false">
 
-      <tr>
-        <td></td>
-        <td>
-          <label>Roof Shape</label>
-          <select name="roof:shape" class="input">
-            <option selected></option>
-            <option>flat</option>
-            <option>skillion</option>
-            <option>gabled</option>
-            <option>half-hipped</option>
-            <option>hipped</option>
-            <option>pyramidal</option>
-            <option>gambrel</option>
-            <option>mansard</option>
-            <option>dome</option>
-            <option>onion</option>
-            <option>round</option>
-            <option>saltbox</option>
-          </select>
-        </td>
-      </tr>
-      </table>
+      <label>Building Color<span id="building:material-hint" class="hint"></span></label>
+      <input type="text" name="building:colour" value="" class="input color" autocomplete="false">
+      <button type="button" name="building:colour-picker" class="color-picker"></button>
+
+      <label>Number of roof levels<span id="roof:height-hint" class="hint"></span></label>
+      <input type="number" min="0" name="roof:levels" value="" class="input" autocomplete="false">
+
+      <label>Roof Color<span id="roof:material-hint" class="hint"></span></label>
+      <input type="text" name="roof:colour" value="" class="input color" autocomplete="false">
+      <button type="button" name="roof:colour-picker" class="color-picker"></button>
+
+      <label>Roof Shape</label>
+      <select name="roof:shape" class="input">
+        <option selected></option>
+        <option>flat</option>
+        <option>skillion</option>
+        <option>gabled</option>
+        <option>half-hipped</option>
+        <option>hipped</option>
+        <option>pyramidal</option>
+        <option>gambrel</option>
+        <option>mansard</option>
+        <option>dome</option>
+        <option>onion</option>
+        <option>round</option>
+        <option>saltbox</option>
+      </select>
     </div>
+
+
+
 
     <style>
       #camera-overlay {

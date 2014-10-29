@@ -69,15 +69,22 @@ Brick.ui.TagEditor.prototype.populate = function(data) {
 
       case 'building:levels':
       case 'roof:levels':
+        item.value = (value === undefined) ? '' : value;
+      break;
+
       case 'building:colour':
       case 'roof:colour':
         item.value = (value === undefined) ? '' : value;
+        item.style.backgroundColor = (value === undefined) ? '' : value;
       break;
     }
   });
 
-  this.$container.find('#height').text(tags['height'] ? '('+ tags['height'] + 'm)' : '');
-  this.$container.find('#roof\\:height').text(tags['roof:height'] ? '('+ tags['roof:height'] + 'm)' : '');
+  this.$container.find('#height-hint').text(tags['height'] ? '('+ tags['height'] +'m)' : '');
+  this.$container.find('#roof\\:height-hint').text(tags['roof:height'] ? '('+ tags['roof:height'] +'m)' : '');
+
+  this.$container.find('#building\\:material-hint').text(tags['building:material'] ? '('+ tags['building:material'] +')' : '');
+  this.$container.find('#roof\\:material-hint').text(tags['roof:material'] ? '('+ tags['roof:material'] +')' : '');
 };
 
 //  getData: function() {

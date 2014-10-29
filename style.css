@@ -22,16 +22,6 @@ button {
   min-height: 50px;
 }
 
-table.layout td {
-  vertical-align: top;
-}
-table.layout.fit-width {
-  width: 100%;
-}
-table.layout.fit-height {
-  height: 100%;
-}
-
 #map {
   height: 100%;
 }
@@ -82,6 +72,9 @@ table.layout.fit-height {
   width: 50px;
   height: 50px;
   font-size: 24px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 label {
@@ -89,8 +82,14 @@ label {
   font-size: 12px;
   margin: 10px 15px 0 15px;
 }
+.hint {
+  display: inline;
+  margin-left: 5px;
+  font-style: italic;
+}
 .input {
   margin: 5px 15px 10px 15px;
+  border: 1px solid #999999;
 }
 
 .input, option {
@@ -102,10 +101,6 @@ label {
 }
 .input.color {
   width: 70px;
-/*
-  background: transparent;
-  border: 1px solid #cccccc;
-*/
 }
 .color-picker {
   width: 24px;
