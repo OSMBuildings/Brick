@@ -102,6 +102,10 @@ label {
 }
 .input.color {
   width: 70px;
+/*
+  background: transparent;
+  border: 1px solid #cccccc;
+*/
 }
 .color-picker {
   width: 24px;
@@ -109,15 +113,12 @@ label {
   background: url(img/camera-24x24.png) no-repeat;
   border: 0;
   cursor: pointer;
-  margin-left: -10px;
+  min-width: 0;
+  min-height: 0;
+  vertical-align: middle;
+  margin: 0 0 5px -5px;
 }
 
-/*
-.input.color {
-  background: transparent;
-  border: 1px solid #cccccc;
-}
-*/
 select[name=building],
 select[name='building:use'],
 select[name='roof:shape'] {
