@@ -1,5 +1,5 @@
 
-Brick.Data = {
+var Data = {
 
   YARD_TO_METER: 0.9144,
   FOOT_TO_METER: 0.3048,

@@ -1,10 +1,8 @@
+
 html, body {
   border: 0;
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   font-family: sans-serif;
 }
 
@@ -23,58 +21,38 @@ button {
 }
 
 #map {
-  height: 100%;
+  height: 500px;
 }
 
-#session {
-  position: absolute;
-  left: 0;
-  top: 0;
+#toolbar {
   width: 100%;
-  z-index: 1000;
   background-color: rgba(255,255,255,0.7);
   text-align: right;
 }
-#session button {
+#login-button {
   padding: 0 15px;
   min-width: 100px;
 }
-#session label {
+#login-button label {
   display: inline;
   margin: 0;
 }
-#session img {
+#login-button img {
   display: none;
 }
-#session.authenticated img {
+#login-button.authenticated img {
   display: inline;
   vertical-align: middle;
   width: 50px;
   margin-left: 20px;
 }
-.leaflet-top {
-  top: 60px;
-}
 
-#overlay {
-  position: absolute;
-  left: 0;
-  top: 100%;
+
+#editor {
   width: 100%;
-  height: 75%;
-  z-index: 1000;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: rgba(255,255,255,0.7);
-}
-
-.close-button {
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 
 label {

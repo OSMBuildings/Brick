@@ -91,7 +91,9 @@ function onCapture(url) {
 return {
   capture: function(config) {
     $container = config.$container;
-    callback   = config.callback;
+    $('<button class="close-button">✕</button>').appendTo($container).click($container.hide);
+
+    callback = config.callback;
 
     $container.show();
 //  if (/iP(ad|hone|od)/g.test(navigator.userAgent)) {

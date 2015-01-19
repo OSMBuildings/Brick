@@ -1,43 +1,34 @@
 
-Brick.Map = function(bus, config) {
-  var pos = [52.52179, 13.39503];
-  if (config.lat !== undefined && config.lon !== undefined) {
-    pos = [config.lat, config.lon];
+var Map = (function() {
+
+  var geo = [52.52179, 13.39503];
+  if (State.get('latitude') !== undefined && State.get('longitude') !== undefined) {
+    geo = [parseFloat(State.get('latitude')), parseFloat(State.get('longitude'))];
   }
 
-  var map = this._engine = new L.Map('map').setView(pos, config.zoom || 18);
+  var zoom = State.get('zoom') || 18;
 
-  map.on('moveend zoomend', function() {
-    var center = map.getCenter();
-    bus.emit('MAP_CHANGED', {
-      lat: center.lat.toFixed(5),
-      lon: center.lng.toFixed(5),
-      zoom: map.getZoom()
+  var Map;
+
+  $(function() {
+    Map = new L.Map('map').setView(geo, zoom);
+
+    Map.on('moveend zoomend', function() {
+      var center = Map.getCenter();
+      State.set('latitude',  center.lat.toFixed(5));
+      State.set('longitude', center.lng.toFixed(5));
+      State.set('zoom', Map.getZoom());
     });
-  }, this);
 
-  new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', { maxNativeZoom: 19, maxZoom: 21 }).addTo(map);
-  //new L.TileLayer('http://{s}.tiles.mapbox.com/v3/osmbuildings.gm744p3p/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    new L.TileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', { maxNativeZoom: 19, maxZoom: 21 }).addTo(Map);
 
-  new OSMBuildings(map)
-    .load()
-    .click(function(e) {
-      bus.emit('FEATURE_SELECTED', e);
-
-      var p = map.latLngToContainerPoint(L.latLng(e.lat, e.lon));
-      p.y += innerHeight*0.375; // put it vertically in center of the topmost quarter of the screen
-      var geo = map.containerPointToLatLng(p);
-
-      map.once('moveend', function() {
-        bus.emit('FEATURE_FOCUSSED');
+    new OSMBuildings(Map)
+      .load()
+      .click(function(e) {
+        Bus.emit('FEATURE_SELECTED', e);
       });
+  });
 
-      map.panTo(geo);
-    }, this);
-};
+  return Map;
 
-Brick.Map.prototype = {};
-
-Brick.Map.prototype.getEngine = function() {
-  return this._engine;
-};
+}());

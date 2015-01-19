@@ -1,0 +1,19 @@
+[
+  "config.js",
+
+  "js/util.js",
+  "lib/jxon.js",
+  "lib/jquery-2.1.1.min.js",
+
+  "js/Bus.js",
+  "js/State.js",
+  "js/OAuth.js",
+  "js/Data.js",
+
+  "js/Map.js",
+  "js/ui/Toolbar.js",
+  "js/ui/Editor.js",
+  "js/Brick.js",
+
+  "js/OSMAPI.js"
+]

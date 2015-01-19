@@ -1,4 +1,8 @@
 ## integrate color selection
+  - fix html & css
+  - flow to return color
+  - re-open
+  - close button
 # save data to OSM
 - overlay position, toggling
 - highlight a building => OSM Buildings
@@ -6,6 +10,10 @@
 - immediate visual feedback
 - UTF8 issue on server
 - messages
+  - login/out
+  - osm account
+  - picture upload
+  - not editable
 - geolocation
 
 - offer materials as color hint

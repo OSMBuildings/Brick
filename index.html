@@ -16,190 +16,63 @@
     <script src="lib/leaflet-0.8/leaflet-src.js"></script>
     <script src="lib/OSMBuildings-Leaflet.js"></script>
 
-    <script src="config.js"></script>
-    <script src="js/util.js"></script>
-    <script src="lib/jxon.js"></script>
-    <script src="lib/jquery-2.1.1.min.js"></script>
-
-    <script src="js/Brick.js"></script>
-    <script src="js/Bus.js"></script>
-    <script src="js/State.js"></script>
-    <script src="js/Auth.js"></script>
-    <script src="js/Provider.js"></script>
-    <script src="js/Data.js"></script>
-
-    <script src="js/Map.js"></script>
-    <script src="js/ui/ui.js"></script>
-    <script src="js/ui/Session.js"></script>
-    <script src="js/ui/TagEditor.js"></script>
-    <script src="js/ui/PhotoColorPicker.js"></script>
-
-    <script src="js/OSMAPI.js"></script>
-    <script src="js/Entity.js"></script>
-    <script src="js/Node.js"></script>
-    <script src="js/Way.js"></script>
-    <script src="js/Relation.js"></script>
+    <script src="loader.js"></script>
   </head>
 
   <body>
     <div id="map"></div>
 
-    <div id="session"></div>
-
-    <div id="overlay" class="hidden">
-
-      <h2 class="title"></h2>
-      <button class="close-button">✕</button>
-
-      <label>Building Type</label>
-      <select name="building" class="input">
-        <option></option>
-        <option>apartments</option>
-        <option>barn</option>
-        <option>bunker</option>
-        <option>cabin</option>
-        <option>cathedral</option>
-        <option>chapel</option>
-        <option>church</option>
-        <option>college</option>
-        <option>commercial</option>
-        <option>construction</option>
-        <option>detached</option>
-        <option>dormitory</option>
-        <option>entrance</option>
-        <option>garage</option>
-        <option>garages</option>
-        <option>greenhouse</option>
-        <option>hospital</option>
-        <option>hotel</option>
-        <option>house</option>
-        <option>hut</option>
-        <option>industrial</option>
-        <option>kindergarten</option>
-        <option>public</option>
-        <option>residential</option>
-        <option>retail</option>
-        <option>roof</option>
-        <option>school</option>
-        <option>shed</option>
-        <option>stable</option>
-        <option>static_caravan</option>
-        <option>terrace</option>
-        <option>train_station</option>
-        <option>university</option>
-        <option>warehouse</option>
-      </select>
-
-      <label>Building Use</label>
-      <select name="building:use" class="input">
-        <option></option>
-        <option>apartments</option>
-        <option>barn</option>
-        <option>bunker</option>
-        <option>cabin</option>
-        <option>cathedral</option>
-        <option>chapel</option>
-        <option>church</option>
-        <option>college</option>
-        <option>commercial</option>
-        <option>construction</option>
-        <option>detached</option>
-        <option>dormitory</option>
-        <option>entrance</option>
-        <option>garage</option>
-        <option>garages</option>
-        <option>greenhouse</option>
-        <option>hospital</option>
-        <option>hotel</option>
-        <option>house</option>
-        <option>hut</option>
-        <option>industrial</option>
-        <option>kindergarten</option>
-        <option>public</option>
-        <option>residential</option>
-        <option>retail</option>
-        <option>roof</option>
-        <option>school</option>
-        <option>shed</option>
-        <option>stable</option>
-        <option>static_caravan</option>
-        <option>terrace</option>
-        <option>train_station</option>
-        <option>university</option>
-      </select>
-
-      <label>Number of building levels<span id="height-hint" class="hint"></span></label>
-      <input type="number" min="0" name="building:levels" value="" class="input" autocomplete="false">
-
-      <label>Building Color<span id="building:material-hint" class="hint"></span></label>
-      <input type="text" name="building:colour" value="" class="input color" autocomplete="false">
-      <button type="button" name="building:colour-picker" class="color-picker"></button>
-
-      <label>Number of roof levels<span id="roof:height-hint" class="hint"></span></label>
-      <input type="number" min="0" name="roof:levels" value="" class="input" autocomplete="false">
-
-      <label>Roof Color<span id="roof:material-hint" class="hint"></span></label>
-      <input type="text" name="roof:colour" value="" class="input color" autocomplete="false">
-      <button type="button" name="roof:colour-picker" class="color-picker"></button>
-
-      <label>Roof Shape</label>
-      <select name="roof:shape" class="input">
-        <option selected></option>
-        <option>flat</option>
-        <option>skillion</option>
-        <option>gabled</option>
-        <option>half-hipped</option>
-        <option>hipped</option>
-        <option>pyramidal</option>
-        <option>gambrel</option>
-        <option>mansard</option>
-        <option>dome</option>
-        <option>onion</option>
-        <option>round</option>
-        <option>saltbox</option>
-      </select>
+    <div id="toolbar">
+      <button id="login-button"><label>Log in</label><img src=""></button>
     </div>
 
+    <div id="editor">
+      <h2 class="title"></h2>
 
-
-
-    <style>
-      #camera-overlay {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1000;
-        background: #333333;
-        display: none;
-      }
-      #camera-overlay video,
-      #camera-overlay canvas {
-        margin: auto;
-        width: 100%;
-        height: 100%;
-      }
-      #camera-overlay button,
-      #capture-image div {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        margin: 0 auto;
-      }
-    </style>
-
-    <div id="camera-overlay"></div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      new Brick({
-        oauthLandingPage: 'auth.html',
-        oauthConsumerKey: config.oauth.consumerKey,
-        oauthSecret: config.oauth.secret,
-        providerURL: config.providerURL
-      });
-    });
-    </script>
+      <table class="layout">
+        <tr>
+          <td>
+            <label>Building Type</label>
+            <select name="building" class="input">
+              <option></option>
+            </select>
+          </td>
+          <td>
+            <label>Building Use</label>
+            <select name="building:use" class="input">
+              <option selected></option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Number of building levels<span id="height-hint" class="hint"></span></label>
+            <input type="number" min="0" name="building:levels" class="input" autocomplete="0">
+          </td>
+          <td>
+            <label>Building Color<span id="building:material-hint" class="hint"></span></label>
+            <input type="text" name="building:colour" class="input color" autocomplete="0">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Number of roof levels<span id="roof:height-hint" class="hint"></span></label>
+            <input type="number" min="0" name="roof:levels" class="input" autocomplete="0">
+          </td>
+          <td>
+            <label>Roof Color<span id="roof:material-hint" class="hint"></span></label>
+            <input type="text" name="roof:colour" class="input color" autocomplete="0">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Roof Shape</label>
+            <select name="roof:shape" class="input">
+              <option selected></option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>

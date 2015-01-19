@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Brick</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+    <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="lib/osm-auth/osmauth.js"></script>
+    <script src="lib/leaflet-0.8/leaflet-src.js"></script>
+    <script src="lib/OSMBuildings-Leaflet.js"></script>
+
+    <script src="config.js"></script>
+    <script src="js/util.js"></script>
+    <script src="lib/jxon.js"></script>
+    <script src="lib/jquery-2.1.1.min.js"></script>
+
+    <script src="js/Brick.js"></script>
+    <script src="js/Bus.js"></script>
+    <script src="js/State.js"></script>
+    <script src="js/Auth.js"></script>
+    <script src="js/Provider.js"></script>
+    <script src="js/Data.js"></script>
+
+    <script src="js/Map.js"></script>
+    <script src="js/ui/ui.js"></script>
+    <script src="js/ui/Session.js"></script>
+    <script src="js/ui/TagEditor.js"></script>
+    <script src="js/ui/PhotoColorPicker.js"></script>
+
+    <script src="js/OSMAPI.js"></script>
+    <script src="js/Entity.js"></script>
+    <script src="js/Node.js"></script>
+    <script src="js/Way.js"></script>
+    <script src="js/Relation.js"></script>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <div id="session"></div>
+
+    <div id="overlay" class="hidden">
+
+      <h2 class="title"></h2>
+      <button class="close-button">✕</button>
+
+      <label>Building Type</label>
+      <select name="building" class="input">
+        <option></option>
+        <option>apartments</option>
+        <option>barn</option>
+        <option>bunker</option>
+        <option>cabin</option>
+        <option>cathedral</option>
+        <option>chapel</option>
+        <option>church</option>
+        <option>college</option>
+        <option>commercial</option>
+        <option>construction</option>
+        <option>detached</option>
+        <option>dormitory</option>
+        <option>entrance</option>
+        <option>garage</option>
+        <option>garages</option>
+        <option>greenhouse</option>
+        <option>hospital</option>
+        <option>hotel</option>
+        <option>house</option>
+        <option>hut</option>
+        <option>industrial</option>
+        <option>kindergarten</option>
+        <option>public</option>
+        <option>residential</option>
+        <option>retail</option>
+        <option>roof</option>
+        <option>school</option>
+        <option>shed</option>
+        <option>stable</option>
+        <option>static_caravan</option>
+        <option>terrace</option>
+        <option>train_station</option>
+        <option>university</option>
+        <option>warehouse</option>
+      </select>
+
+      <label>Building Use</label>
+      <select name="building:use" class="input">
+        <option></option>
+        <option>apartments</option>
+        <option>barn</option>
+        <option>bunker</option>
+        <option>cabin</option>
+        <option>cathedral</option>
+        <option>chapel</option>
+        <option>church</option>
+        <option>college</option>
+        <option>commercial</option>
+        <option>construction</option>
+        <option>detached</option>
+        <option>dormitory</option>
+        <option>entrance</option>
+        <option>garage</option>
+        <option>garages</option>
+        <option>greenhouse</option>
+        <option>hospital</option>
+        <option>hotel</option>
+        <option>house</option>
+        <option>hut</option>
+        <option>industrial</option>
+        <option>kindergarten</option>
+        <option>public</option>
+        <option>residential</option>
+        <option>retail</option>
+        <option>roof</option>
+        <option>school</option>
+        <option>shed</option>
+        <option>stable</option>
+        <option>static_caravan</option>
+        <option>terrace</option>
+        <option>train_station</option>
+        <option>university</option>
+      </select>
+
+      <label>Number of building levels<span id="height-hint" class="hint"></span></label>
+      <input type="number" min="0" name="building:levels" value="" class="input" autocomplete="false">
+
+      <label>Building Color<span id="building:material-hint" class="hint"></span></label>
+      <input type="text" name="building:colour" value="" class="input color" autocomplete="false">
+      <button type="button" name="building:colour-picker" class="color-picker"></button>
+
+      <label>Number of roof levels<span id="roof:height-hint" class="hint"></span></label>
+      <input type="number" min="0" name="roof:levels" value="" class="input" autocomplete="false">
+
+      <label>Roof Color<span id="roof:material-hint" class="hint"></span></label>
+      <input type="text" name="roof:colour" value="" class="input color" autocomplete="false">
+      <button type="button" name="roof:colour-picker" class="color-picker"></button>
+
+      <label>Roof Shape</label>
+      <select name="roof:shape" class="input">
+        <option selected></option>
+        <option>flat</option>
+        <option>skillion</option>
+        <option>gabled</option>
+        <option>half-hipped</option>
+        <option>hipped</option>
+        <option>pyramidal</option>
+        <option>gambrel</option>
+        <option>mansard</option>
+        <option>dome</option>
+        <option>onion</option>
+        <option>round</option>
+        <option>saltbox</option>
+      </select>
+    </div>
+
+
+
+
+    <style>
+      #camera-overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        background: #333333;
+        display: none;
+      }
+      #camera-overlay video,
+      #camera-overlay canvas {
+        margin: auto;
+        width: 100%;
+        height: 100%;
+      }
+      #camera-overlay button,
+      #capture-image div {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0 auto;
+      }
+    </style>
+
+    <div id="camera-overlay">
+      <button class="close-button">✕</button>
+      <div id="capture-photo">
+        <video></video>
+        <button>CAPTURE</button>
+      </div>
+
+      <div id="upload-photo">
+        <input id="upload" type="file" accept="image/*" capture="camera">
+        <div id="upload-progress"></div>;
+      </div>
+
+      <canvas id="preview"></canvas>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new Brick({
+        oauthLandingPage: 'auth.html',
+        oauthConsumerKey: config.oauth.consumerKey,
+        oauthSecret: config.oauth.secret,
+        providerURL: config.providerURL
+      });
+    });
+    </script>
+  </body>
+</html>
