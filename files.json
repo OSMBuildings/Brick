@@ -1,19 +1,22 @@
 [
-  "config.js",
-
-  "js/util.js",
-  "lib/jxon.js",
   "lib/jquery-2.1.1.min.js",
 
+  "lib/jquery-2.1.1.min.js",
+  "lib/jxon.js",
+  "lib/osm-auth/osmauth.js",
+  "lib/leaflet-0.8/leaflet-src.js",
+  "lib/leaflet-locatecontrol/L.Control.Locate.min.js",
+  "lib/OSMBuildings-Leaflet.js",
+
+  "config.js",
+  "js/util.js",
   "js/Bus.js",
   "js/State.js",
   "js/OAuth.js",
   "js/Data.js",
-
   "js/Map.js",
-  "js/ui/Toolbar.js",
+  "js/ui/Login.js",
   "js/ui/Editor.js",
   "js/Brick.js",
-
   "js/OSMAPI.js"
 ]

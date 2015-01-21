@@ -10,11 +10,8 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
+    <link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.min.css">
     <link rel="stylesheet" href="style.css">
-
-    <script src="lib/osm-auth/osmauth.js"></script>
-    <script src="lib/leaflet-0.8/leaflet-src.js"></script>
-    <script src="lib/OSMBuildings-Leaflet.js"></script>
 
     <script src="loader.js"></script>
   </head>
@@ -22,9 +19,7 @@
   <body>
     <div id="map"></div>
 
-    <div id="toolbar">
-      <button id="login-button"><label>Log in</label><img src=""></button>
-    </div>
+    <button id="login-button"><label>Log in</label><img/></button>
 
     <div id="editor">
       <h2 class="title"></h2>
@@ -32,13 +27,13 @@
       <table class="layout">
         <tr>
           <td>
-            <label>Building Type</label>
+            <label>Building type</label>
             <select name="building" class="input">
-              <option></option>
+              <option value="yes" selected></option>
             </select>
           </td>
           <td>
-            <label>Building Use</label>
+            <label>Building use</label>
             <select name="building:use" class="input">
               <option selected></option>
             </select>
@@ -46,33 +41,35 @@
         </tr>
         <tr>
           <td>
-            <label>Number of building levels<span id="height-hint" class="hint"></span></label>
-            <input type="number" min="0" name="building:levels" class="input" autocomplete="0">
+            <label>Number of building levels</label>
+            <input type="number" min="0" name="building:levels" class="input" autocomplete="0"><span id="height-hint" class="hint"></span>
           </td>
           <td>
-            <label>Building Color<span id="building:material-hint" class="hint"></span></label>
-            <input type="text" name="building:colour" class="input color" autocomplete="0">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Number of roof levels<span id="roof:height-hint" class="hint"></span></label>
-            <input type="number" min="0" name="roof:levels" class="input" autocomplete="0">
-          </td>
-          <td>
-            <label>Roof Color<span id="roof:material-hint" class="hint"></span></label>
-            <input type="text" name="roof:colour" class="input color" autocomplete="0">
+            <label>Building color</span></label>
+            <input type="text" name="building:colour" class="input color" autocomplete="0"><span id="building:material-hint" class="hint">
           </td>
         </tr>
         <tr>
           <td>
-            <label>Roof Shape</label>
+            <label>Number of roof levels</span></label>
+            <input type="number" min="0" name="roof:levels" class="input" autocomplete="0"><span id="roof:height-hint" class="hint">
+          </td>
+          <td>
+            <label>Roof color</label>
+            <input type="text" name="roof:colour" class="input color" autocomplete="0"><span id="roof:material-hint" class="hint"></span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Roof shape</label>
             <select name="roof:shape" class="input">
               <option selected></option>
             </select>
           </td>
         </tr>
       </table>
+
+      <button type="submit" id="submit-button">Save</button>
     </div>
   </body>
 </html>

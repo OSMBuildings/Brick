@@ -13,6 +13,7 @@
       $button.find('label').text('Log out');
       $button.find('img').prop('src', user.img['@href']);
     }
+    $button.blur();
   }
 
   $(function() {
