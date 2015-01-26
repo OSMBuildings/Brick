@@ -20,35 +20,31 @@
       }
     });
 
-    $editor.find('.color-picker').click(function(i, field) {
+//    $editor.find('.color-picker').click(function(i, field) {
 //      // TODO: handle every picker individually
 //      PhotoColorPicker.capture({ $editor: $('#camera-overlay'), callback: function(color) {
 //        $editor.find('.input.color').val(color).css('backgroundColor', color);
 //      }});
-    });
+//    });
   });
 
-  Bus.on('FEATURE_SELECTED', function(e) {
-console.log(e);
+  // TODO: should be done on top level
+  Bus.on('FEATURE_SELECTED', function(featureId) {
+    show();
   });
 
-  Bus.on('FEATURE_LOADED', function(geojson) {
-    populate(geojson.features[0]);
-  });
-
-  function populate(data) {
+  Bus.on('FEATURE_LOADED', function(feature) {
     // TODO: make complex items readonly + offer iD editor
     // http://www.openstreetmap.org/edit?way=24273422
 
     var
-      tags = Data.alignTags(data.properties && data.properties.tags || {}),
+      tags = feature.properties.tags || {},
       value;
 
     clear();
 
-    var title = tags.name ? tags.name +' (ID '+ data.id +')' : 'Building ID '+ data.id;
-    $('.title').text(title);
-    document.title = title +' - Brick';
+    var title = tags.name ? tags.name +' (ID '+ feature.id +')' : 'Building ID '+ feature.id;
+    $editor.find('h2').text(title);
 
     $fields.each(function(_, field) {
       value = tags[field.name];
@@ -80,19 +76,24 @@ console.log(e);
 
     $editor.find('#building\\:material-hint').text(tags['building:material'] ? tags['building:material'] : '');
     $editor.find('#roof\\:material-hint').text(tags['roof:material'] ? tags['roof:material'] : '');
-};
+  });
 
-//  function getData() {
-//    var data = {};
-//    for (var i = 0, il = this.fields.length; i < il; i++) {
-//      this.fields[i].name && (data[ this.fields[i].name ] = this.fields[i].value);
-//    }
-//    return data;
-//  }
+  Bus.on('FEATURE_CLEARED', function() {
+    hide();
+  });
+
+  function show() {
+    $('#info').hide();
+    $editor.show();
+  }
+
+  function hide() {
+    $editor.hide();
+    $('#info').show();
+  }
 
   function clear() {
-    $('.title').text('');
-    document.title = 'Brick';
+    $editor.find('h2').text('');
 
     $fields.each(function(i, field) {
       field.value = '';

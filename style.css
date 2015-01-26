@@ -13,17 +13,18 @@ h2 {
   font-weight: normal;
   color: #666666;
   letter-spacing: -1px;
-  margin: 15px;
+  margin: 15px 0;
+}
+
+#map {
+  height: 500px;
 }
 
 button {
   border: 1px solid #666666;
   min-width: 50px;
   min-height: 50px;
-}
-
-#map {
-  height: 500px;
+  border-radius: 5px;
 }
 
 #login-button {
@@ -50,21 +51,27 @@ button {
   margin-left: 20px;
 }
 
-#editor {
+#submit-button {
+  width: 160px;
+  margin: 15px 20px 10px 0;
+}
+
+.content {
   background-color: #ffffff;
+  margin: 20px;
 }
 
 label {
   display: block;
   font-size: 12px;
-  margin: 10px 15px 0 15px;
+  margin: 10px 20px 0 0;
 }
 .hint {
   color: #999999;
 }
 
 .input {
-  margin: 5px 15px 10px 15px;
+  margin: 5px 20px 10px 0;
   border: 1px solid #999999;
 }
 

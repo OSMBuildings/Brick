@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
-    <link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.min.css">
+    <link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.css">
     <link rel="stylesheet" href="style.css">
 
     <script src="loader.js"></script>
@@ -21,8 +21,19 @@
 
     <button id="login-button"><label>Log in</label><img/></button>
 
-    <div id="editor">
-      <h2 class="title"></h2>
+    <div id="info" class="content">
+      <h2>Welcome to Brick, a mobile OSM building editor!</h2>
+
+      <p>Please select a building from the map in order to edit its properties.<br>
+      Only simple buildings are available for editing in Brick.</p>
+
+      <p>For more advanced options, please visit the <a href="http://www.openstreetmap.org/edit">OpenStreetMap iD Editor</a></p>
+
+      <p>To save your changes, you'll need an <a href="https://www.openstreetmap.org/user/new">OSM account</a>. It's free and easy to sign up.</p>
+    </div>
+
+    <div id="editor" class="content hidden">
+      <h2></h2>
 
       <table class="layout">
         <tr>
@@ -69,7 +80,7 @@
         </tr>
       </table>
 
-      <button type="submit" id="submit-button">Save</button>
+      <button type="submit" id="submit-button">Save changes</button>
     </div>
   </body>
 </html>

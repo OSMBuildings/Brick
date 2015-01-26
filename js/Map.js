@@ -25,7 +25,7 @@ var Map = (function() {
     new OSMBuildings(Map)
       .load()
       .click(function(e) {
-        Bus.emit('FEATURE_SELECTED', e);
+        Bus.emit('FEATURE_SELECTED', e.feature);
       });
 
     L.control.locate({
