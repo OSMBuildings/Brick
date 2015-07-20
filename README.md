@@ -1,8 +1,5 @@
 # Brick #
 
-A buildings editor for OpenStreetMap
+A specialized buildings editor for OpenStreetMap.
 
-Brick is highly specialized and just offers a few tags.
-It wants to make editing on mibile as simple as possible.
-
-Visit http://brick.osmbuildings.org/
+It just offers a few tags to make editing on mobile as simple as possible.
