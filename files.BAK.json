@@ -1,0 +1,9 @@
+[
+  "lib/osm-auth/osmauth.js",
+
+  "js/OAuth.js",
+  "js/Data.js",
+  "js/Login.js",
+  "js/Editor.js",
+  "js/OSMAPI.js"
+]

@@ -21,14 +21,14 @@
 
     $button.click(function() {
       if ($button.is('.authenticated')) {
-        Bus.emit('SESSION_LOGOUT');
+        Events.emit('SESSION_LOGOUT');
       } else {
-        Bus.emit('SESSION_LOGIN');
+        Events.emit('SESSION_LOGIN');
       }
     });
 
-    Bus.on('AUTH_LOGIN', update);
-    Bus.on('AUTH_LOGOUT', update);
+    Events.on('AUTH_LOGIN', update);
+    Events.on('AUTH_LOGOUT', update);
 
     update();
   });

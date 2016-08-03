@@ -1,4 +1,12 @@
 
+
+
+// Events.on('FEATURE_LOADED', function(feature) {
+//   var tags = feature.properties || {};
+//   var title = tags.name ? tags.name +' (ID '+ feature.id +')' : 'Building ID '+ feature.id;
+//   document.title = title +' - Brick';
+// });
+
 (function() {
 
   var $editor, $fields;
@@ -29,11 +37,11 @@
   });
 
   // TODO: should be done on top level
-  Bus.on('FEATURE_SELECTED', function(featureId) {
+  Events.on('FEATURE_SELECTED', function(featureId) {
     show();
   });
 
-  Bus.on('FEATURE_LOADED', function(feature) {
+  Events.on('FEATURE_LOADED', function(feature) {
     // TODO: make complex items readonly + offer iD editor
     // http://www.openstreetmap.org/edit?way=24273422
 
@@ -78,7 +86,7 @@
     $editor.find('#roof\\:material-hint').text(tags['roof:material'] ? tags['roof:material'] : '');
   });
 
-  Bus.on('FEATURE_CLEARED', function() {
+  Events.on('FEATURE_CLEARED', function() {
     hide();
   });
 

@@ -23,8 +23,13 @@
   - show in OSMB
     => store somehow locally because of lag (implement later)
 
+=============================================================
 
-#############
+- put leaflet buttons to bottom center
+- deep links
+s
+=============================================================
+
 
 - Analysis
 

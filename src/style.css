@@ -9,17 +9,80 @@ html, body {
   font-family: sans-serif;
 }
 
-h2 {
+.covered {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -ms-filter: blur(2px);
+}
+
+h1 {
   font-weight: normal;
-  color: #666666;
-  letter-spacing: -1px;
-  margin: 10px 0;
-  font-size: 16pt;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  font-size: 24px;
 }
 
 #map {
-  height: 210px;
+    height: 100%;
 }
+
+#intro {
+    color: #ffffff;
+    font-size: 18px;
+    text-shadow: 0 0 5px #000000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background: rgba(0,0,0,0.25);
+    padding: 30px;
+    line-height: 150%;
+    cursor: default;
+}
+
+#intro-link-ideditor {
+    color: #ffeedd;
+    font-weight: bold;
+}
+
+#intro-button-start {
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 5px #000000;
+    background: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#intro-button-start:focus {
+    outline: none;
+}
+
+/*************************************/
+
+#editor {
+    color: #ffffff;
+    font-size: 18px;
+    text-shadow: 0 0 5px #000000;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background: rgba(0,0,0,0.25);
+    padding: 30px;
+    line-height: 150%;
+    cursor: default;
+}
+
+/*************************************/
+
 
 button {
   border: 1px solid #666666;

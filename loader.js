@@ -1,5 +1,5 @@
 
-var baseURL = baseURL || './';
+var baseURL = baseURL || '.';
 
 function loadFile(url) {
   var xhr = new XMLHttpRequest();
@@ -16,7 +16,8 @@ function loadFile(url) {
 
   return xhr.responseText;
 }
-var srcFiles = JSON.parse(loadFile(baseURL +'/files.json'));
+
+var srcFiles = JSON.parse(loadFile(baseURL +'/../files.json'));
 var file, str, js = '';
 for (var i = 0; i < srcFiles.length; i++) {
   file = srcFiles[i];

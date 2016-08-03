@@ -7,7 +7,7 @@ var OAuth = (function() {
     oauth_secret: config.oauth.secret //,
   //    done: function() {
   //      if (!OAuth.authenticated()) {
-  //        Bus.emit('AUTH_LOGOUT');
+  //        Events.emit('AUTH_LOGOUT');
   //      } else {
   //        getUserInfo();
   //      }
@@ -20,25 +20,25 @@ var OAuth = (function() {
       path: '/api/0.6/user/details'
     }, function(err, res) {
       var user = JXON.build(res.getElementsByTagName('user')[0]);
-      Bus.emit('AUTH_LOGIN', user);
+      Events.emit('AUTH_LOGIN', user);
     });
   }
 
   if (!OAuth.authenticated()) {
-    Bus.emit('AUTH_LOGOUT');
+    Events.emit('AUTH_LOGOUT');
   } else {
     getUserInfo();
   }
 
-  Bus.on('SESSION_LOGIN', function() {
+  Events.on('SESSION_LOGIN', function() {
     OAuth.authenticate(function() {
       getUserInfo();
     });
   });
 
-  Bus.on('SESSION_LOGOUT', function() {
+  Events.on('SESSION_LOGOUT', function() {
     OAuth.logout();
-    Bus.emit('AUTH_LOGOUT');
+    Events.emit('AUTH_LOGOUT');
   });
 
   return OAuth;

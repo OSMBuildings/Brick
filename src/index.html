@@ -2,39 +2,42 @@
 <html>
   <head>
     <title>Brick</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
     <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="favicon.png">
-
     <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
     <link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.css">
     <link rel="stylesheet" href="style.css">
-
-    <script src="loader.js"></script>
+    <script src="../loader.js"></script>
   </head>
 
   <body>
-    <div id="map"></div>
+    <div id="map" class="covered"></div>
 
-    <button id="login-button"><label>Log in</label><img/></button>
+    <div id="intro">
+      <h1>Welcome to Brick!</h1>
 
-    <div id="info" class="content">
-      <h2>Welcome to Brick, a mobile OSM building editor!</h2>
+      <p>A mobile OpenStreetMap buildings editor.</p>
 
-      <p>Please select a building from the map in order to edit its properties.<br>
-      Only simple buildings are available for editing in Brick.</p>
+      <p>Please select an object from the map<br>
+        in order to edit its properties.</p>
 
-      <p>For more advanced options, please visit the <a href="http://www.openstreetmap.org/edit">OpenStreetMap iD Editor</a></p>
+      <p>Only basic buildings can be changed.<br>
+        For more advanced options try <a href="#" id="intro-link-ideditor">iD Editor</a>.</p>
 
-      <p>To save your changes, you'll need an <a href="https://www.openstreetmap.org/user/new">OSM account</a>. It's free and easy to sign up.</p>
+<!--p>To save your changes, you'll need an <a href="https://www.openstreetmap.org/user/new">OSM account</a>. It's free and easy to sign up.</p-->
+
+      <button id="intro-button-start">Start editing</button>
+
     </div>
 
-    <div id="editor" class="content hidden">
-      <h2></h2>
+<!--button id="login-button"><label>Log in</label><img/></button-->
 
+    <div id="editor" style="display:none;">
+      <h2></h2>
       <table class="layout">
         <tr>
           <td>
