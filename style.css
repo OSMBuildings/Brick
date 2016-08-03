@@ -13,11 +13,12 @@ h2 {
   font-weight: normal;
   color: #666666;
   letter-spacing: -1px;
-  margin: 15px 0;
+  margin: 10px 0;
+  font-size: 16pt;
 }
 
 #map {
-  height: 500px;
+  height: 210px;
 }
 
 button {
@@ -53,18 +54,18 @@ button {
 
 #submit-button {
   width: 160px;
-  margin: 15px 20px 10px 0;
+  margin: 10px 20px 10px 0;
 }
 
 .content {
   background-color: #ffffff;
-  margin: 20px;
+  margin: 15px;
 }
 
 label {
   display: block;
   font-size: 12px;
-  margin: 10px 20px 0 0;
+  margin: 5px 20px 0 0;
 }
 .hint {
   color: #999999;
@@ -76,8 +77,8 @@ label {
 }
 
 .input, option {
-  padding: 8px;
-  font-size: 16px;
+  padding: 5px;
+  font-size: 12px;
 }
 .input[type=number] {
   width: 80px;
@@ -101,7 +102,7 @@ label {
 select[name=building],
 select[name='building:use'],
 select[name='roof:shape'] {
-  width: 160px;
+  width: 120px;
 }
 
 .hidden {
