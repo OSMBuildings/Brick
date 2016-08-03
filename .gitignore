@@ -1,5 +1,4 @@
-.DS_Store
-node_modules
-dist
-/nbproject/private/
-/nbproject
+.DS_Store/
+.idea/
+node_modules/
+dist/
