@@ -9,5 +9,6 @@
   "js/Events.js",
   "js/State.js",
   "js/Map.js",
+  "js/Editor.js",
   "js/index.js"
 ]

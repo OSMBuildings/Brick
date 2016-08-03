@@ -37,53 +37,54 @@
 <!--button id="login-button"><label>Log in</label><img/></button-->
 
     <div id="editor" style="display:none;">
-      <h2></h2>
-      <table class="layout">
-        <tr>
-          <td>
-            <label>Building type</label>
-            <select name="building" class="input">
-              <option value="yes" selected></option>
-            </select>
-          </td>
-          <td>
-            <label>Building use</label>
-            <select name="building:use" class="input">
-              <option selected></option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Number of building levels</label>
-            <input type="number" min="0" name="building:levels" class="input" autocomplete="0"><span id="height-hint" class="hint"></span>
-          </td>
-          <td>
-            <label>Building color</span></label>
-            <input type="text" name="building:colour" class="input color" autocomplete="0"><span id="building:material-hint" class="hint">
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Number of roof levels</span></label>
-            <input type="number" min="0" name="roof:levels" class="input" autocomplete="0"><span id="roof:height-hint" class="hint">
-          </td>
-          <td>
-            <label>Roof color</label>
-            <input type="text" name="roof:colour" class="input color" autocomplete="0"><span id="roof:material-hint" class="hint"></span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label>Roof shape</label>
-            <select name="roof:shape" class="input">
-              <option selected></option>
-            </select>
-          </td>
-        </tr>
-      </table>
+      <div class="align-right">
+        <button id="editor-button-close">&times;</button>
+      </div>
 
-      <button type="submit" id="submit-button">Save changes</button>
+      <h1></h1>
+
+      <div class="editor-row">
+        <label>Select building type</label>
+        <select name="building" class="input"></select>
+      </div>
+
+      <div class="editor-row">
+        <label>Select building use</label>
+        <select name="building:use" class="input"></select>
+      </div>
+
+      <div class="editor-row">
+        <label>Number of building levels</label>
+        <input type="number" min="0" step="1" name="building:levels" autocomplete="0">
+        <span name="height" class="editor-info"></span>
+      </div>
+
+      <div class="editor-row">
+        <label>Pick building color</label>
+        <input type="text" name="building:colour" class="editor-color" autocomplete="0">
+        <span name="building:material" class="editor-info"></span>
+        <span name="building:colour" class="editor-info"></span>
+      </div>
+
+      <div class="editor-row">
+        <label>Number of roof levels</label>
+        <input type="number" min="0" step="1" name="roof:levels" autocomplete="0">
+        <span name="roof:height" class="editor-info"></span>
+      </div>
+
+      <div class="editor-row">
+        <label>Pick roof color</label>
+        <input type="text" name="roof:colour" class="editor-color" autocomplete="0">
+        <span name="roof:material" class="editor-info"></span>
+        <span name="roof:colour" class="editor-info"></span>
+      </div>
+
+      <div class="editor-row">
+        <label>Select roof shape</label>
+        <select name="roof:shape" class="input"></select>
+      </div>
+
+      <button type="submit" id="editor-button-submit">Save changes</button>
     </div>
   </body>
 </html>

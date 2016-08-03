@@ -1,6 +1,13 @@
 
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 html, body {
-  border: 0;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -16,10 +23,18 @@ html, body {
     -ms-filter: blur(2px);
 }
 
+.hidden {
+    display: none;
+}
+
+.align-right {
+    width: 100%;
+    text-align: right;
+}
+
 h1 {
   font-weight: normal;
   letter-spacing: -0.5px;
-  color: #ffffff;
   font-size: 24px;
 }
 
@@ -41,6 +56,11 @@ h1 {
     padding: 30px;
     line-height: 150%;
     cursor: default;
+    overflow-y: auto;
+}
+
+#intro h1 {
+    color: #ffffff;
 }
 
 #intro-link-ideditor {
@@ -50,10 +70,10 @@ h1 {
 
 #intro-button-start {
     border: 0;
-    border-radius: 5px;
     padding: 10px 20px;
     margin: 20px 0;
-    box-shadow: 0 0 5px #000000;
+    box-shadow: 0 0 10px #000000;
+    border-radius: 2px;
     background: #ffffff;
     font-size: 16px;
     cursor: pointer;
@@ -66,30 +86,114 @@ h1 {
 /*************************************/
 
 #editor {
-    color: #ffffff;
+    color: #000000;
     font-size: 18px;
-    text-shadow: 0 0 5px #000000;
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     z-index: 1000;
-    background: rgba(0,0,0,0.25);
+    background: rgba(255,255,255,255.75);
     padding: 30px;
-    line-height: 150%;
-    cursor: default;
+    overflow-y: auto;
 }
+
+#editor-button-close {
+    border: 0;
+    padding: 5px 10px;
+    background: transparent;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+#editor-button-close:focus {
+    outline: none;
+}
+
+#editor-button-submit {
+    border: 0;
+    padding: 10px 20px;
+    margin: 40px 0 20px 0;
+    box-shadow: 0 0 10px #000000;
+    border-radius: 2px;
+    background: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#editor-button-submit:focus {
+    outline: none;
+}
+
+.editor-row {
+    margin: 20px 0 0 0;
+}
+
+#editor label {
+    display: block;
+    font-size: 14px;
+    margin: 5px 0;
+    color: #666666;
+}
+
+.editor-info {
+    color: #999999;
+}
+
+#editor input,
+#editor select {
+    margin: 0;
+    padding: 5px;
+    font-size: 18px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    border: 0;
+    width: 250px;
+    background: #dddddd;
+}
+
+#editor option {
+    padding: 5px;
+    font-size: 18px;
+}
+
+#editor input[type=number] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+}
+
+/* looks odd
+#editor input[type=number] {
+    text-align: right;
+}
+*/
+
+/*
+.editor-color {
+    width: 80px;
+}
+
+#editor .color-picker {
+  width: 24px;
+  height: 24px;
+  background: url(img/camera-24x24.png) no-repeat;
+  border: 0;
+  cursor: pointer;
+  min-width: 0;
+  min-height: 0;
+  vertical-align: middle;
+  margin: 0 0 5px -5px;
+}
+
+*/
 
 /*************************************/
-
-
-button {
-  border: 1px solid #666666;
-  min-width: 50px;
-  min-height: 50px;
-  border-radius: 5px;
-}
 
 #login-button {
   padding: 0 15px;
@@ -113,61 +217,4 @@ button {
   vertical-align: middle;
   width: 50px;
   margin-left: 20px;
-}
-
-#submit-button {
-  width: 160px;
-  margin: 10px 20px 10px 0;
-}
-
-.content {
-  background-color: #ffffff;
-  margin: 15px;
-}
-
-label {
-  display: block;
-  font-size: 12px;
-  margin: 5px 20px 0 0;
-}
-.hint {
-  color: #999999;
-}
-
-.input {
-  margin: 5px 20px 10px 0;
-  border: 1px solid #999999;
-}
-
-.input, option {
-  padding: 5px;
-  font-size: 12px;
-}
-.input[type=number] {
-  width: 80px;
-  text-align: right;
-}
-.input.color {
-  width: 80px;
-}
-.color-picker {
-  width: 24px;
-  height: 24px;
-  background: url(img/camera-24x24.png) no-repeat;
-  border: 0;
-  cursor: pointer;
-  min-width: 0;
-  min-height: 0;
-  vertical-align: middle;
-  margin: 0 0 5px -5px;
-}
-
-select[name=building],
-select[name='building:use'],
-select[name='roof:shape'] {
-  width: 120px;
-}
-
-.hidden {
-  display: none;
 }

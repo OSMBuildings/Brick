@@ -27,7 +27,8 @@
 
 - put leaflet buttons to bottom center
 - deep links
-s
+- have map and editor visible
+
 =============================================================
 
 

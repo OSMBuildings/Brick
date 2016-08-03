@@ -9,42 +9,41 @@
 //     history.replaceState(null, '', baseURL);
 //   }
 // });
-//
-// // TODO: remove this
-//
-// function unselect() {
-//   Events.emit('FEATURE_CLEARED');
-// }
-
-//*****************************************************************************
-
-function getIdeditorUrl() {
-  var position = Map.getCenter();
-  return 'http://www.openstreetmap.org/edit#map=' + Map.getZoom() + '/' + position.lat + '/' + position.lng;
-}
 
 //*****************************************************************************
 
 Events.on('FEATURE_SELECTED', function(featureId) {
-  $.ajax(config.map.featureUrl.replace('{id}', featureId), function(geojson) {
-    var feature = geojson.features[0];
-// //  tags = Data.alignTags(feature.properties && feature.properties.tags || {}),
-     Events.emit('FEATURE_LOADED', feature);
-   });
+  Editor.show();
 
-   if (history.pushState) {
-  //   history.pushState(null, null, baseURL +'feature/'+ featureId);
-   }
+  if (history.pushState) {
+//   history.pushState(null, null, baseURL +'feature/'+ featureId);
+  }
+
+  $.ajax(config.map.featureUrl.replace('{id}', featureId)).done(function(geojson) {
+    var feature = geojson.features[0];
+
+//  tags = Data.alignTags(feature.properties),
+    var tags = feature.properties || {};
+
+    document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
+
+    Events.emit('FEATURE_LOADED', feature);
+   });
+});
+
+Events.on('MAP_CHANGE', function(state) {
+  $('#intro-link-ideditor').attr('href', 'http://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
 });
 
 //*****************************************************************************
 
 $(function() {
-  $('#intro-link-ideditor').attr('href', getIdeditorUrl());
-
   $('#intro-button-start').click(function() {
     $('#intro').fadeOut(200, function() {
       $('#map').removeClass('covered');
     });
   });
-s});
+
+  Map.init();
+  Editor.init();
+});
