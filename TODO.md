@@ -1,3 +1,33 @@
+- map component
+
+- OSMB
+  - marks editable (+desired) objects
+    => only simple buildings
+  - allows picking
+
+- login form
+  - OSM OAuth
+
+- edit form
+  - read from either OSM or OSMB
+    => data layer for either
+  - fields for: height, use
+  - manual roof/wall color selection
+    => later image picker
+  - roof shape selection
+    => not visible in OSMB yet
+
+- saving
+  - save to OSM
+    => data layer
+  - show in OSMB
+    => store somehow locally because of lag (implement later)
+
+
+#############
+
+- Analysis
+
 - geolocation ("locate me")
 - form validation
 - change color swatch onkeyup
