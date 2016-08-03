@@ -22,10 +22,24 @@ Events.on('FEATURE_SELECTED', function(featureId) {
   $.ajax(config.map.featureUrl.replace('{id}', featureId)).done(function(geojson) {
     var feature = geojson.features[0];
 
-//  tags = Data.alignTags(feature.properties),
-    var tags = feature.properties || {};
+    // TODO
+//  feature.properties = Data.alignTags(feature.properties),
+    feature.properties = {
+      'name': undefined,
+      'building': 'yes',
+      'building:use': undefined,
+      'roof:shape': 'gabled',
+      'building:levels': 3,
+      'roof:levels': 1,
+      'building:colour': undefined,
+      'roof:colour': '#ffeedd',
+      'height': 10,
+      'roof:height': undefined,
+      'building:material': 'brick',
+      'roof:material': undefined
+    };
 
-    document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
+    document.title = (feature.properties.name ? feature.properties.name + ' - ' : '') + config.appName;
 
     Events.emit('FEATURE_LOADED', feature);
    });

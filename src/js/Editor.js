@@ -60,21 +60,21 @@ console.log(tags);
   
           case 'building:colour':
             input.value = (value === undefined) ? '' : value;
-            $('#editor-info[building\\:colour]').css('backgroundColor', (value === undefined) ? 'transparent' : value);
+            $('.editor-color-info[name=building\\:colour]').css('background', (value === undefined) ? 'transparent' : value);
             break;
 
           case 'roof:colour':
             input.value = (value === undefined) ? '' : value;
-            $('#editor-info[roof\\:colour]').css('backgroundColor', (value === undefined) ? 'transparent' : value);
+            $('.editor-color-info[name=roof\\:colour]').css('background', (value === undefined) ? 'transparent' : value);
           break;
         }
       });
 
-      $('.editor-info[name=height]').text(tags['height'] ? tags['height'] + 'm' : '');
-      $('.editor-info[roof\\:height]').text(tags['roof:height'] ? tags['roof:height'] +'m' : '');
+      $('.editor-info[name=height]').text(tags['height'] ? '(' + tags['height'] + 'm)' : '');
+      $('.editor-info[name=roof\\:height]').text(tags['roof:height'] ? '(' + tags['roof:height'] +'m)' : '');
 
-      $('.editor-info[building\\:material]').text(tags['building:material'] ? tags['building:material'] : '');
-      $('#editor-info[roof\\:material]').text(tags['roof:material'] ? tags['roof:material'] : '');
+      $('.editor-info[name=building\\:material]').text(tags['building:material'] ? '(' + tags['building:material']+')' : '');
+      $('.editor-info[name=roof\\:material]').text(tags['roof:material'] ?'(' + tags['roof:material']+')' : '');
     });
   };
 
