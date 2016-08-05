@@ -79,11 +79,11 @@ console.log(tags);
   };
 
   Editor.show = function() {
-    $('#editor').show();
+    $('#editor').fadeIn();
   };
 
   Editor.hide = function() {
-    $('#editor').hide();
+    $('#editor').fadeOut();
   };
 
 }());

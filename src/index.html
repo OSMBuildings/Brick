@@ -9,32 +9,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
-    <link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.css">
+    <!--<link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.css">-->
     <link rel="stylesheet" href="style.css">
     <script src="../loader.js"></script>
   </head>
 
   <body>
-    <div id="map" class="covered"></div>
+    <div id="map"></div>
 
-    <div id="intro">
-      <h1>Welcome to Brick!</h1>
-
-      <p>A mobile OpenStreetMap buildings editor.</p>
-
-      <p>Please select an object from the map<br>
-        in order to edit its properties.</p>
-
-      <p>Only basic buildings can be changed.<br>
-        For more advanced options try <a href="#" id="intro-link-ideditor">iD Editor</a>.</p>
-
-<!--p>To save your changes, you'll need an <a href="https://www.openstreetmap.org/user/new">OSM account</a>. It's free and easy to sign up.</p-->
-
-      <button id="intro-button-start">Start editing</button>
-
+    <div id="hint">
+      <p>Select a building from the map in order to edit its properties. Only basic objects can be changed.</p>
+      <p id="login-hint">To save your changes, please log in with OpenStreetMap.</p>
+      <button id="login-button">Log in</button>
     </div>
-
-<!--button id="login-button"><label>Log in</label><img/></button-->
 
     <div id="editor" style="display:none;">
       <div class="align-right">

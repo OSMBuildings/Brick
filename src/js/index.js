@@ -45,17 +45,41 @@ Events.on('FEATURE_SELECTED', function(featureId) {
    });
 });
 
-Events.on('MAP_CHANGE', function(state) {
-  $('#intro-link-ideditor').attr('href', 'http://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
+// Events.on('MAP_CHANGE', function(state) {
+//   $('#intro-link-ideditor').attr('href', 'http://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
+// });
+
+Events.on('LOGIN', function(user) {
+// console.log('USER', user);
+  toggleLogin();
 });
+
+Events.on('LOGOUT', function() {
+  toggleLogin();
+});
+
+function toggleLogin() {
+  if (Auth.isLoggedIn()) {
+    $('#login-hint').hide();
+    $('#login-button').hide();
+  } else {
+    $('#login-hint').show();
+    $('#login-button').show();
+  }
+}
 
 //*****************************************************************************
 
 $(function() {
-  $('#intro-button-start').click(function() {
-    $('#intro').fadeOut(200, function() {
-      $('#map').removeClass('covered');
-    });
+  $('#hint').click(function() {
+    $('#hint').fadeOut(200);
+  });
+
+  toggleLogin();
+
+  $('#login-button').click(function(e) {
+    e.stopPropagation();
+    Auth.login();
   });
 
   Map.init();

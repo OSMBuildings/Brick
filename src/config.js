@@ -10,11 +10,11 @@ var config = {
     featureUrl: 'http://data.osmbuildings.org/0.2/dixw8kmb/feature/{id}.json'
   },
 
-  // oauth: {
-  //   landingPage: 'auth.html',
-  //   consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',
-  //   secret: 'C9g9MAaJHEkif59p2fKwNPFoMld3V5rgTUXOh0qp'
-  // },
+  auth: {
+    landingPage: 'auth.html',
+    consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',
+    secret: 'C9g9MAaJHEkif59p2fKwNPFoMld3V5rgTUXOh0qp'
+  },
 
   editor: {
     fields: {

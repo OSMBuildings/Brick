@@ -1,6 +1,7 @@
 [
   "lib/jquery-2.1.1.min.js",
   "lib/jxon.js",
+  "../node_modules/osm-auth/osmauth.js",
   "lib/leaflet-0.8/leaflet-src.js",
   "lib/leaflet-locatecontrol/L.Control.Locate.min.js",
   "lib/OSMBuildings-Leaflet.js",
@@ -10,5 +11,6 @@
   "js/State.js",
   "js/Map.js",
   "js/Editor.js",
+  "js/Auth.js",
   "js/index.js"
 ]
