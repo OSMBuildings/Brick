@@ -19,30 +19,23 @@ Events.on('FEATURE_SELECTED', function(featureId) {
 //   history.pushState(null, null, baseURL +'feature/'+ featureId);
   }
 
-  $.ajax(config.map.featureUrl.replace('{id}', featureId)).done(function(geojson) {
-    var feature = geojson.features[0];
+  $.ajax('http://api.openstreetmap.org/api/0.6/way/' + featureId.replace(/^\D/, '')).done(function(doc) {
+    var way = JXON.build(doc.getElementsByTagName('way')[0]);
 
-    // TODO
-//  feature.properties = Data.alignTags(feature.properties),
-    feature.properties = {
-      'name': undefined,
-      'building': 'yes',
-      'building:use': undefined,
-      'roof:shape': 'gabled',
-      'building:levels': 3,
-      'roof:levels': 1,
-      'building:colour': undefined,
-      'roof:colour': '#ffeedd',
-      'height': 10,
-      'roof:height': undefined,
-      'building:material': 'brick',
-      'roof:material': undefined
-    };
+    var tags = {};
+    for (var i = 0, il = way.tag.length; i <il; i++) {
+      tags[ way.tag[i]['@k'] ] = way.tag[i]['@v'];
+    }
 
-    document.title = (feature.properties.name ? feature.properties.name + ' - ' : '') + config.appName;
+    document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
 
-    Events.emit('FEATURE_LOADED', feature);
-   });
+    Events.emit('FEATURE_LOADED', { id:way['@id'], tags:tags });
+  });
+
+  // $.ajax(config.map.featureUrl.replace('{id}', featureId)).done(function(geojson) {
+  //   var feature = geojson.features[0];
+  //   var tags = feature.properties.tags;
+  //  });
 });
 
 // Events.on('MAP_CHANGE', function(state) {
@@ -71,9 +64,9 @@ function toggleLogin() {
 //*****************************************************************************
 
 $(function() {
-  $('#hint').click(function() {
-    $('#hint').fadeOut(200);
-  });
+  // $('#hint').click(function() {
+  //   $('#hint').fadeOut(200);
+  // });
 
   toggleLogin();
 

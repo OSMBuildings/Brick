@@ -7,7 +7,7 @@ var config = {
     zoom: 17,
     maxZoom: 19,
     basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png',
-    featureUrl: 'http://data.osmbuildings.org/0.2/dixw8kmb/feature/{id}.json'
+    featureUrl: 'http://data.osmbuildings.org/0.2/3hxnp33t/feature/{id}.json'
   },
 
   auth: {

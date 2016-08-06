@@ -32,9 +32,9 @@ var Editor = {};
       // TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
   
       var
-        tags = feature.properties || {},
+        tags = feature.tags,
         value;
-console.log(tags);
+
       $('#editor h1').text(tags.name ? 'Edit "' + tags.name + '"' : 'Edit building');
   
       $('#editor input, #editor select').each(function(index, input) {
@@ -70,7 +70,7 @@ console.log(tags);
         }
       });
 
-      $('.editor-info[name=height]').text(tags['height'] ? '(' + tags['height'] + 'm)' : '');
+      $('.editor-info[name=height]').text(tags['building:height'] ? '(' + tags['building:height'] + 'm)' : '');
       $('.editor-info[name=roof\\:height]').text(tags['roof:height'] ? '(' + tags['roof:height'] +'m)' : '');
 
       $('.editor-info[name=building\\:material]').text(tags['building:material'] ? '(' + tags['building:material']+')' : '');

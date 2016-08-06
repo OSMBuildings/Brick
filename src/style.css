@@ -145,6 +145,13 @@ p {
     appearance: none;
 }
 
+#editor input:focus,
+#editor select:focus {
+    outline: 0;
+    background: #BBBBBB;
+}
+
+
 /* looks odd
 #editor input[type=number] {
     text-align: right;

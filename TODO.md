@@ -1,55 +1,37 @@
 
-- map component
+# TODAY
 
-- OSMB
-  - marks editable (+wanted) objects => only simple buildings
-  OK allows picking
-
-- login form
-  - OSM OAuth
-
-- edit form
-  - read from either OSM or OSMB => data layer for either
-  OK fields for: height, use
-  - manual roof/wall color selection => later image picker
-  - roof shape selection => not visible in OSMB yet
+- editor
+  - roof/wall color picker => later image picker (color thief)
+  - roof shape selection => not visible in OSMB yet (http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings)
 
 - saving
-  - save to OSM => data layer
+  - save to OSM
   - show in OSMB => store somehow locally because of lag (implement later)
 
-=============================================================
 
+# NEXT
+
+- OSMB marks editable (+wanted) objects => only simple buildings
 - put leaflet buttons to bottom center
-- deep links
 - have map and editor visible
 
-=============================================================
 
 # LATER
 
-- usage analysis
+- deep links
+- login/logout button
 - geolocation ("locate me")
-- form validation
-- change color swatch onkeyup
-- "unsaved" warning
 
-## integrate color selection
+
+# MAYBE
+
+- usage analysis
+- form validation
+- "unsaved" warning
+- integrate color selection
   - fix html & css
   - flow to return color
   - re-open
   - close button
-
-- highlight a building => OSM Buildings
-- roof selection: http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings
-- immediate visual feedback
-- UTF8 issue on server
-- messages
-  - login/out
-  - osm account
-  - picture upload
-  - not editable
-- offer materials as color hint
-- permanent url
-- simple color picker
-- Mapillary
+- Mapillary integration
