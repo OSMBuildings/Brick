@@ -4,21 +4,26 @@
 - editor
   - roof/wall color picker => later image picker (color thief)
   - roof shape selection => not visible in OSMB yet (http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings)
+  - align a few tags
 
 - saving
   - save to OSM
   - show in OSMB => store somehow locally because of lag (implement later)
 
+- map
+  - have map and editor visible
+  - OSMB marks editable (+wanted) objects => only simple buildings
+
 
 # NEXT
 
-- OSMB marks editable (+wanted) objects => only simple buildings
-- put leaflet buttons to bottom center
-- have map and editor visible
+- "unsaved" warning
+- CATEGORIES!
 
 
 # LATER
 
+- put leaflet buttons to bottom center
 - deep links
 - login/logout button
 - geolocation ("locate me")
@@ -28,9 +33,7 @@
 
 - usage analysis
 - form validation
-- "unsaved" warning
 - integrate color selection
-  - fix html & css
   - flow to return color
   - re-open
   - close button

@@ -30,51 +30,65 @@ var Editor = {};
   
     Events.on('FEATURE_LOADED', function(feature) {
       // TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
-  
+
       var
-        tags = feature.tags,
+        properties = feature.properties,
+        tags = properties.tags,
         value;
 
       $('#editor h1').text(tags.name ? 'Edit "' + tags.name + '"' : 'Edit building');
   
       $('#editor input, #editor select').each(function(index, input) {
-        value = tags[input.name];
+        // value = tags[input.name];
         switch(input.name) {
           case 'building':
+            value = tags.building || 'yes';
             $(input).find('option').filter(function() {
-              return $(this).html() === (value || 'yes');
+              return $(this).html() === value;
             }).prop('selected', true);
-            break;
-  
-          case 'building:use':
+          break;
+
+          // case 'building:use':
+          //   value = tags.buildingUse || '';
+          //   $(input).find('option').filter(function() {
+          //     return $(this).html() === value;
+          //   }).prop('selected', true);
+          // break;
+
           case 'roof:shape':
+            value = properties.roofShape || '';
             $(input).find('option').filter(function() {
-              return $(this).html() === (value || '');
+              return $(this).html() === value;
             }).prop('selected', true);
           break;
-  
+
           case 'building:levels':
-          case 'roof:levels':
-            input.value = (value === undefined) ? '' : value;
+            input.value = properties.levels;
           break;
-  
+
+          case 'roof:levels':
+            input.value = properties.roofLevels;
+          break;
+
           case 'building:colour':
-            input.value = (value === undefined) ? '' : value;
-            $('.editor-color-info[name=building\\:colour]').css('background', (value === undefined) ? 'transparent' : value);
+            value = properties.color || '';
+            input.value = value;
+            $('.editor-color-info[name=building\\:colour]').css('background', (value === '') ? 'transparent' : value);
             break;
 
           case 'roof:colour':
-            input.value = (value === undefined) ? '' : value;
-            $('.editor-color-info[name=roof\\:colour]').css('background', (value === undefined) ? 'transparent' : value);
+            value = properties.roofColor || '';
+            input.value = value;
+            $('.editor-color-info[name=roof\\:colour]').css('background', (value === '') ? 'transparent' : value);
           break;
         }
       });
 
-      $('.editor-info[name=height]').text(tags['building:height'] ? '(' + tags['building:height'] + 'm)' : '');
-      $('.editor-info[name=roof\\:height]').text(tags['roof:height'] ? '(' + tags['roof:height'] +'m)' : '');
+      $('.editor-info[name=height]').text(properties.height ? '(' + properties.height + 'm)' : '');
+      $('.editor-info[name=roof\\:height]').text(properties.roofHeight ? '(' + properties.roofHeight + 'm)' : '');
 
-      $('.editor-info[name=building\\:material]').text(tags['building:material'] ? '(' + tags['building:material']+')' : '');
-      $('.editor-info[name=roof\\:material]').text(tags['roof:material'] ?'(' + tags['roof:material']+')' : '');
+      $('.editor-info[name=building\\:material]').text(properties.material ? '(' + properties.material + ')' : '');
+      $('.editor-info[name=roof\\:material]').text(properties.roofMaterial ? '(' + properties.roofMaterial + ')' : '');
     });
   };
 
