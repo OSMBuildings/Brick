@@ -16,20 +16,8 @@ html, body {
   font-family: sans-serif;
 }
 
-.covered {
-    filter: blur(2px);
-    -webkit-filter: blur(2px);
-    -moz-filter: blur(2px);
-    -ms-filter: blur(2px);
-}
-
 .hidden {
     display: none;
-}
-
-.align-right {
-    width: 100%;
-    text-align: right;
 }
 
 h1 {
@@ -42,11 +30,38 @@ p {
     margin: 5px 0;
 }
 
-#map {
+.map {
     height: 100%;
 }
 
-#hint {
+/*************************************/
+
+.panel {
+    color: #000000;
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 320px;
+    height: 100%;
+    z-index: 1000;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px #000000;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+@media screen and (orientation: portrait) and (max-device-width: 400px) {
+    .panel {
+        width: 100%;
+        height: 50%;
+        top: 50%;
+    }
+}
+
+/*************************************/
+
+.intro {
     color: #ffffff;
     font-size: 14px;
     text-shadow: 0 0 2px #000000;
@@ -62,33 +77,14 @@ p {
 
 /*************************************/
 
-#editor {
-    color: #000000;
-    font-size: 18px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 350px;
-    height: 100%;
-    z-index: 1000;
-    background: rgba(255,255,255,255,0.75);
-    padding: 30px;
-    overflow-y: auto;
+.editor-title {
+    text-overflow: ellipsis;
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-#editor-button-close {
-    border: 0;
-    padding: 5px 10px;
-    background: transparent;
-    font-size: 40px;
-    cursor: pointer;
-}
-
-#editor-button-close:focus {
-    outline: none;
-}
-
-#editor-button-submit {
+.editor-button-submit {
     border: 0;
     padding: 10px 20px;
     margin: 40px 0 20px 0;
@@ -99,7 +95,7 @@ p {
     cursor: pointer;
 }
 
-#editor-button-submit:focus {
+.editor-button-submit:focus {
     outline: none;
 }
 
@@ -107,7 +103,7 @@ p {
     margin: 20px 0 0 0;
 }
 
-#editor label {
+.editor label {
     display: block;
     font-size: 14px;
     margin: 5px 0;
@@ -118,8 +114,8 @@ p {
     color: #999999;
 }
 
-#editor input,
-#editor select {
+.editor input,
+.editor select {
     margin: 0;
     padding: 5px;
     font-size: 18px;
@@ -133,27 +129,27 @@ p {
     background: #dddddd;
 }
 
-#editor option {
+.editor option {
     padding: 5px;
     font-size: 18px;
 }
 
-#editor input[type=number] {
+.editor input[type=number] {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     appearance: none;
 }
 
-#editor input:focus,
-#editor select:focus {
+.editor input:focus,
+.editor select:focus {
     outline: 0;
     background: #BBBBBB;
 }
 
 
 /* looks odd
-#editor input[type=number] {
+.editor input[type=number] {
     text-align: right;
 }
 */
@@ -163,7 +159,7 @@ p {
     width: 80px;
 }
 
-#editor .color-picker {
+.editor .color-picker {
   width: 24px;
   height: 24px;
   background: url(img/camera-24x24.png) no-repeat;
@@ -174,12 +170,11 @@ p {
   vertical-align: middle;
   margin: 0 0 5px -5px;
 }
-
 */
 
 /*************************************/
 
-#login-button {
+.login-button {
     border: 0;
     padding: 10px 20px;
     margin: 10px 0 0 0;
@@ -190,6 +185,6 @@ p {
     cursor: pointer;
 }
 
-#login-button:focus {
+.login-button:focus {
     outline: none;
 }

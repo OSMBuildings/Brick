@@ -26,8 +26,6 @@ var Editor = {};
 //      }});
 //    });
 
-    $('#editor-button-close').click(Editor.hide);
-  
     Events.on('FEATURE_LOADED', function(feature) {
       // TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
 
@@ -36,7 +34,7 @@ var Editor = {};
         tags = properties.tags,
         value;
 
-      $('#editor h1').text(tags.name ? 'Edit "' + tags.name + '"' : 'Edit building');
+      $('#editor h1').text(tags.name ? tags.name : 'Building ' + feature.id);
   
       $('#editor input, #editor select').each(function(index, input) {
         // value = tags[input.name];
@@ -90,14 +88,6 @@ var Editor = {};
       $('.editor-info[name=building\\:material]').text(properties.material !== undefined ? '(' + properties.material + ')' : '');
       $('.editor-info[name=roof\\:material]').text(properties.roofMaterial !== undefined ? '(' + properties.roofMaterial + ')' : '');
     });
-  };
-
-  Editor.show = function() {
-    $('#editor').fadeIn();
-  };
-
-  Editor.hide = function() {
-    $('#editor').fadeOut();
   };
 
 }());

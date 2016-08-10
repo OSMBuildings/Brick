@@ -1,20 +1,16 @@
 [
-  "lib/jquery-2.1.1.min.js",
-  "lib/jxon.js",
-  "node_modules/osm-auth/osmauth.js",
-  "lib/leaflet-0.8/leaflet-src.js",
-  "lib/leaflet-locatecontrol/L.Control.Locate.min.js",
-  "lib/OSMBuildings-Leaflet.js",
+  "../lib/jquery-2.1.1.min.js",
+  "../lib/jxon.js",
+  "../node_modules/osm-auth/osmauth.js",
+  "../lib/leaflet-0.8/leaflet-src.js",
+  "../lib/leaflet-locatecontrol/L.Control.Locate.min.js",
+  "../lib/OSMBuildings-Leaflet.js",
 
-  "src/config.js",
-  "js/util.js",
-  "js/Bus.js",
+  "config.js",
   "js/State.js",
-  "js/OAuth.js",
-  "js/Data.js",
-  "js/Map.js",
-  "js/Login.js",
+  "js/Auth.js",
   "js/Editor.js",
-  "js/Brick.js",
-  "js/OSMAPI.js"
+  "js/Events.js",
+  "js/Map.js",
+  "js/index.js"
 ]

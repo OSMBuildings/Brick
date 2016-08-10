@@ -8,85 +8,83 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="lib/leaflet-0.8/leaflet.css">
-    <!--<link rel="stylesheet" href="lib/leaflet-locatecontrol/L.Control.Locate.css">-->
+    <link rel="stylesheet" href="../lib/leaflet-0.8/leaflet.css">
     <link rel="stylesheet" href="style.css">
     <script src="../loader.js"></script>
   </head>
 
   <body>
-    <div id="map"></div>
+    <div id="map" class="map"></div>
 
-    <div id="hint">
-      <p>Select a building from the map in order to edit its properties. Only basic objects can be changed.</p>
-      <p id="login-hint">To save your changes, please log in with OpenStreetMap.</p>
-      <button id="login-button">Log in</button>
-    </div>
+    <div class="panel">
 
-    <div id="editor" style="display:none;">
-      <div class="align-right">
-        <button id="editor-button-close">&times;</button>
+      <!--<div id="intro" class="intro" style="display:none">-->
+        <!--<p>Select a building from the map in order to edit its properties. Only basic objects can be changed.</p>-->
+        <!--<p id="login-hint">To save your changes, please log in with OpenStreetMap.</p>-->
+        <!--<button id="login-button" class="login-button">Log in</button>-->
+      <!--</div>-->
+
+      <div id="editor" class="editor">
+        <h1 class="editor-title">Edit building</h1>
+
+        <div class="editor-row">
+          <label>Select building type</label>
+          <select name="building" class="input"></select>
+        </div>
+
+        <!--div class="editor-row">
+          <label>Select building use</label>
+          <select name="building:use" class="input"></select>
+        </div-->
+
+        <div class="editor-row">
+          <label>Number of building levels</label>
+          <input type="number" min="0" step="1" name="building:levels" autocomplete="0">
+          <span name="height" class="editor-info"></span>
+        </div>
+
+        <div class="editor-row">
+          <label>Pick building color</label>
+          <input type="text" name="building:colour" class="editor-color" autocomplete="0">
+          <span name="building:material" class="editor-info"></span>
+          <div name="building:colour" class="editor-color-info" style="width:40px;height:40px;border:1px solid #666666;display:inline;"></div>
+        </div>
+
+        <div class="editor-row">
+          <label>Number of roof levels</label>
+          <input type="number" min="0" step="1" name="roof:levels" autocomplete="0">
+          <span name="roof:height" class="editor-info"></span>
+        </div>
+
+        <div class="editor-row">
+          <label>Pick roof color</label>
+          <input type="text" name="roof:colour" class="editor-color" autocomplete="0">
+          <span name="roof:material" class="editor-info"></span>
+          <div name="roof:colour" class="editor-color-info" style="width:40px;height:40px;border:1px solid #666666;display:inline;"></div>
+        </div>
+
+        <div class="editor-row">
+          <label>Select roof shape</label>
+          <!-- select name="roof:shape" class="input"></select -->
+          <input type="hidden" name="roof:shape">
+          <div class="roof-shape"><img src="images/roof-flat.jpg" class="roof-shape-icon" width="50">flat</div>
+          <div class="roof-shape"><img src="images/roof-skillion.jpg" class="roof-shape-icon" width="50">skillion</div>
+          <div class="roof-shape"><img src="images/roof-gabled.jpg" class="roof-shape-icon" width="50">gabled</div>
+          <div class="roof-shape"><img src="images/roof-halfhipped.jpg" class="roof-shape-icon" width="50">half hipped</div><br>
+
+          <div class="roof-shape"><img src="images/roof-hipped.jpg" class="roof-shape-icon" width="50">hipped</div>
+          <div class="roof-shape"><img src="images/roof-gambrel.jpg" class="roof-shape-icon" width="50">gambrel</div>
+          <div class="roof-shape"><img src="images/roof-mansard.jpg" class="roof-shape-icon" width="50">mansard</div>
+          <div class="roof-shape"><img src="images/roof-pyramidal.jpg" class="roof-shape-icon" width="50">pyramidal</div><br>
+
+          <div class="roof-shape"><img src="images/roof-onion.jpg" class="roof-shape-icon" width="50">onion</div>
+          <div class="roof-shape"><img src="images/roof-dome.jpg" class="roof-shape-icon" width="50">dome</div>
+          <div class="roof-shape"><img src="images/roof-round.jpg" class="roof-shape-icon" width="50">round</div>
+          <div class="roof-shape"><img src="images/roof-saltbox.jpg" class="roof-shape-icon" width="50">saltbox</div>
+        </div>
+
+        <button type="submit" id="editor-button-submit" class="editor-button-submit">Save changes</button>
       </div>
-
-      <h1>Edit building</h1>
-
-      <div class="editor-row">
-        <label>Select building type</label>
-        <select name="building" class="input"></select>
-      </div>
-
-      <!--div class="editor-row">
-        <label>Select building use</label>
-        <select name="building:use" class="input"></select>
-      </div-->
-
-      <div class="editor-row">
-        <label>Number of building levels</label>
-        <input type="number" min="0" step="1" name="building:levels" autocomplete="0">
-        <span name="height" class="editor-info"></span>
-      </div>
-
-      <div class="editor-row">
-        <label>Pick building color</label>
-        <input type="text" name="building:colour" class="editor-color" autocomplete="0">
-        <span name="building:material" class="editor-info"></span>
-        <div name="building:colour" class="editor-color-info" style="width:40px;height:40px;border:1px solid #666666;display:inline;"></div>
-      </div>
-
-      <div class="editor-row">
-        <label>Number of roof levels</label>
-        <input type="number" min="0" step="1" name="roof:levels" autocomplete="0">
-        <span name="roof:height" class="editor-info"></span>
-      </div>
-
-      <div class="editor-row">
-        <label>Pick roof color</label>
-        <input type="text" name="roof:colour" class="editor-color" autocomplete="0">
-        <span name="roof:material" class="editor-info"></span>
-        <div name="roof:colour" class="editor-color-info" style="width:40px;height:40px;border:1px solid #666666;display:inline;"></div>
-      </div>
-
-      <div class="editor-row">
-        <label>Select roof shape</label>
-        <!-- select name="roof:shape" class="input"></select -->
-        <input type="hidden" name="roof:shape">
-        <div class="roof-shape"></div><img src="images/roof-flat.jpg" class="roof-shape-icon" width="50">flat</div>
-        <div class="roof-shape"><img src="images/roof-skillion.jpg" class="roof-shape-icon" width="50">skillion</div>
-        <div class="roof-shape"><img src="images/roof-gabled.jpg" class="roof-shape-icon" width="50">gabled</div>
-        <div class="roof-shape"><img src="images/roof-halfhipped.jpg" class="roof-shape-icon" width="50">half hipped</div><br>
-
-        <div class="roof-shape"><img src="images/roof-hipped.jpg" class="roof-shape-icon" width="50">hipped</div>
-        <div class="roof-shape"><img src="images/roof-gambrel.jpg" class="roof-shape-icon" width="50">gambrel</div>
-        <div class="roof-shape"><img src="images/roof-mansard.jpg" class="roof-shape-icon" width="50">mansard</div>
-        <div class="roof-shape"><img src="images/roof-pyramidal.jpg" class="roof-shape-icon" width="50">pyramidal</div><br>
-
-        <div class="roof-shape"><img src="images/roof-onion.jpg" class="roof-shape-icon" width="50">onion</div>
-        <div class="roof-shape"><img src="images/roof-dome.jpg" class="roof-shape-icon" width="50">dome</div>
-        <div class="roof-shape"><img src="images/roof-round.jpg" class="roof-shape-icon" width="50">round</div>
-        <div class="roof-shape"><img src="images/roof-saltbox.jpg" class="roof-shape-icon" width="50">saltbox</div>
-      </div>
-
-      <button type="submit" id="editor-button-submit">Save changes</button>
     </div>
   </body>
 </html>
