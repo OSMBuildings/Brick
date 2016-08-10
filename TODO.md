@@ -4,7 +4,6 @@
 - editor
   - roof/wall color picker => later image picker (color thief)
   - roof shape selection => not visible in OSMB yet (http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings)
-  - align a few tags
 
 - saving
   - save to OSM

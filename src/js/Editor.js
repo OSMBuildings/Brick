@@ -63,11 +63,11 @@ var Editor = {};
           break;
 
           case 'building:levels':
-            input.value = properties.levels;
+            input.value = properties.levels !== undefined ? properties.levels : '';
           break;
 
           case 'roof:levels':
-            input.value = properties.roofLevels;
+            input.value = properties.roofLevels !== undefined ? properties.roofLevels : '';
           break;
 
           case 'building:colour':
@@ -84,11 +84,11 @@ var Editor = {};
         }
       });
 
-      $('.editor-info[name=height]').text(properties.height ? '(' + properties.height + 'm)' : '');
-      $('.editor-info[name=roof\\:height]').text(properties.roofHeight ? '(' + properties.roofHeight + 'm)' : '');
+      $('.editor-info[name=height]').text(properties.height !== undefined ? '(' + properties.height + 'm)' : '');
+      $('.editor-info[name=roof\\:height]').text(properties.roofHeight !== undefined ? '(' + properties.roofHeight + 'm)' : '');
 
-      $('.editor-info[name=building\\:material]').text(properties.material ? '(' + properties.material + ')' : '');
-      $('.editor-info[name=roof\\:material]').text(properties.roofMaterial ? '(' + properties.roofMaterial + ')' : '');
+      $('.editor-info[name=building\\:material]').text(properties.material !== undefined ? '(' + properties.material + ')' : '');
+      $('.editor-info[name=roof\\:material]').text(properties.roofMaterial !== undefined ? '(' + properties.roofMaterial + ')' : '');
     });
   };
 

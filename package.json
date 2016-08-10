@@ -12,9 +12,7 @@
     "url": "git@github.com:OSMBuildings/Brick.git"
   },
   "scripts": {},
-  "dependencies": {
-    "osm-auth": "^0.2.9"
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-concat": "~0.4.0",

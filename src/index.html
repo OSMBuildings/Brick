@@ -68,7 +68,22 @@
 
       <div class="editor-row">
         <label>Select roof shape</label>
-        <select name="roof:shape" class="input"></select>
+        <!-- select name="roof:shape" class="input"></select -->
+        <input type="hidden" name="roof:shape">
+        <div class="roof-shape"></div><img src="images/roof-flat.jpg" class="roof-shape-icon" width="50">flat</div>
+        <div class="roof-shape"><img src="images/roof-skillion.jpg" class="roof-shape-icon" width="50">skillion</div>
+        <div class="roof-shape"><img src="images/roof-gabled.jpg" class="roof-shape-icon" width="50">gabled</div>
+        <div class="roof-shape"><img src="images/roof-halfhipped.jpg" class="roof-shape-icon" width="50">half hipped</div><br>
+
+        <div class="roof-shape"><img src="images/roof-hipped.jpg" class="roof-shape-icon" width="50">hipped</div>
+        <div class="roof-shape"><img src="images/roof-gambrel.jpg" class="roof-shape-icon" width="50">gambrel</div>
+        <div class="roof-shape"><img src="images/roof-mansard.jpg" class="roof-shape-icon" width="50">mansard</div>
+        <div class="roof-shape"><img src="images/roof-pyramidal.jpg" class="roof-shape-icon" width="50">pyramidal</div><br>
+
+        <div class="roof-shape"><img src="images/roof-onion.jpg" class="roof-shape-icon" width="50">onion</div>
+        <div class="roof-shape"><img src="images/roof-dome.jpg" class="roof-shape-icon" width="50">dome</div>
+        <div class="roof-shape"><img src="images/roof-round.jpg" class="roof-shape-icon" width="50">round</div>
+        <div class="roof-shape"><img src="images/roof-saltbox.jpg" class="roof-shape-icon" width="50">saltbox</div>
       </div>
 
       <button type="submit" id="editor-button-submit">Save changes</button>
