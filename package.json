@@ -2,7 +2,7 @@
   "name": "brick",
   "private": false,
   "description": "Brick",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "http://brick.osmbuildings.org",
   "author": "@osmbuildings",
   "contributors": [],
@@ -12,7 +12,9 @@
     "url": "git@github.com:OSMBuildings/Brick.git"
   },
   "scripts": {},
-  "dependencies": {},
+  "dependencies": {
+    "osm-auth": "^0.2.9"
+  },
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-concat": "~0.4.0",
