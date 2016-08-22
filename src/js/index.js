@@ -8,16 +8,20 @@ Events.on('FEATURE_SELECTED', function(featureId) {
   $('#editor').fadeIn();
 
   if (history.pushState) {
-//   history.pushState(null, null, baseURL +'feature/'+ featureId);
+//   history.pushState(null, null, baseURL + 'feature/' + featureId);
   }
 
-  $.ajax(config.map.featureUrl.replace('{id}', featureId)).done(function(geojson) {
-    var feature = geojson.features[0];
-    var tags = feature.properties.tags;
-
-    document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
-    Events.emit('FEATURE_LOADED', feature);
+  // $.ajax('http://api.openstreetmap.org/api/0.6/' + featureId.replace(/^([wr])/, function($0, $1) {
+  //     var m = {
+  //       w: 'way/',
+  //       r: 'relation/'
+  //     };
+  //     return m[$1] || $1;
+  //   })).done(function(doc) {
+  $.ajax('http://api.openstreetmap.org/api/0.6/way/98867555').done(function(doc) {
+    Events.emit('ITEM_LOADED', JXON.build(doc.children[0]));
   });
+
 });
 
 // Events.on('MAP_CHANGE', function(state) {
@@ -33,7 +37,7 @@ Events.on('LOGOUT', function() {
 });
 
 function toggleLogin() {
-  if (Auth.isLoggedIn()) {
+  if (OSMAPI.isLoggedIn()) {
     $('#login-hint').hide();
     $('#login-button').hide();
   } else {
@@ -53,7 +57,7 @@ $(function() {
 
   $('#login-button').click(function(e) {
     e.stopPropagation();
-    Auth.login();
+    OSMAPI.login();
   });
 
   Map.init();

@@ -26,67 +26,76 @@ var Editor = {};
 //      }});
 //    });
 
-    Events.on('FEATURE_LOADED', function(feature) {
+    var loadedItem;
+
+    Events.on('ITEM_LOADED', function(item) {
+      loadedItem = item;
+
       // TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
 
-      var
-        properties = feature.properties,
-        tags = properties.tags,
-        value;
+      var itemType = item.way ? 'way' : 'relation';
 
-      $('#editor h1').text(tags.name ? tags.name : 'Building ' + feature.id);
+      var t, tags = {};
+      if (item[itemType].tag) {
+        for (var i = 0, il = item[itemType].tag.length; i<il; i++) {
+          t = item[itemType].tag[i];
+          tags[t['@k']] = t['@v'];
+        }
+      }
+
+      var value;
+
+      document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
+      $('#editor h1').text(tags.name ? tags.name : 'Building ' + item[itemType]['@id']);
   
       $('#editor input, #editor select').each(function(index, input) {
-        // value = tags[input.name];
+        value = tags[input.name];
         switch(input.name) {
           case 'building':
-            value = tags.building || 'yes';
             $(input).find('option').filter(function() {
-              return $(this).html() === value;
+              return $(this).html() === (value || 'yes');
             }).prop('selected', true);
           break;
 
           // case 'building:use':
-          //   value = tags.buildingUse || '';
           //   $(input).find('option').filter(function() {
-          //     return $(this).html() === value;
+          //     return $(this).html() === (value || '');
           //   }).prop('selected', true);
           // break;
 
           case 'roof:shape':
-            value = properties.roofShape || '';
             $(input).find('option').filter(function() {
-              return $(this).html() === value;
+              return $(this).html() === (value || '');
             }).prop('selected', true);
           break;
 
           case 'building:levels':
-            input.value = properties.levels !== undefined ? properties.levels : '';
-          break;
-
           case 'roof:levels':
-            input.value = properties.roofLevels !== undefined ? properties.roofLevels : '';
+            input.value = (value !== undefined ? value : '');
           break;
 
           case 'building:colour':
-            value = properties.color || '';
-            input.value = value;
-            $('.editor-color-info[name=building\\:colour]').css('background', (value === '') ? 'transparent' : value);
+            input.value = value || '';
+            $('.editor-color-info[name=building\\:colour]').css('background', (value || 'transparent'));
             break;
 
           case 'roof:colour':
-            value = properties.roofColor || '';
-            input.value = value;
-            $('.editor-color-info[name=roof\\:colour]').css('background', (value === '') ? 'transparent' : value);
+            input.value = value || '';
+            $('.editor-color-info[name=roof\\:colour]').css('background', (value || 'transparent'));
           break;
         }
       });
 
-      $('.editor-info[name=height]').text(properties.height !== undefined ? '(' + properties.height + 'm)' : '');
-      $('.editor-info[name=roof\\:height]').text(properties.roofHeight !== undefined ? '(' + properties.roofHeight + 'm)' : '');
+      $('.editor-info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
+      $('.editor-info[name=roof\\:height]').text(tags['roofHeight'] !== undefined ? '(' + tags['roofHeight'] + 'm)' : '');
 
-      $('.editor-info[name=building\\:material]').text(properties.material !== undefined ? '(' + properties.material + ')' : '');
-      $('.editor-info[name=roof\\:material]').text(properties.roofMaterial !== undefined ? '(' + properties.roofMaterial + ')' : '');
+      $('.editor-info[name=building\\:material]').text(tags['material'] ? '(' + tags['material'] + ')' : '');
+      $('.editor-info[name=roof\\:material]').text(tags['roofMaterial'] ? '(' + tags['roofMaterial'] + ')' : '');
+    });
+
+    $('#editor-button-submit').click(function() {
+      var itemType = loadedItem.way ? 'way' : 'relation';
+      OSMAPI.write(loadedItem, 'Brick Edit 01');
     });
   };
 

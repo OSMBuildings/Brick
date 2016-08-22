@@ -85,12 +85,13 @@ p {
 }
 
 .editor-button-submit {
-    border: 0;
+    border: 1px solid #336699;
     padding: 10px 20px;
     margin: 40px 0 20px 0;
-    box-shadow: 0 0 10px #000000;
-    border-radius: 2px;
-    background: #ffffff;
+    /*box-shadow: 0 0 5px #000000;*/
+    border-radius: 4px;
+    background: #6699ff;
+    color: #ffffff;
     font-size: 16px;
     cursor: pointer;
 }

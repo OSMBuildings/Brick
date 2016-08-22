@@ -8,7 +8,7 @@
 
   "config.js",
   "js/State.js",
-  "js/Auth.js",
+  "js/OSMAPI.js",
   "js/Editor.js",
   "js/Events.js",
   "js/Map.js",
