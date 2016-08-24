@@ -30,33 +30,57 @@ p {
     margin: 5px 0;
 }
 
-.map {
-    height: 100%;
-}
-
 /*************************************/
 
+.layout {
+  display:table;
+    width:100%;
+    height:100%;
+}
+
 .panel {
-    color: #000000;
-    font-size: 18px;
-    position: absolute;
-    left: 0;
-    top: 0;
     width: 320px;
     height: 100%;
-    z-index: 1000;
-    background: rgba(255,255,255,0.8);
+    display: table-cell;
+    color: #000000;
+    font-size: 18px;
+    background: #ffffff;
     box-shadow: 0 0 15px #000000;
-    padding: 30px;
-    overflow-y: auto;
+    vertical-align: top;
+    z-index: 10;
+}
+
+.panel-scroll {
+    margin: 30px;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 @media screen and (orientation: portrait) and (max-device-width: 400px) {
     .panel {
+        position: absolute;
+        left: 0;
+        top: 50%;
         width: 100%;
         height: 50%;
-        top: 50%;
+        display: block;
     }
+
+    #map {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 50%;
+        display: block;
+    }
+}
+
+#map {
+    display:table-cell;
+    height: 100%;
+    /*z-index: -1;*/
 }
 
 /*************************************/
@@ -147,13 +171,6 @@ p {
     outline: 0;
     background: #BBBBBB;
 }
-
-
-/* looks odd
-.editor input[type=number] {
-    text-align: right;
-}
-*/
 
 /*
 .editor-color {
