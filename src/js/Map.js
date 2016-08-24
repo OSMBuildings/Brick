@@ -13,7 +13,9 @@ var Map;
 
     var zoom = State.get('zoom') || config.map.zoom;
 
-    var map = new L.Map('map').setView(position, zoom);
+    var map = new L.Map('map', { zoomControl: false }).setView(position, zoom);
+    var zoomControl = L.control.zoom({ position:'topright' });
+    zoomControl.addTo(map);
 
     map.on('moveend zoomend', function() {
       var
@@ -38,11 +40,11 @@ var Map;
       });
 
     L.control.locate({
-      position: 'topleft',  // set the location of the control
+      position: 'topright',  // set the location of the control
       drawCircle: true,  // controls whether a circle is drawn that shows the uncertainty about the location
-      follow: false,  // follow the user's location
+      follow: true,  // follow the user's location
       setView: true, // automatically sets the map view to the user's location, enabled if `follow` is true
-      keepCurrentZoomLevel: false, // keep the current map zoom level when displaying the user's location. (if `false`, use maxZoom)
+      keepCurrentZoomLevel: true, // keep the current map zoom level when displaying the user's location. (if `false`, use maxZoom)
       stopFollowingOnDrag: false, // stop following when the map is dragged if `follow` is true (deprecated, see below)
       remainActive: false, // if true locate control remains active on click even if the user's location is in view.
       markerClass: L.circleMarker, // L.circleMarker or L.marker

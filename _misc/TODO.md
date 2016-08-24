@@ -1,28 +1,29 @@
 
+- relocate leaflet buttons and/or change layout
+- geolocation ("locate me")
+
 
 # TODAY
 
 - roof shape selection
 - roof/wall color picker
-- relocate leaflet buttons or change layout
-- geolocation ("locate me")
-- save to OSM
+
+- intro text + login button
+- "unsaved" warning
+- form validation
 
 
 
 # NEXT
 
-- intro text + login button
-- "unsaved" warning
 - OSMB: mark editable (+wanted) objects => only simple buildings
 - show in OSMB => store somehow locally because of lag (implement later)
+- geolocation for OSMB: function + marker
 
 
 # LATER
 
-- form validation
 - deep links
 - integrate color selection from image (color-thief?)
 - Mapillary
-- usage analysis
 - FYI http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings
