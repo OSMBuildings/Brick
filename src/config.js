@@ -3,6 +3,8 @@ var config = {
   appName: 'Brick',
   appVersion: '0.2.0',
 
+  editComment: 'Brick edit',
+
   map: {
     position: { latitude: 52.52179, longitude: 13.39503 },
     zoom: 17,

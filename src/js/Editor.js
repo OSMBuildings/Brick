@@ -5,6 +5,9 @@ var Editor = {};
 
   var configFields = config.editor.fields;
 
+  var isDirty = false;
+  var loadedItem;
+
   Editor.init = function() {
 
     $('#editor select').each(function(index, input) {
@@ -19,6 +22,12 @@ var Editor = {};
       }
     });
 
+    if (OSMAPI.isLoggedIn()) {
+      $('#editor-button-submit').show();
+    } else {
+      $('#editor-button-submit').hide();
+    }
+
 //    $('#editor').find('.color-picker').click(function(index, input) {
 //      // TODO: handle every picker individually
 //      PhotoColorPicker.capture({ $('#editor'): $('#camera-overlay'), callback: function(color) {
@@ -26,7 +35,13 @@ var Editor = {};
 //      }});
 //    });
 
-    var loadedItem;
+    Events.on('LOGIN', function() {
+      $('#editor-button-submit').show();
+    });
+
+    Events.on('LOGOUT', function() {
+      $('#editor-button-submit').hide();
+    });
 
     Events.on('ITEM_LOADED', function(item) {
       loadedItem = item;
@@ -76,26 +91,31 @@ var Editor = {};
 
           case 'building:colour':
             input.value = value || '';
-            $('.editor-color-info[name=building\\:colour]').css('background', (value || 'transparent'));
+            $('#editor .color-info[name=building\\:colour]').css('background', (value || 'transparent'));
             break;
 
           case 'roof:colour':
             input.value = value || '';
-            $('.editor-color-info[name=roof\\:colour]').css('background', (value || 'transparent'));
+            $('#editor .color-info[name=roof\\:colour]').css('background', (value || 'transparent'));
           break;
         }
       });
 
-      $('.editor-info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
-      $('.editor-info[name=roof\\:height]').text(tags['roofHeight'] !== undefined ? '(' + tags['roofHeight'] + 'm)' : '');
+      $('#editor .info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
+      $('#editor .info[name=roof\\:height]').text(tags['roofHeight'] !== undefined ? '(' + tags['roofHeight'] + 'm)' : '');
 
-      $('.editor-info[name=building\\:material]').text(tags['material'] ? '(' + tags['material'] + ')' : '');
-      $('.editor-info[name=roof\\:material]').text(tags['roofMaterial'] ? '(' + tags['roofMaterial'] + ')' : '');
+      $('#editor .info[name=building\\:material]').text(tags['material'] ? '(' + tags['material'] + ')' : '');
+      $('#editor .info[name=roof\\:material]').text(tags['roofMaterial'] ? '(' + tags['roofMaterial'] + ')' : '');
+    });
+
+    $('#editor input, #editor select').change(function() {
+      isDirty = true;
     });
 
     $('#editor-button-submit').click(function() {
-      var itemType = loadedItem.way ? 'way' : 'relation';
-      OSMAPI.write(loadedItem, 'Brick Edit 01');
+      OSMAPI.write(loadedItem, CONFIG.editComment).done(function() {
+        isDirty = false;
+      });
     });
   };
 

@@ -11,6 +11,7 @@
   "js/OSMAPI.js",
   "js/Editor.js",
   "js/Events.js",
+  "js/User.js",
   "js/Map.js",
   "js/index.js"
 ]

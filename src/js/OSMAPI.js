@@ -52,17 +52,7 @@ var OSMAPI = {};
         relation: {
           '@id': data['@id'],
           '@version': data['@version'] || 0,
-          // member: data.members.map(function(member) {
-          //   return {
-          //     keyAttributes: { type: member.type, role: member.role, ref: member.id }
-          //   };
-          // }),
           member: data.member,
-          // tag: data.tags.map(function(v, k) {
-          //   return {
-          //     keyAttributes: { k: k, v: v }
-          //   };
-          // })
           tag: data.tag
         }
       };
@@ -74,17 +64,7 @@ var OSMAPI = {};
         way: {
           '@id': data['@id'],
           '@version': data['@version'] || 0,
-          // nd: data.nodes.map(function(id) {
-          //   return {
-          //     keyAttributes: { ref: id }
-          //   };
-          // }),
           nd: data.nd,
-          // tag: data.tags.map(function(v, k) {
-          //   return {
-          //     keyAttributes: { k: k, v: v }
-          //   };
-          // })
           tag: data.tag
         }
       };
@@ -169,14 +149,7 @@ var OSMAPI = {};
       if (!auth.authenticated()) {
         return;
       }
-      auth.xhr({
-        method: 'GET',
-        accept: 'application/json',
-        path: '/api/0.6/user/details.json'
-      }, function(err, doc) {
-        var user = JXON.build(doc.getElementsByTagName('user')[0]);
-        Events.emit('LOGIN', user);
-      });
+      Events.emit('LOGIN');
     });
   };
 
@@ -185,9 +158,17 @@ var OSMAPI = {};
     Events.emit('LOGOUT');
   };
 
+  OSMAPI.getUserInfo = function() {
+    var promise = $.Deferred();
+    auth.xhr({
+      method: 'GET',
+      accept: 'application/json',
+      path: '/api/0.6/user/details.json'
+    }, function(err, doc) {
+      var user = JXON.build(doc.getElementsByTagName('user')[0]);
+      promise.resolve(user);
+    });
+    return promise;
+  };
+
 }());
-
-
-//<osm><changeset version="0.6" generator="iD"><tag k="created_by" v="iD 1.9.7"/><tag k="imagery_used" v="Bing"/><tag k="host" v="http://www.openstreetmap.org/id"/><tag k="locale" v="de"/><tag k="comment" v="tag alignment"/></changeset></osm>
-//<osmChange version="0.6" generator="iD"><create/><modify><way id="38551185" version="6" changeset="41456821"><nd ref="456369932"/><nd ref="456369933"/><nd ref="1788794832"/><nd ref="1788794835"/><nd ref="1788794836"/><nd ref="456369935"/><nd ref="456369936"/><nd ref="456369932"/><tag k="addr:city" v="Bedford"/><tag k="addr:housename" v="Talbot's"/><tag k="addr:housenumber" v="27"/><tag k="addr:postcode" v="MK40 2TX"/><tag k="addr:street" v="De Parys Avenue"/><tag k="building" v="school"/><tag k="name" v="Talbots House"/></way></modify><delete if-unused="true"/></osmChange>
-//OSMAPI.write(changes, '');

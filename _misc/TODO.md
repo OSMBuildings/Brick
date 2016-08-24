@@ -1,16 +1,15 @@
 
 - relocate leaflet buttons and/or change layout
 - geolocation ("locate me")
+- intro text + login bu7tton
+- form validation -> solved via picker
 
 
 # TODAY
 
 - roof shape selection
 - roof/wall color picker
-
-- intro text + login button
-- "unsaved" warning
-- form validation
+- "unsaved" warning -> warning is missing (dialog)
 
 
 
@@ -27,3 +26,5 @@
 - integrate color selection from image (color-thief?)
 - Mapillary
 - FYI http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings
+- Search
+- About page
