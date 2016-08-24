@@ -206,3 +206,15 @@ p {
 .login-button:focus {
     outline: none;
 }
+
+.leaflet-top {
+    top: 50%;
+    margin-top: -42px;
+}
+
+@media screen and (orientation: portrait) and (max-device-width: 400px) {
+    .leaflet-top {
+        top: 0;
+        margin-top: 0;
+    }
+}
