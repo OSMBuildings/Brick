@@ -22,9 +22,9 @@ var Editor = {};
       }
     });
 
-    new Picker($('#editor *[name=roof\\:shape]'), $('#roof-picker'));
-    new Picker($('#editor *[name=roof\\:colour]'), $('#color-picker'));
-    new Picker($('#editor *[name=building\\:colour]'), $('#color-picker'));
+    new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
+    new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
+    new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
 
     if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
@@ -94,17 +94,11 @@ var Editor = {};
           case 'building:colour':
             input.value = value || '';
             $('#editor *[name=building\\:colour]').css('border-right-color', (value || 'transparent'));
-            $(input).focus(function() {
-              $('#color-picker').show();
-            });
           break;
 
           case 'roof:colour':
             input.value = value || '';
             $('#editor *[name=roof\\:colour]').css('border-right-color', (value || 'transparent'));
-            $(input).focus(function() {
-              $('#color-picker').show();
-            });
           break;
         }
       });

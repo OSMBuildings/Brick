@@ -11,7 +11,13 @@ var Picker = (function() {
       $pickerDom.hide();
     });
 
-    $srcField.focus(function() {
+    $options.click(function(e) {
+      $srcField.val($(this).data('value'));
+      $pickerDom.hide();
+    });
+
+    $srcField.focus(function(e) {
+      $srcField.blur();
       $pickerDom.show();
 
       $options.each(function(index, option) {
@@ -20,11 +26,6 @@ var Picker = (function() {
         } else {
           $(option).removeClass('selected');
         }
-      });
-
-      $options.one('click', function(e) {
-        $srcField.val($(e.target).data('value'));
-        $pickerDom.hide();
       });
     });
   }

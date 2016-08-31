@@ -6,6 +6,7 @@
 
 # NEXT
 
+- check pickers on mobile
 - "unsaved" warning -> dialog
 - OSMB: mark editable (+wanted) objects => only simple buildings
 - geolocation for OSMB: function + marker
