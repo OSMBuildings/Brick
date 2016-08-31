@@ -151,11 +151,11 @@ button:focus {
     background: #BBBBBB;
 }
 
-/*
 #editor .color {
-    width: 80px;
+    border-right: 15px solid transparent;
 }
 
+/*
 #editor .color-picker {
   width: 24px;
   height: 24px;
@@ -181,4 +181,63 @@ button:focus {
         top: 0;
         margin-top: 0;
     }
+}
+
+/*************************************/
+
+.picker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(255,255,255,0.8);
+    width: 320px;
+    height: 100%;
+    z-index: 1010;
+    display: none;
+}
+
+.picker-option {
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.picker-option.selected {
+    background: #999999;
+    color: #ffffff;
+}
+
+.picker button {
+    border: 0;
+    font-size: 30px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 10px;
+    background: transparent;
+    cursor: pointer;
+}
+
+/*************************************/
+
+#color-picker {
+}
+
+#color-picker .picker-option div {
+    width: 50px;
+    height: 45px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/*************************************/
+
+#roof-picker {
+}
+
+#roof-picker .picker-option img {
+    width: 50px;
+    border: 0;
+    vertical-align: middle;
+    margin-right: 5px;
 }

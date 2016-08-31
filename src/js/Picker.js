@@ -5,32 +5,31 @@ var Picker = (function() {
     var
       $srcField = $(srcField),
       $pickerDom = $(pickerDom),
-      $options = $(pickerDom);
+      $options = $pickerDom.find('.picker-option');
+
+    $pickerDom.find('button').click(function() {
+      $pickerDom.hide();
+    });
 
     $srcField.focus(function() {
       $pickerDom.show();
 
-      $pickerDom.find('button').click(function() {
-        $pickerDom.hide();
-      });
-
-      $pickerDom.find('.roof-icon').click(function(e) {
-        debugger
-        var itemValue = $(e.target).data('value');
-        $(input).val(itemValue);
-      });
-
-      $pickerDom.find('.roof-icon').each(function(index, item) {
-        debugger
-        var itemValue = $(e.target).data('value');
-        if (itemValue === $(input).val()) {
-          $(item).addClass('selected');
+      $options.each(function(index, option) {
+        if ($(option).data('value') === $srcField.val()) {
+          $(option).addClass('selected');
         } else {
-          $(item).removeClass('selected');
+          $(option).removeClass('selected');
         }
       });
+
+      $options.one('click', function(e) {
+        $srcField.val($(e.target).data('value'));
+        $pickerDom.hide();
+      });
     });
-  };
+  }
+
+  var prototype = constructor.prototype;
 
   return constructor;
 

@@ -22,6 +22,10 @@ var Editor = {};
       }
     });
 
+    new Picker($('#editor *[name=roof\\:shape]'), $('#roof-picker'));
+    new Picker($('#editor *[name=roof\\:colour]'), $('#color-picker'));
+    new Picker($('#editor *[name=building\\:colour]'), $('#color-picker'));
+
     if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
     } else {
@@ -79,34 +83,7 @@ var Editor = {};
           // break;
 
           case 'roof:shape':
-            $(input).find('option').filter(function() {
-              return $(this).html() === (value || '');
-            }).prop('selected', true);
-            $(input).focus(function() {
-              // TODO: popup class, scrollable
-
-              $('#roof-picker').show();
-
-              $('#roof-picker button').click(function() {
-                $('#roof-picker').hide();
-              });
-
-              $('#roof-picker .roof-icon').click(function(e) {
-                debugger
-                var itemValue = $(e.target).data('value');
-                $(input).val(itemValue);
-              });
-
-              $('#roof-picker .roof-icon').each(function(index, item) {
-                debugger
-                var itemValue = $(e.target).data('value');
-                if (itemValue === $(input).val()) {
-                  $(item).addClass('selected');
-                } else {
-                  $(item).removeClass('selected');
-                }
-              });
-            });
+            input.value = value || '';
           break;
 
           case 'building:levels':

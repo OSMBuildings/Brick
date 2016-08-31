@@ -9,6 +9,7 @@
   "config.js",
   "js/State.js",
   "js/OSMAPI.js",
+  "js/Picker.js",
   "js/Editor.js",
   "js/Events.js",
   "js/User.js",
