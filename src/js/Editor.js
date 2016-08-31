@@ -82,6 +82,31 @@ var Editor = {};
             $(input).find('option').filter(function() {
               return $(this).html() === (value || '');
             }).prop('selected', true);
+            $(input).focus(function() {
+              // TODO: popup class, scrollable
+
+              $('#roof-picker').show();
+
+              $('#roof-picker button').click(function() {
+                $('#roof-picker').hide();
+              });
+
+              $('#roof-picker .roof-icon').click(function(e) {
+                debugger
+                var itemValue = $(e.target).data('value');
+                $(input).val(itemValue);
+              });
+
+              $('#roof-picker .roof-icon').each(function(index, item) {
+                debugger
+                var itemValue = $(e.target).data('value');
+                if (itemValue === $(input).val()) {
+                  $(item).addClass('selected');
+                } else {
+                  $(item).removeClass('selected');
+                }
+              });
+            });
           break;
 
           case 'building:levels':
@@ -91,12 +116,18 @@ var Editor = {};
 
           case 'building:colour':
             input.value = value || '';
-            $('#editor .color-info[name=building\\:colour]').css('background', (value || 'transparent'));
-            break;
+            $('#editor *[name=building\\:colour]').css('border-right-color', (value || 'transparent'));
+            $(input).focus(function() {
+              $('#color-picker').show();
+            });
+          break;
 
           case 'roof:colour':
             input.value = value || '';
-            $('#editor .color-info[name=roof\\:colour]').css('background', (value || 'transparent'));
+            $('#editor *[name=roof\\:colour]').css('border-right-color', (value || 'transparent'));
+            $(input).focus(function() {
+              $('#color-picker').show();
+            });
           break;
         }
       });
