@@ -2,9 +2,7 @@
   "../lib/jquery-2.1.1.min.js",
   "../lib/jxon.js",
   "../node_modules/osm-auth/osmauth.js",
-  "../lib/leaflet-0.8/leaflet-src.js",
-  "../lib/leaflet-locatecontrol/L.Control.Locate.min.js",
-  "../lib/OSMBuildings-Leaflet.js",
+  "../lib/OSMBuildings/OSMBuildings.js",
 
   "config.js",
   "js/State.js",
@@ -14,5 +12,6 @@
   "js/Events.js",
   "js/User.js",
   "js/Map.js",
+  "js/Locate.js",
   "js/index.js"
 ]

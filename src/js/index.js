@@ -34,4 +34,6 @@ $(function() {
   User.init();
   Map.init();
   Editor.init();
+
+  Locate.start();
 });

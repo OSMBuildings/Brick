@@ -104,10 +104,10 @@ var Editor = {};
       });
 
       $('#editor .info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
-      $('#editor .info[name=roof\\:height]').text(tags['roofHeight'] !== undefined ? '(' + tags['roofHeight'] + 'm)' : '');
+      $('#editor .info[name=roof\\:height]').text(tags['roof:height'] !== undefined ? '(' + tags['roof:height'] + 'm)' : '');
 
-      $('#editor .info[name=building\\:material]').text(tags['material'] ? '(' + tags['material'] + ')' : '');
-      $('#editor .info[name=roof\\:material]').text(tags['roofMaterial'] ? '(' + tags['roofMaterial'] + ')' : '');
+      $('#editor .info[name=building\\:material]').text(tags['building:material'] ? '(' + tags['building:material'] + ')' : '');
+      $('#editor .info[name=roof\\:material]').text(tags['roof:material'] ? '(' + tags['roof:material'] + ')' : '');
     });
 
     $('#editor input, #editor select').change(function() {
