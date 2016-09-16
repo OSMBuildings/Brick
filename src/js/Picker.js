@@ -2,6 +2,8 @@
 var Picker = (function() {
 
   function constructor(srcField, pickerDom) {
+    Events.call(this);
+
     var
       $srcField = $(srcField),
       $pickerDom = $(pickerDom),
@@ -9,12 +11,19 @@ var Picker = (function() {
 
     $pickerDom.find('button').click(function() {
       $pickerDom.hide();
-    });
+      this.emit('HIDE');
+    }.bind(this));
 
     $options.click(function(e) {
-      $srcField.val($(this).data('value'));
+      var $target = $(e.target);
+      if (!$target.is('.picker-option')) {
+        $target = $target.parent('.picker-option');
+      }
+      var value = $target.data('value');
+      $srcField.val(value);
       $pickerDom.hide();
-    });
+      this.emit('SELECT', value);
+    }.bind(this));
 
     $srcField.focus(function(e) {
       $srcField.blur();
@@ -27,10 +36,12 @@ var Picker = (function() {
           $(option).removeClass('selected');
         }
       });
-    });
+
+      this.emit('SHOW');
+    }.bind(this));
   }
 
-  var prototype = constructor.prototype;
+  var prototype = constructor.prototype = Object.create(Events.prototype);
 
   return constructor;
 

@@ -5,13 +5,14 @@
   "../lib/OSMBuildings/OSMBuildings.js",
 
   "config.js",
+  "js/Events.js",
+  "js/Data.js",
+  "js/index.js",
   "js/State.js",
   "js/OSMAPI.js",
   "js/Picker.js",
   "js/Editor.js",
-  "js/Events.js",
   "js/User.js",
   "js/Map.js",
-  "js/Locate.js",
-  "js/index.js"
+  "js/Locate.js"
 ]

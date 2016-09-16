@@ -14,8 +14,8 @@ var User = {};
     $('#login').show();
   }
 
-  Events.on('LOGIN', onLogin);
-  Events.on('LOGOUT', onLogout);
+  App.on('LOGIN', onLogin);
+  App.on('LOGOUT', onLogout);
 
   User.init = function() {
     if (OSMAPI.isLoggedIn()) {

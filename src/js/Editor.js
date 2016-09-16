@@ -22,9 +22,17 @@ var Editor = {};
       }
     });
 
-    new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
-    new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
-    new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
+    var buildingColorPicker = new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
+    buildingColorPicker.on('SELECT', function(value) {
+      $('#editor *[name=building\\:colour]').val(value).css('border-right-color', (value || 'transparent'));
+    });
+
+    var roofColorPicker = new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
+    roofColorPicker.on('SELECT', function(value) {
+      $('#editor *[name=roof\\:colour]').val(value).css('border-right-color', (value || 'transparent'));
+    });
+
+    var roofShapePicker = new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
 
     if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
@@ -32,41 +40,27 @@ var Editor = {};
       $('#editor-button-submit').hide();
     }
 
-//    $('#editor').find('.color-picker').click(function(index, input) {
-//      // TODO: handle every picker individually
-//      PhotoColorPicker.capture({ $('#editor'): $('#camera-overlay'), callback: function(color) {
-//        $('#editor').find('.input.color').val(color).css('backgroundColor', color);
-//      }});
-//    });
-
-    Events.on('LOGIN', function() {
+    App.on('LOGIN', function() {
       $('#editor-button-submit').show();
     });
 
-    Events.on('LOGOUT', function() {
+    App.on('LOGOUT', function() {
       $('#editor-button-submit').hide();
     });
 
-    Events.on('ITEM_LOADED', function(item) {
+    App.on('ITEM_LOAD', function(item) {
       loadedItem = item;
 
       // TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
 
       var itemType = item.way ? 'way' : 'relation';
 
-      var t, tags = {};
-      if (item[itemType].tag) {
-        for (var i = 0, il = item[itemType].tag.length; i<il; i++) {
-          t = item[itemType].tag[i];
-          tags[t['@k']] = t['@v'];
-        }
-      }
-
-      var value;
+      var tags = Data.read(item[itemType].tag);
 
       document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
       $('#editor h1').text(tags.name ? tags.name : 'Building ' + item[itemType]['@id']);
-  
+
+      var value;
       $('#editor input, #editor select').each(function(index, input) {
         value = tags[input.name];
         switch(input.name) {
@@ -106,8 +100,8 @@ var Editor = {};
       $('#editor .info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
       $('#editor .info[name=roof\\:height]').text(tags['roof:height'] !== undefined ? '(' + tags['roof:height'] + 'm)' : '');
 
-      $('#editor .info[name=building\\:material]').text(tags['building:material'] ? '(' + tags['building:material'] + ')' : '');
-      $('#editor .info[name=roof\\:material]').text(tags['roof:material'] ? '(' + tags['roof:material'] + ')' : '');
+      $('#editor .info[name=building\\:material]').text(tags['building:material'] ? '(material: ' + tags['building:material'] + ')' : '');
+      $('#editor .info[name=roof\\:material]').text(tags['roof:material'] ? '(material: ' + tags['roof:material'] + ')' : '');
     });
 
     $('#editor input, #editor select').change(function() {

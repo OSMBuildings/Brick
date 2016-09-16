@@ -1,5 +1,5 @@
 
-var Map;
+var Map = new Events();
 
 (function() {
 
@@ -26,6 +26,34 @@ var Map;
 
     map.addMapTiles(config.map.basemapUrl);
     // map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/ph2apjye/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
+
+    map.on('loadfeature', function(e) {
+      var feature = e.detail;
+
+      if (!feature.properties) {
+        feature.properties = {};
+      }
+
+      if (feature.id[0] !== 'w' || feature.properties.relationId) {
+        feature.properties.color = '#ffffff';
+        feature.properties.roofColor = '#ffffff';
+      } else {
+        if (
+          (feature.properties.levels || feature.properties.height) &&
+          (feature.properties.color || feature.properties.wallColor || feature.properties.material) &&
+          (feature.properties.roofShape) &&
+          (feature.properties.roofLevels || feature.properties.roofHeight) &&
+          (feature.properties.roofColor || feature.properties.roofMaterial)
+      ) {
+        } else {
+          feature.properties.color = '#ffcc00';
+          feature.properties.roofColor = '#ffcc00';
+        }
+      }
+
+      return feature;
+    });
+
     map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
 
     map.on('change', function() {
@@ -41,19 +69,18 @@ var Map;
       State.set('rotation', rotation.toFixed(5));
       State.set('tilt', tilt.toFixed(5));
 
-      Events.emit('MAP_CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
+      Map.emit('CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
     });
 
     map.on('pointerdown', function(e) {
       map.getTarget(e.detail.x, e.detail.y, function(id) {
         if (id) {
-          console.log(id);
-          Events.emit('FEATURE_SELECTED', id);
+          Map.emit('FEATURE_SELECT', id);
         }
       });
     });
 
-    Events.on('LOCATION_CHANGE', function(position) {
+    Locate.on('CHANGE', function(position) {
       map.setPosition(position);
    // map.setZoom(zoom);
     });

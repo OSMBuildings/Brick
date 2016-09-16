@@ -1,22 +1,42 @@
 
-var Events = {};
+var Events = (function() {
 
-(function() {
+  function constructor() {
+    this.listeners = {};
+  }
 
-  var listeners = {};
+  var prototype = constructor.prototype;
 
-  Events.on = function(type, fn) {
-    (listeners[type] || (listeners[type] = [])).push(fn);
+  prototype.on = function(type, fn) {
+    (this.listeners[type] || (this.listeners[type] = [])).push(fn);
   };
 
-  Events.emit = function(type, payload) {
-    if (!listeners[type]) {
+  prototype.off = function(type, fn) {
+    if (this.listeners[type] === undefined) {
       return;
     }
-    var l = listeners[type];
-    for (var i = 0, il = l.length; i < il; i++) {
-      l[i](payload);
-    }
+
+    this.listeners[type] = this.listeners[type].filter(function(item) {
+      return item[0] !== fn;
+    });
   };
+
+  prototype.emit = function(type, payload) {
+    if (this.listeners[type] === undefined) {
+      return;
+    }
+    setTimeout(function() {
+      var typeListeners = this.listeners[type];
+      for (var i = 0, len = typeListeners.length; i < len; i++) {
+        typeListeners[i](payload);
+      }
+    }.bind(this), 0);
+  };
+
+  prototype.destroy = function() {
+    this.listeners = {};
+  };
+
+  return constructor;
 
 }());

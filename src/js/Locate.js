@@ -1,5 +1,5 @@
 
-var Locate = {};
+var Locate = new Events();
 
 (function() {
 
@@ -26,11 +26,11 @@ var Locate = {};
 
   function onError(code, message) {
     var message = message || (code === 1 ? 'permission denied' : (code === 2 ? 'position unavailable' : 'timeout'));
-    Events.emit('LOCATION_ERROR', { code:code, message:message });
+    Locate.emit('ERROR', { code:code, message:message });
   }
 
   function onSuccess(e) {
-    Events.emit('LOCATION_CHANGE', e.coords);
+    Locate.emit('CHANGE', e.coords);
   }
 
 }());

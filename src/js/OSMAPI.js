@@ -149,13 +149,13 @@ var OSMAPI = {};
       if (!auth.authenticated()) {
         return;
       }
-      Events.emit('LOGIN');
+      App.emit('LOGIN');
     });
   };
 
   OSMAPI.logout = function() {
     auth.logout();
-    Events.emit('LOGOUT');
+    App.emit('LOGOUT');
   };
 
   OSMAPI.getUserInfo = function() {
