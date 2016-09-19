@@ -83,7 +83,6 @@ var OSMAPI = {};
 
   // Generate an OSM change (http://wiki.openstreetmap.org/wiki/OsmChange)
   function createChange(item, changesetId) {
-    debugger
     return {
       osmChange: {
         '@version': 0.6,
@@ -93,7 +92,11 @@ var OSMAPI = {};
     };
   }
 
-  OSMAPI.write = function(item, comment) {
+  OSMAPI.readItem = function(itemType, itemId) {
+    return $.ajax('http://api.openstreetmap.org/api/0.6/' + itemType +'/'+ itemId);
+  };
+
+  OSMAPI.writeItem = function(item, comment) {
     var promise = $.Deferred();
 
     auth.xhr({

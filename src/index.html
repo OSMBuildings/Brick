@@ -25,6 +25,8 @@
   </div>
 
   <div id="editor" style="display:none">
+    <button type="button" id="editor-button-cancel" class="button-close" disabled>&times;</button>
+
     <h1>Edit building</h1>
 
     <div class="row">
@@ -62,7 +64,7 @@
       <input type="text" name="roof:shape" autocomplete="0">
     </div>
 
-    <button type="submit" id="editor-button-submit">Save changes</button>
+    <button type="submit" id="editor-button-submit" disabled>Save changes</button>
   </div>
 
   <div id="login">
@@ -80,7 +82,7 @@
 <!-- clrs.cc -->
 
 <div id="building-color-picker" class="picker">
-  <button>&times;</button>
+  <button class="button-close">&times;</button>
   <div class="picker-option" data-value="#111111"><div style="background:#111111"></div>Black</div>
   <div class="picker-option" data-value="#AAAAAA"><div style="background:#AAAAAA"></div>Gray</div>
   <div class="picker-option" data-value="#DDDDDD"><div style="background:#DDDDDD"></div>Silver</div>
@@ -101,7 +103,7 @@
 </div>
 
 <div id="roof-color-picker" class="picker">
-  <button>&times;</button>
+  <button class="button-close">&times;</button>
   <div class="picker-option" data-value="#111111"><div style="background:#111111"></div>Black</div>
   <div class="picker-option" data-value="#AAAAAA"><div style="background:#AAAAAA"></div>Gray</div>
   <div class="picker-option" data-value="#DDDDDD"><div style="background:#DDDDDD"></div>Silver</div>
@@ -122,7 +124,7 @@
 </div>
 
 <div id="roof-shape-picker" class="picker">
-  <button>&times;</button>
+  <button class="button-close">&times;</button>
   <div class="picker-option" data-value="flat"><img src="images/roof-flat.png">Flat</div>
   <div class="picker-option" data-value="skillion"><img src="images/roof-skillion.png">Skillion</div>
   <div class="picker-option" data-value="gabled"><img src="images/roof-gabled.png">Gabled</div>

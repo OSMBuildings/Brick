@@ -1,25 +1,29 @@
 
-- geänderte farbe wird nicht als vorschau gezeigt
-- data alignment
-- OSMB: mark editable (+wanted) objects => only simple buildings
-
-
 # TODAY
 
-- show in OSMB => store somehow locally because of lag
+- highlight selected
+- onchange: remove layer, expose object
+CH "unsaved" -> X Button
+CH getData() is missing
 
 
 # NEXT
 
-- highlight selected
-- "unsaved" warning -> dialog
-- check pickers on mobile
+- fix zoom ranges
+- fix touch bug
+- check picking on mobile
+
+
+
 
 
 # LATER
 
+
+- show in OSMB => store somehow locally because of lag
+// TODO: make complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422
+- store last position
 - Rev. Geocode
-- fix touch bug
 - demo color selection from image (color-thief?)
 - handle location watch during drag&drop
 - chosen roof type as icon
@@ -32,14 +36,6 @@
 - About page
 - loading indicator
 - FYI http://wiki.openstreetmap.org/wiki/Simple_3D_Buildings
-
-
-
-
-
-
-
-
 
 
 The minimalist OSM Building Editor

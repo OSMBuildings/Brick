@@ -3,6 +3,8 @@ var Map = new Events();
 
 (function() {
 
+  var buildingLayer;
+
   Map.init = function() {
     var position, p;
     if ((p = State.get('position'))) {
@@ -25,7 +27,6 @@ var Map = new Events();
     }).appendTo(document.getElementById('map'));
 
     map.addMapTiles(config.map.basemapUrl);
-    // map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/ph2apjye/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
 
     map.on('loadfeature', function(e) {
       var feature = e.detail;
@@ -34,27 +35,31 @@ var Map = new Events();
         feature.properties = {};
       }
 
+      // not editable for now
       if (feature.id[0] !== 'w' || feature.properties.relationId) {
         feature.properties.color = '#ffffff';
         feature.properties.roofColor = '#ffffff';
       } else {
+        /*
+        // well tagged
         if (
           (feature.properties.levels || feature.properties.height) &&
           (feature.properties.color || feature.properties.wallColor || feature.properties.material) &&
           (feature.properties.roofShape) &&
           (feature.properties.roofLevels || feature.properties.roofHeight) &&
           (feature.properties.roofColor || feature.properties.roofMaterial)
-      ) {
-        } else {
+        ) {} else {
+          // poorly tagged
           feature.properties.color = '#ffcc00';
           feature.properties.roofColor = '#ffcc00';
         }
+        */
       }
 
       return feature;
     });
 
-    map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
+    buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
 
     map.on('change', function() {
       var
@@ -69,20 +74,40 @@ var Map = new Events();
       State.set('rotation', rotation.toFixed(5));
       State.set('tilt', tilt.toFixed(5));
 
-      Map.emit('CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
+      App.emit('MAP_CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
     });
 
     map.on('pointerdown', function(e) {
-      map.getTarget(e.detail.x, e.detail.y, function(id) {
-        if (id) {
-          Map.emit('FEATURE_SELECT', id);
+      map.getTarget(e.detail.x, e.detail.y, function(featureId) {
+        if (featureId) {
+          App.emit('FEATURE_SELECT', featureId);
+          //   if (featureId && featureId[0] === 'w') {
+              map.highlight(featureId, '#ffcc00');
+          //   } else {
+          //     // map.highlight(null);
+          //   }
         }
       });
     });
 
-    Locate.on('CHANGE', function(position) {
+    map.on('pointermove', function(e) {
+      map.getTarget(e.detail.x, e.detail.y, function(featureId) {
+        App.emit('FEATURE_HOVER', featureId);
+      });
+    });
+
+    App.on('POSITION_CHANGE', function(position) {
       map.setPosition(position);
    // map.setZoom(zoom);
+    });
+
+    App.on('FEATURE_CHANGE', function(feature) {
+      buildingLayer.destroy();
+      buildingLayer = undefined;
+    });
+
+    App.on('FEATURE_RESET', function() {
+      buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
     });
 
     return map;

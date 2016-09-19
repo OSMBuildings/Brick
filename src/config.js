@@ -8,14 +8,13 @@ var config = {
   map: {
     position: { latitude: 52.52179, longitude: 13.39503 },
     zoom: 17,
-    maxZoom: 19,
+    maxZoom: 18,
     basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png',
     featureUrl: 'http://data.osmbuildings.org/0.2/3hxnp33t/feature/{id}.json'
   },
 
   osmapi: {
     endpoint: '',
-    // endpoint: 'http://api06.dev.openstreetmap.org',
     auth: {
       landingPage: 'auth.html',
       consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',

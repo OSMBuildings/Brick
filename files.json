@@ -14,5 +14,5 @@
   "js/Editor.js",
   "js/User.js",
   "js/Map.js",
-  "js/Locate.js"
+  "js/Position.js"
 ]

@@ -92,6 +92,25 @@ button:focus {
 
 /*************************************/
 
+.button-close {
+    border: 0;
+    font-size: 30px;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    color: #000000;
+    padding: 10px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.button-close[disabled] {
+    color: #cccccc;
+    cursor: default;
+}
+
+/*************************************/
+
 #editor-button-submit {
     border: 1px solid #336699;
     padding: 10px 20px;
@@ -101,6 +120,12 @@ button:focus {
     color: #ffffff;
     font-size: 16px;
     cursor: pointer;
+}
+
+#editor-button-submit[disabled] {
+    border: 1px solid #999999;
+    background: #cccccc;
+    cursor: default;
 }
 
 #editor .row {
@@ -207,17 +232,6 @@ button:focus {
 .picker-option.selected {
     background: #999999;
     color: #ffffff;
-}
-
-.picker button {
-    border: 0;
-    font-size: 30px;
-    position: absolute;
-    top: 0;
-    right: 5px;
-    padding: 10px;
-    background: transparent;
-    cursor: pointer;
 }
 
 @media screen and (orientation: portrait) and (max-device-width: 400px) {

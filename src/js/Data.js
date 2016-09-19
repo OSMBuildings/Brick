@@ -73,8 +73,14 @@ var Data = {};
     return parseInt(str, 10);
   }
 
-  Data.read = function(tagList) {
-    var tags = {};
+  Data.read = function(doc) {
+    var
+      item = JXON.build(doc.children[0]),
+      itemType = item.way ? 'way' : 'relation',
+      tagList = item[itemType].tag,
+      id = item[itemType]['@id'],
+      tags = {};
+
     if (tagList && tagList.length) {
       for (var i = 0, il = tagList.length; i<il; i++) {
         tags[tagList[i]['@k']] = tagList[i]['@v'];
@@ -122,7 +128,20 @@ var Data = {};
     tags['roof:levels'] = getLevels(tags['roof:levels'] || tags['building:roof:levels']);
     delete tags['building:roof:levels'];
 
-    return tags;
+    return { id:id, tags:tags, item:item }; // TODO: geometry
+  };
+
+  Data.write = function(item, tags) {
+    var tagList = [];
+    for (var k in tags) {
+      tagList.push({ '@k':k, '@v':tags[k] });
+    }
+
+    var itemType = item.way ? 'way' : 'relation';
+
+    item[itemType].tag = tagList;
+
+    return item;
   };
 
 }());
