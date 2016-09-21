@@ -54,7 +54,7 @@ var Editor = {};
     $('#editor input, #editor select').change(onInputChange);
 
     $('#editor-button-submit').click(function() {
-      OSMAPI.writeItem(Data.write(loadedFeature.item, getValues()), CONFIG.editComment)
+      OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), CONFIG.editComment)
         .done(function() {
           // TODO update loadedItem
           isDirty = false;

@@ -74,18 +74,35 @@ var Data = {};
   }
 
   Data.read = function(doc) {
-    var
-      item = JXON.build(doc.children[0]),
-      itemType = item.way ? 'way' : 'relation',
-      tagList = item[itemType].tag,
-      id = item[itemType]['@id'],
-      tags = {};
+    var data = JXON.build(doc.children[0]);
 
-    if (tagList && tagList.length) {
-      for (var i = 0, il = tagList.length; i<il; i++) {
-        tags[tagList[i]['@k']] = tagList[i]['@v'];
+    var nodeIndex = {};
+    if (data.node) {
+      for (var i = 0; i < data.node.length; i++) {
+        nodeIndex[ data.node[i]['@id'] ] = [ data.node[i]['@lon'], data.node[i]['@lat'] ];
       }
     }
+
+    var
+      way = data.way || {},
+      tagList = way.tag,
+      tags = {};
+    if (tagList) {
+      for (var i = 0; i < tagList.length; i++) {
+        tags[ tagList[i]['@k'] ] = tagList[i]['@v'];
+      }
+    }
+
+    var
+      nodeList = way.nd,
+      nodes = [];
+    if (nodeList) {
+      for (var i = 0, il = nodeList.length; i<il; i++) {
+        nodes.push(nodeIndex[ nodeList[i]['@ref'] ]);
+      }
+    }
+
+    var id = way['@id'];
 
     tags['height'] = getMeters(tags['height'] || tags['building:height']);
     delete tags['building:height'];
@@ -128,20 +145,17 @@ var Data = {};
     tags['roof:levels'] = getLevels(tags['roof:levels'] || tags['building:roof:levels']);
     delete tags['building:roof:levels'];
 
-    return { id:id, tags:tags, item:item }; // TODO: geometry
+    return { id:id, tags:tags, nodes:nodes, data:data };
   };
 
-  Data.write = function(item, tags) {
+  Data.write = function(data, tags) {
     var tagList = [];
     for (var k in tags) {
       tagList.push({ '@k':k, '@v':tags[k] });
     }
 
-    var itemType = item.way ? 'way' : 'relation';
-
-    item[itemType].tag = tagList;
-
-    return item;
+    data.way.tag = tagList;
+    return data;
   };
 
 }());

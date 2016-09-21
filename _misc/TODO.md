@@ -1,20 +1,15 @@
 
 # TODAY
 
-- highlight selected
-- onchange: remove layer, expose object
-CH "unsaved" -> X Button
-CH getData() is missing
-
-
-# NEXT
-
+- onchange: expose object
 - fix zoom ranges
 - fix touch bug
+- release ROOFS
+- check WRITE
 - check picking on mobile
 
 
-
+# NEXT
 
 
 # LATER
