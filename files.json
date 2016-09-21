@@ -1,18 +1,18 @@
 [
-  "../lib/jquery-2.1.1.min.js",
-  "../lib/jxon.js",
-  "../node_modules/osm-auth/osmauth.js",
-  "../lib/OSMBuildings/OSMBuildings.js",
+  "lib/jquery-2.1.1.min.js",
+  "lib/jxon.js",
+  "node_modules/osm-auth/osmauth.js",
+  "lib/OSMBuildings/OSMBuildings.debug.js",
 
-  "config.js",
-  "js/Events.js",
-  "js/Data.js",
-  "js/index.js",
-  "js/State.js",
-  "js/OSMAPI.js",
-  "js/Picker.js",
-  "js/Editor.js",
-  "js/User.js",
-  "js/Map.js",
-  "js/Position.js"
+  "src/config.js",
+  "src/js/Events.js",
+  "src/js/Data.js",
+  "src/js/index.js",
+  "src/js/State.js",
+  "src/js/OSMAPI.js",
+  "src/js/Picker.js",
+  "src/js/Editor.js",
+  "src/js/User.js",
+  "src/js/Map.js",
+  "src/js/Position.js"
 ]

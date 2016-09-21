@@ -16,10 +16,8 @@ $(function() {
   App.on('FEATURE_HOVER', function(featureId) {
     if (featureId && featureId[0] === 'w') {
       document.body.style.cursor = 'pointer';
-      // map.highlight(featureId, '#cc0000');
     } else {
       document.body.style.cursor = 'default';
-      // map.highlight(null);
     }
   });
 

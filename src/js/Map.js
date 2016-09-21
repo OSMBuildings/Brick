@@ -5,7 +5,8 @@ var Map = new Events();
 
   var
     buildingLayer,
-    selectedBuilding;
+    selectedBuilding,
+    highlightedBuildingId;
 
   Map.init = function() {
     var position, p;
@@ -16,6 +17,10 @@ var Map = new Events();
     }
 
     var zoom = State.get('zoom') || config.map.zoom;
+
+    // if nothing shows up, saving State has failed
+    // position = config.map.position;
+    // var zoom = config.map.zoom;
 
     var map = new OSMBuildings({
       position: position,
@@ -43,7 +48,7 @@ var Map = new Events();
         feature.properties.roofColor = '#ffffff';
       } else {
         /*
-        // well tagged
+        // is well tagged
         if (
           (feature.properties.levels || feature.properties.height) &&
           (feature.properties.color || feature.properties.wallColor || feature.properties.material) &&
@@ -80,19 +85,25 @@ var Map = new Events();
     });
 
     map.on('pointerdown', function(e) {
+      // no mouse interaction, if an object is currently edited
+      if (selectedBuilding) {
+        return;
+      }
       map.getTarget(e.detail.x, e.detail.y, function(featureId) {
         if (featureId) {
           App.emit('FEATURE_SELECT', featureId);
-          //   if (featureId && featureId[0] === 'w') {
+            if (featureId && featureId[0] === 'w') {
               map.highlight(featureId, '#ffcc00');
-          //   } else {
-          //     // map.highlight(null);
-          //   }
+            }
         }
       });
     });
 
     map.on('pointermove', function(e) {
+      // no mouse interaction, if an object is currently edited
+      if (selectedBuilding) {
+        return;
+      }
       map.getTarget(e.detail.x, e.detail.y, function(featureId) {
         App.emit('FEATURE_HOVER', featureId);
       });
@@ -104,13 +115,19 @@ var Map = new Events();
     });
 
     App.on('FEATURE_CHANGE', function(feature) {
-      buildingLayer.destroy();
-      buildingLayer = undefined;
+      if (buildingLayer) {
+        buildingLayer.destroy();
+        buildingLayer = undefined;
+      }
+
       if (selectedBuilding) {
         selectedBuilding.destroy();
       }
-      console.log(feature);
 
+      var tags = feature.tags;
+      console.log(tags);
+
+      // properties are converted into OSMB format
       var geojson = {
         type: 'FeatureCollection',
         features: [
@@ -118,51 +135,17 @@ var Map = new Events();
             type: 'Feature',
             id: 'w' + feature.id,
             properties: {
-              // color: feature.tags['building:colour']
-//
-//       tags['height'] = getMeters(tags['height'] || tags['building:height']);
-//       delete tags['building:height'];
-//
-//       tags['building:levels'] = getLevels(tags['levels'] || tags['building:levels']);
-//       delete tags['levels'];
-//
-//       tags['min_height'] = getMeters(tags['min_height'] || tags['building:min_height']);
-//       delete tags['building:min_height'];
-//
-//       tags['min_level']  = getLevels(tags['min_level']  || tags['building:min_level']);
-//       delete tags['building:min_level'];
-//
-//       // wall material
-//       tags['building:material'] = getMaterial(tags['building:material'] || tags['building:facade:material'] || tags['building:cladding']);
-//
-//       // wall color
-//       tags['building:colour'] = tags['building:color'] || tags['building:colour'];
-//       delete tags['building:color'];
-//
-//       // roof material
-//       tags['roof:material'] = getMaterial(tags['roof:material'] || tags['building:roof:material']);
-//       delete tags['building:roof:material'];
-//
-//       // roof color
-//       tags['roof:colour'] = tags['roof:color'] || tags['roof:colour'] || tags['building:roof:color'] || tags['building:roof:colour'];
-//       delete tags['roof:color'];
-//       delete tags['building:roof:color'];
-//       delete tags['building:roof:colour'];
-//
-//       tags['roof:shape'] = tags['roof:shape'] || tags['building:roof:shape'];
-//       delete tags['building:roof:shape'];
-//       if (tags['roof:shape'] === 'pyramidal') {
-//         tags['roof:shape'] = 'pyramid';
-//       }
-//
-//       tags['roof:height'] = getMeters(tags['roof:height'] || tags['building:roof:height']);
-//       delete tags['building:roof:height'];
-//
-//       tags['roof:levels'] = getLevels(tags['roof:levels'] || tags['building:roof:levels']);
-//       delete tags['building:roof:levels'];
-//
-
-
+              color: tags['building:colour'],
+              height: tags.height,
+              levels: tags['building:levels'],
+              minHeight: tags.min_height,
+              minLevel: tags.min_level,
+              material: tags['building:material'],
+              roofMaterial: tags['roof:material'],
+              roofColor: tags['roof:colour'],
+              roofShape: tags['roof:shape'],
+              roofHeight: tags['roof:height'],
+              roofLevels: tags['roof:levels']
             },
             geometry: {
               type: 'Polygon',
@@ -172,13 +155,20 @@ var Map = new Events();
         ]
       };
 
+      // remove selection color effect
+      highlightedBuildingId = 'w' + feature.id;
+      map.highlight(null);
+
       selectedBuilding = map.addGeoJSON(geojson, { fadeIn:false });
     });
 
     App.on('FEATURE_RESET', function() {
       buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom:15, fadeIn:false });
-      selectedBuilding.destroy();
-      selectedBuilding = null;
+      map.highlight(highlightedBuildingId, '#ffcc00');
+      setTimeout(function() {
+        selectedBuilding.destroy();
+        selectedBuilding = null;
+      }, 1000)
     });
 
     return map;

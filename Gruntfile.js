@@ -9,25 +9,25 @@ module.exports = function(grunt) {
     concat: {
       options: {
         separator: '\n',
-        banner: 'var <%=product%> = (function(global) {\n\n',
-        footer: '\nreturn <%=product%>; }(this));'
+        banner: '(function(global) {\n\n',
+        footer: '\n}(this));'
       },
       dist: {
         src: grunt.file.readJSON('files.json'),
-        dest:  'dist/<%=product%>.debug.js'
+        dest:  'dist/index.debug.js'
       }
     },
 
     uglify: {
       options: {},
       build: {
-        src: 'dist/<%=product%>.debug.js',
-        dest: 'dist/<%=product%>.js'
+        src: 'dist/index.debug.js',
+        dest: 'dist/index.js'
       }
     },
 
     jshint: {
-      all: ['dist/<%=product%>.debug.js']
+      all: ['dist/index.debug.js']
     }
   });
 
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
   grunt.registerTask('release', 'Release build', function() {
     grunt.log.writeln('\033[1;36m'+ grunt.template.date(new Date(), 'yyyy-mm-dd HH:MM:ss') +'\033[0m');
     grunt.task.run('concat');
-    grunt.task.run('jshint');
+    // grunt.task.run('jshint');
     grunt.task.run('uglify');
   });
 };

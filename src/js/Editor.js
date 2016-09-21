@@ -28,17 +28,17 @@ var Editor = {};
 
     var buildingColorPicker = new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
     buildingColorPicker.on('SELECT', function(value) {
-      $('#editor *[name=building\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('change');
+      $('#editor *[name=building\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
     });
 
     var roofColorPicker = new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
     roofColorPicker.on('SELECT', function(value) {
-      $('#editor *[name=roof\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('change');
+      $('#editor *[name=roof\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
     });
 
     var roofShapePicker = new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
     roofShapePicker.on('SELECT', function(value) {
-      $('#editor *[name=roof\\:shape]').trigger('change');
+      $('#editor *[name=roof\\:shape]').trigger('keyup');
     });
 
     // toggle buttons
@@ -51,12 +51,15 @@ var Editor = {};
     App.on('LOGOUT', toggleButtons);
     App.on('FEATURE_SELECT', onFeatureSelect);
 
-    $('#editor input, #editor select').change(onInputChange);
+    $('#editor select').change(onInputChange);
+    $('#editor input').keyup(onInputChange);
+    $('#editor input').change(onInputChange);
 
     $('#editor-button-submit').click(function() {
-      OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), CONFIG.editComment)
+      OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), config.editComment)
         .done(function() {
           // TODO update loadedItem
+          // TODO reset view
           isDirty = false;
           $('#editor-button-submit').attr('disabled', true);
           $('#editor-button-cancel').attr('disabled', true);
@@ -64,7 +67,6 @@ var Editor = {};
     });
 
     $('#editor-button-cancel').click(function() {
-      // TODO: restore map view
       App.emit('FEATURE_RESET');
       setValues(loadedFeature);
     });
@@ -85,9 +87,10 @@ var Editor = {};
       isDirty = true;
       $('#editor-button-submit').attr('disabled', false);
       $('#editor-button-cancel').attr('disabled', false);
-      // TODO: change map view, disallow new selection
-      App.emit('FEATURE_CHANGE', loadedFeature);
+      // TODO: disallow new selection
     }
+
+    App.emit('FEATURE_CHANGE', { id:loadedFeature.id, tags:getValues(), nodes:loadedFeature.nodes, data:loadedFeature.data });
   }
 
   function onFeatureSelect(featureId) {
