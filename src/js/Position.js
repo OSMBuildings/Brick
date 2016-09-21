@@ -25,7 +25,7 @@ var Position = new Events();
   };
 
   function onError(code, message) {
-    var message = message || (code === 1 ? 'permission denied' : (code === 2 ? 'position unavailable' : 'timeout'));
+    message = message || (code === 1 ? 'permission denied' : (code === 2 ? 'position unavailable' : 'timeout'));
     App.emit('POSITION_ERROR', { code:code, message:message });
   }
 

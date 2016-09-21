@@ -63,6 +63,9 @@ var Editor = {};
           isDirty = false;
           $('#editor-button-submit').attr('disabled', true);
           $('#editor-button-cancel').attr('disabled', true);
+
+          // restore map view
+          App.emit('FEATURE_RESET');
         });
     });
 
@@ -118,7 +121,7 @@ var Editor = {};
     loadedFeature = feature;
 
     var
-      nameWithId = feature ? 'Building ' + feature.id : 'Building',
+      nameWithId = feature ? 'Building ' + feature.id : 'Select building',
       tags = feature ? feature.tags : {};
 
     document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
@@ -158,8 +161,8 @@ var Editor = {};
     $('#editor .info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
     $('#editor .info[name=roof\\:height]').text(tags['roof:height'] !== undefined ? '(' + tags['roof:height'] + 'm)' : '');
 
-    $('#editor .info[name=building\\:material]').text(tags['building:material'] ? '(material: ' + tags['building:material'] + ')' : '');
-    $('#editor .info[name=roof\\:material]').text(tags['roof:material'] ? '(material: ' + tags['roof:material'] + ')' : '');
+    $('#editor .info[name=building\\:material]').text(tags['building:material'] !== undefined ? '(material: ' + tags['building:material'] + ')' : '');
+    $('#editor .info[name=roof\\:material]').text(tags['roof:material'] !== undefined ? '(material: ' + tags['roof:material'] + ')' : '');
   }
 
   function getValues() {

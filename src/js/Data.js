@@ -151,7 +151,9 @@ var Data = {};
   Data.write = function(data, tags) {
     var tagList = [];
     for (var k in tags) {
-      tagList.push({ '@k':k, '@v':tags[k] });
+      if (tags[k] !== undefined && tags[k] !== 'undefined') {
+        tagList.push({ '@k':k, '@v':tags[k] });
+      } 
     }
 
     data.way.tag = tagList;

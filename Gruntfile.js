@@ -27,7 +27,7 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      all: ['dist/index.debug.js']
+      all: grunt.file.readJSON('files.json')
     }
   });
 
@@ -38,12 +38,13 @@ module.exports = function(grunt) {
   grunt.registerTask('default', 'Development build', function() {
     grunt.log.writeln('\033[1;36m'+ grunt.template.date(new Date(), 'yyyy-mm-dd HH:MM:ss') +'\033[0m');
     grunt.task.run('concat');
+    grunt.task.run('uglify');
   });
 
   grunt.registerTask('release', 'Release build', function() {
     grunt.log.writeln('\033[1;36m'+ grunt.template.date(new Date(), 'yyyy-mm-dd HH:MM:ss') +'\033[0m');
     grunt.task.run('concat');
-    // grunt.task.run('jshint');
+    grunt.task.run('jshint');
     grunt.task.run('uglify');
   });
 };

@@ -3,6 +3,10 @@ var App = new Events();
 
 $(function() {
 
+  document.querySelector('.panel').addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+  });
+
   User.init();
   Map.init();
   Editor.init();
@@ -11,14 +15,6 @@ $(function() {
   App.on('FEATURE_SELECT', function() {
     $('#intro').hide();
     $('#editor').fadeIn();
-  });
-
-  App.on('FEATURE_HOVER', function(featureId) {
-    if (featureId && featureId[0] === 'w') {
-      document.body.style.cursor = 'pointer';
-    } else {
-      document.body.style.cursor = 'default';
-    }
   });
 
   // App.on('FEATURE_LOAD', function(feature) {

@@ -90,11 +90,9 @@ var Map = new Events();
         return;
       }
       map.getTarget(e.detail.x, e.detail.y, function(featureId) {
-        if (featureId) {
+        if (featureId && featureId[0] === 'w') {
           App.emit('FEATURE_SELECT', featureId);
-            if (featureId && featureId[0] === 'w') {
-              map.highlight(featureId, '#ffcc00');
-            }
+          map.highlight(featureId, '#ffcc00');
         }
       });
     });
@@ -168,7 +166,7 @@ var Map = new Events();
       setTimeout(function() {
         selectedBuilding.destroy();
         selectedBuilding = null;
-      }, 1000)
+      }, 1000);
     });
 
     return map;
