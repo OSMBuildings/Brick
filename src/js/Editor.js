@@ -78,10 +78,8 @@ var Editor = {};
   function toggleButtons() {
     if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
-      $('#editor-button-cancel').show();
     } else {
       $('#editor-button-submit').hide();
-      $('#editor-button-cancel').hide();
     }
   }
 
@@ -90,7 +88,6 @@ var Editor = {};
       isDirty = true;
       $('#editor-button-submit').attr('disabled', false);
       $('#editor-button-cancel').attr('disabled', false);
-      // TODO: disallow new selection
     }
 
     App.emit('FEATURE_CHANGE', { id:loadedFeature.id, tags:getValues(), nodes:loadedFeature.nodes, data:loadedFeature.data });

@@ -9,12 +9,11 @@ var config = {
     position: { latitude: 52.52179, longitude: 13.39503 },
     zoom: 17,
     maxZoom: 18,
-    basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png',
-    featureUrl: 'http://data.osmbuildings.org/0.2/3hxnp33t/feature/{id}.json'
+    basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png'
   },
 
   osmapi: {
-    endpoint: '',
+    endpoint: 'https://www.openstreetmap.org',
     auth: {
       landingPage: 'auth.html',
       consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',

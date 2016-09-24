@@ -10028,12 +10028,11 @@ var config = {
     position: { latitude: 52.52179, longitude: 13.39503 },
     zoom: 17,
     maxZoom: 18,
-    basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png',
-    featureUrl: 'http://data.osmbuildings.org/0.2/3hxnp33t/feature/{id}.json'
+    basemapUrl: 'https://{s}.tiles.mapbox.com/v3/osmbuildings.kbpalbpk/{z}/{x}/{y}.png'
   },
 
   osmapi: {
-    endpoint: '',
+    endpoint: 'https://www.openstreetmap.org',
     auth: {
       landingPage: 'auth.html',
       consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',
@@ -10370,7 +10369,7 @@ $(function() {
   // });
 
   // App.on('MAP_CHANGE', function(state) {
-  //   $('#intro-link-ideditor').attr('href', 'http://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
+  //   $('#intro-link-ideditor').attr('href', 'https://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
   // });
 });
 
@@ -10503,7 +10502,7 @@ var OSMAPI = {};
   }
 
   OSMAPI.readItem = function(itemType, itemId) {
-    return $.ajax('http://api.openstreetmap.org/api/0.6/'+ itemType +'/'+ itemId +'/full');
+    return $.ajax('https://api.openstreetmap.org/api/0.6/'+ itemType +'/'+ itemId +'/full');
   };
 
   OSMAPI.writeItem = function(item, comment) {
@@ -10715,10 +10714,8 @@ var Editor = {};
   function toggleButtons() {
     if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
-      $('#editor-button-cancel').show();
     } else {
       $('#editor-button-submit').hide();
-      $('#editor-button-cancel').hide();
     }
   }
 
@@ -10727,7 +10724,6 @@ var Editor = {};
       isDirty = true;
       $('#editor-button-submit').attr('disabled', false);
       $('#editor-button-cancel').attr('disabled', false);
-      // TODO: disallow new selection
     }
 
     App.emit('FEATURE_CHANGE', { id:loadedFeature.id, tags:getValues(), nodes:loadedFeature.nodes, data:loadedFeature.data });

@@ -1,13 +1,15 @@
 
 # TODAY
 
-- CHECK material:undefined
 - CHECK return after saving
+- CHECK orientation change (slow)
 
-- mobile: clicks do highlight but nothing else
 - buggy: login/logout/save toggling
 
-- DO deploy!
+- WIP deployment
+
+- Fix roofHeight
+- Talk test
 
 
 

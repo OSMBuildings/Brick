@@ -93,7 +93,7 @@ var OSMAPI = {};
   }
 
   OSMAPI.readItem = function(itemType, itemId) {
-    return $.ajax('http://api.openstreetmap.org/api/0.6/'+ itemType +'/'+ itemId +'/full');
+    return $.ajax('https://api.openstreetmap.org/api/0.6/'+ itemType +'/'+ itemId +'/full');
   };
 
   OSMAPI.writeItem = function(item, comment) {

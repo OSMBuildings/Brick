@@ -24,6 +24,6 @@ $(function() {
   // });
 
   // App.on('MAP_CHANGE', function(state) {
-  //   $('#intro-link-ideditor').attr('href', 'http://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
+  //   $('#intro-link-ideditor').attr('href', 'https://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
   // });
 });
