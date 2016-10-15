@@ -168,14 +168,22 @@ var Editor = {};
     $('#editor input, #editor select').each(function(index, input) {
       switch(input.name) {
         case 'building':
+          // there should always be a value
           tags[input.name] = $(input).find('option:selected').val();
           break;
         case 'roof:shape':
-        case 'building:levels':
-        case 'roof:levels':
         case 'building:colour':
         case 'roof:colour':
-          tags[input.name] = input.value;
+          if (input.value) {
+            tags[input.name] = input.value;
+          }
+          break;
+        case 'building:levels':
+        case 'roof:levels':
+          var value = parseFloat(input.value);
+          if (!isNaN(value)) {
+            tags[input.name] = value;
+          }
           break;
       }
     });

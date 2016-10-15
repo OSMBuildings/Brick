@@ -10,7 +10,7 @@ $(function() {
   User.init();
   Map.init();
   Editor.init();
-  Position.start();
+  Position.get();
 
   App.on('FEATURE_SELECT', function() {
     $('#intro').hide();

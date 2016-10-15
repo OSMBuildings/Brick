@@ -1,17 +1,7 @@
 
 # TODAY
 
-- CHECK return after saving
-- CHECK orientation change (slow)
-
-- buggy: login/logout/save toggling
-
-- WIP deployment
-
 - Fix roofHeight
-- Talk test
-
-
 
 
 # NEXT
@@ -19,6 +9,7 @@
 
 # LATER
 
+- orientation change (slow)
 - re-focus selected object
 - show in OSMB => store somehow locally because of lag
 // TODO: complex items readonly + offer iD editor => http://www.openstreetmap.org/edit?way=24273422

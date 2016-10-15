@@ -24,6 +24,17 @@ var Position = new Events();
     }
   };
 
+  // Note that, if your page doesn't use HTTPS, this method will fail in
+  // modern browsers ([Chrome 50 and newer](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins))
+  Position.get = function() {
+    if (!('geolocation' in navigator)) {
+      onError({ code: 0, message: 'Geolocation not supported.' });
+      return this;
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+  };
+  
   function onError(code, message) {
     message = message || (code === 1 ? 'permission denied' : (code === 2 ? 'position unavailable' : 'timeout'));
     App.emit('POSITION_ERROR', { code:code, message:message });

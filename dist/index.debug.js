@@ -4567,10 +4567,14 @@ function getPolygonDirection(polygon) {
 
   for (var i = 0, il = simplePolygon.length - 1; i<il; i++) {
     segmentLength = vec2.len(vec2.sub(simplePolygon[i+1], simplePolygon[i]));
-    if (segmentLength>maxSegmentLength) {
+    if (segmentLength > maxSegmentLength) {
       maxSegmentLength = segmentLength;
       maxSegment = [simplePolygon[i], simplePolygon[i + 1]];
     }
+  }
+
+  if (maxSegment === undefined) {
+    return;
   }
 
   d = vec2.sub(maxSegment[1], maxSegment[0]);
@@ -4675,6 +4679,7 @@ function addRidgedRoof(buffers, properties, polygon, offset, dim, wallColor, roo
   offset = 0; // TODO
 
   var
+    i,
     outerPolygon = polygon[0],
     direction,
     angle, rad;
@@ -4698,6 +4703,10 @@ function addRidgedRoof(buffers, properties, polygon, offset, dim, wallColor, roo
     }
   }
 
+  if (direction === undefined) {
+    return;
+  }
+
   direction = vec2.scale(direction, 1000);
 
   // calculate the two outermost intersection indices of the
@@ -4705,8 +4714,9 @@ function addRidgedRoof(buffers, properties, polygon, offset, dim, wallColor, roo
 
   var intersections = getPolygonIntersections(outerPolygon, [vec2.sub(dim.center, direction), vec2.add(dim.center, direction)]);
 
+  // need at least two intersections
   if (intersections.length < 2) {
-    throw new Error('can\'t handle ridged roof geometry');
+    return;
   }
 
   // roof caps that are close to first and second vertex of the ridge
@@ -4726,11 +4736,8 @@ function addRidgedRoof(buffers, properties, polygon, offset, dim, wallColor, roo
   cap2.center = getSegmentCenter(cap2.segment);
 
   if (offset === 0) {
-    var i;
-
-    var ridge = [cap1.center, cap2.center];
-
     var
+      ridge = [cap1.center, cap2.center],
       maxDistance = 0,
       distances = [];
 
@@ -4785,7 +4792,7 @@ function addRidgedRoof(buffers, properties, polygon, offset, dim, wallColor, roo
 function addSkillionRoof(buffers, properties, polygon, dim, wallColor, roofColor) {
 
   var
-    i, il,
+    i,
     outerPolygon = polygon[0],
     direction,
     angle, rad;
@@ -4810,6 +4817,10 @@ function addSkillionRoof(buffers, properties, polygon, dim, wallColor, roofColor
     }
   }
 
+  if (direction === undefined) {
+    return;
+  }
+
   direction = vec2.scale(direction, 1000);
 
   // get farthest intersection of polygon and slope line
@@ -4820,7 +4831,7 @@ function addSkillionRoof(buffers, properties, polygon, dim, wallColor, roofColor
     distance = 0,
     maxDistance = 0;
 
-  for (i = 0, il = intersections.length; i<il; i++) {
+  for (i = 0; i < intersections.length; i++) {
     distance = getDistanceToLine(dim.center, intersections[i].segment);
     if (distance > maxDistance) {
       ridge = intersections[i].segment;
@@ -5665,42 +5676,12 @@ var triangulate = (function() {
   }
 
   function getDimensions(properties, bbox) {
-    var
-      dim = {},
-      totalHeight = properties.height || (properties.levels ? properties.levels*METERS_PER_LEVEL : 0);
-
-    // dim.center = [
-    //   (bbox.minX + (bbox.maxX - bbox.minX)/2 - origin[0]) * scale[0],
-    //   (bbox.minY + (bbox.maxY - bbox.minY)/2 - origin[1]) * scale[1]
-    // ]
-    // dim.radius = (bbox.maxX - bbox.minX)/2 * scale[0]
+    var dim = {};
 
     dim.center = [bbox.minX + (bbox.maxX - bbox.minX)/2, bbox.minY + (bbox.maxY - bbox.minY)/2];
     dim.radius = (bbox.maxX - bbox.minX)/2;
 
-    //*** wall height *********************************************************
-
-    dim.wallZ = properties.minHeight || (properties.minLevel ? properties.minLevel*METERS_PER_LEVEL : 0);
-    dim.wallHeight = Math.max(0, totalHeight - dim.wallZ);
-
-    switch (properties.shape) {
-      case 'cone':
-      case 'dome':
-      case 'pyramid':
-        dim.wallHeight = dim.wallHeight || 2*dim.radius;
-        break;
-
-      case 'sphere':
-        dim.wallHeight = dim.wallHeight || 4*dim.radius;
-        break;
-
-      // case 'none': // no walls at all
-      // case 'cylinder':
-      default:
-        dim.wallHeight = dim.wallHeight || DEFAULT_HEIGHT;
-    }
-
-    //*** roof height and update wall height **********************************
+    //*** roof height *********************************************************
 
     dim.roofHeight = properties.roofHeight || (properties.roofLevels ? properties.roofLevels*METERS_PER_LEVEL : 0);
 
@@ -5715,10 +5696,10 @@ var triangulate = (function() {
       case 'gabled':
       case 'hipped':
       case 'half-hipped':
-case 'skillion':
-case 'gambrel':
-case 'mansard':
-case 'round':
+      case 'skillion':
+      case 'gambrel':
+      case 'mansard':
+      case 'round':
          dim.roofHeight = dim.roofHeight || 1*METERS_PER_LEVEL;
          break;
 
@@ -5731,9 +5712,43 @@ case 'round':
         dim.roofHeight = 0;
     }
 
-    dim.roofHeight = Math.min(dim.roofHeight, dim.wallHeight);
-    dim.wallHeight = dim.wallHeight - dim.roofHeight;
-    dim.roofZ = dim.wallHeight + dim.wallZ;
+    //*** wall height *********************************************************
+
+    var maxHeight;
+    dim.wallZ = properties.minHeight || (properties.minLevel ? properties.minLevel*METERS_PER_LEVEL : 0);
+
+    if (properties.height !== undefined) {
+      maxHeight = properties.height;
+      dim.roofHeight = Math.min(dim.roofHeight, maxHeight); // we don't want negative wall heights after subtraction
+      dim.roofZ = maxHeight-dim.roofHeight;
+      dim.wallHeight = maxHeight - dim.roofHeight - dim.wallZ;
+    } else if (properties.levels !== undefined) {
+      maxHeight = properties.levels*METERS_PER_LEVEL;
+      // dim.roofHeight remains unchanged
+      dim.roofZ = maxHeight;
+      dim.wallHeight = maxHeight - dim.wallZ;
+    } else {
+      switch (properties.shape) {
+        case 'cone':
+        case 'dome':
+        case 'pyramid':
+          maxHeight = 2*dim.radius;
+          dim.roofHeight = 0;
+          break;
+
+        case 'sphere':
+          maxHeight = 4*dim.radius;
+          dim.roofHeight = 0;
+          break;
+
+        // case 'none': // no walls at all
+        // case 'cylinder':
+        default:
+          maxHeight = DEFAULT_HEIGHT;
+      }
+      dim.roofZ = maxHeight;
+      dim.wallHeight = maxHeight - dim.wallZ;
+    }
 
     return dim;
   }
@@ -5834,11 +5849,11 @@ var OSMBuildings = function(options) {
 
   APP.attribution = APP.options.attribution || OSMBuildings.ATTRIBUTION;
 
-  APP.minZoom = Math.max(parseFloat(APP.options.minZoom || 14.5), 14.5);
-  APP.maxZoom = Math.min(parseFloat(APP.options.maxZoom || 20), 20);
+  APP.minZoom = Math.max(parseFloat(APP.options.minZoom || MIN_ZOOM), MIN_ZOOM);
+  APP.maxZoom = Math.min(parseFloat(APP.options.maxZoom || MAX_ZOOM), MAX_ZOOM);
   if (APP.maxZoom < APP.minZoom) {
-    APP.minZoom = 14.5;
-    APP.maxZoom = 20;
+    APP.minZoom = MIN_ZOOM;
+    APP.maxZoom = MAX_ZOOM;
   }
 
   APP.bounds = APP.options.bounds;
@@ -5870,6 +5885,10 @@ OSMBuildings.prototype = {
 
     APP.container = document.createElement('DIV');
     APP.container.className = 'osmb';
+    if (container.offsetHeight === 0) {
+      container.style.height = '100%';
+      console.warn('Map container height should be set. Now defaults to 100%.');
+    }
     container.appendChild(APP.container);
 
     APP.width  = width  !== undefined ? width  : container.offsetWidth;
@@ -6047,7 +6066,7 @@ OSMBuildings.prototype = {
   /**
    * Adds a GeoJSON layer to the map
    * @public
-   * @param {String} url - URL of the GeoJSON file
+   * @param {String} url - URL of the GeoJSON file or a JavaScript Object representing a GeoJSON FeatureCollection
    * @param {Object} options - Options to apply to the GeoJSON being rendered
    * @param {Number} [options.scale=1] - Scale the model by this value before rendering
    * @param {Number} [options.rotation=0] - Rotate the model by this much before rendering
@@ -6896,6 +6915,9 @@ var TILE_SIZE = 256;
 var DEFAULT_HEIGHT = 10;
 var HEIGHT_SCALE = 1.0;
 
+var MIN_ZOOM = 14.5;
+var MAX_ZOOM = 22;
+
 var MAX_USED_ZOOM_LEVEL = 25;
 var DEFAULT_COLOR = new Color('rgb(220, 210, 200)').toArray();
 var HIGHLIGHT_COLOR = new Color('#f08000').toArray();
@@ -7061,11 +7083,11 @@ var Grid = function(source, tileClass, options) {
 
   this.tileOptions = { color:options.color, fadeIn:options.fadeIn };
 
-  this.minZoom = Math.max(parseFloat(options.minZoom || 14.5), APP.minZoom);
-  this.maxZoom = Math.min(parseFloat(options.maxZoom || 20), APP.maxZoom);
+  this.minZoom = Math.max(parseFloat(options.minZoom || MIN_ZOOM), APP.minZoom);
+  this.maxZoom = Math.min(parseFloat(options.maxZoom || MAX_ZOOM), APP.maxZoom);
   if (this.maxZoom < this.minZoom) {
-    this.minZoom = 14.5;
-    this.maxZoom = 20;
+    this.minZoom = MIN_ZOOM;
+    this.maxZoom = MAX_ZOOM;
   }
 
   APP.on('change', this._onChange = function() {
@@ -7505,11 +7527,11 @@ mesh.GeoJSON = (function() {
     this.elevation    = options.elevation || 0;
     this.shouldFadeIn = 'fadeIn' in options ? !!options.fadeIn : true;
 
-    this.minZoom = Math.max(parseFloat(options.minZoom || 14.5), APP.minZoom);
-    this.maxZoom = Math.min(parseFloat(options.maxZoom || 20), APP.maxZoom);
+    this.minZoom = Math.max(parseFloat(options.minZoom || MIN_ZOOM), APP.minZoom);
+    this.maxZoom = Math.min(parseFloat(options.maxZoom || MAX_ZOOM), APP.maxZoom);
     if (this.maxZoom < this.minZoom) {
-      this.minZoom = 14.5;
-      this.maxZoom = 20;
+      this.minZoom = MIN_ZOOM;
+      this.maxZoom = MAX_ZOOM;
     }
 
     this.items = [];
@@ -8066,11 +8088,11 @@ mesh.OBJ = (function() {
     this.position     = position;
     this.shouldFadeIn = 'fadeIn' in options ? !!options.fadeIn : true;
 
-    this.minZoom = Math.max(parseFloat(options.minZoom || 14.5), APP.minZoom);
-    this.maxZoom = Math.min(parseFloat(options.maxZoom || 20), APP.maxZoom);
+    this.minZoom = Math.max(parseFloat(options.minZoom || MIN_ZOOM), APP.minZoom);
+    this.maxZoom = Math.min(parseFloat(options.maxZoom || MAX_ZOOM), APP.maxZoom);
     if (this.maxZoom < this.minZoom) {
-      this.minZoom = 14.5;
-      this.maxZoom = 20;
+      this.minZoom = MIN_ZOOM;
+      this.maxZoom = MAX_ZOOM;
     }
 
     this.data = {
@@ -10355,7 +10377,7 @@ $(function() {
   User.init();
   Map.init();
   Editor.init();
-  Position.start();
+  Position.get();
 
   App.on('FEATURE_SELECT', function() {
     $('#intro').hide();
@@ -10804,14 +10826,22 @@ var Editor = {};
     $('#editor input, #editor select').each(function(index, input) {
       switch(input.name) {
         case 'building':
+          // there should always be a value
           tags[input.name] = $(input).find('option:selected').val();
           break;
         case 'roof:shape':
-        case 'building:levels':
-        case 'roof:levels':
         case 'building:colour':
         case 'roof:colour':
-          tags[input.name] = input.value;
+          if (input.value) {
+            tags[input.name] = input.value;
+          }
+          break;
+        case 'building:levels':
+        case 'roof:levels':
+          var value = parseFloat(input.value);
+          if (!isNaN(value)) {
+            tags[input.name] = value;
+          }
           break;
       }
     });
@@ -10928,7 +10958,7 @@ var Map = new Events();
       return feature;
     });
 
-    buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
+    // buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
 
     map.on('change', function() {
       var
@@ -10972,6 +11002,7 @@ var Map = new Events();
     App.on('POSITION_CHANGE', function(position) {
       map.setPosition(position);
    // map.setZoom(zoom);
+      buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
     });
 
     App.on('FEATURE_CHANGE', function(feature) {
@@ -11062,6 +11093,17 @@ var Position = new Events();
     }
   };
 
+  // Note that, if your page doesn't use HTTPS, this method will fail in
+  // modern browsers ([Chrome 50 and newer](https://sites.google.com/a/chromium.org/dev/Home/chromium-security/deprecating-powerful-features-on-insecure-origins))
+  Position.get = function() {
+    if (!('geolocation' in navigator)) {
+      onError({ code: 0, message: 'Geolocation not supported.' });
+      return this;
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+  };
+  
   function onError(code, message) {
     message = message || (code === 1 ? 'permission denied' : (code === 2 ? 'position unavailable' : 'timeout'));
     App.emit('POSITION_ERROR', { code:code, message:message });

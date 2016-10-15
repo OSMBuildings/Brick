@@ -30,6 +30,7 @@ var Map = new Events();
       minZoom: 16,
       maxZoom: config.map.maxZoom+2,
       effects: ['shadows'],
+      state: true,
       attribution: '© Data <a href="https://openstreetmap.org/copyright/">OpenStreetMap</a> · © Map <a href="https://mapbox.com/">Mapbox</a> · © 3D <a href="https://osmbuildings.org/copyright/">OSM Buildings</a>'
     }).appendTo(document.getElementById('map'));
 
@@ -65,22 +66,8 @@ var Map = new Events();
 
       return feature;
     });
-
-    buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
-
+    
     map.on('change', function() {
-      var
-        position = map.getPosition(),
-        zoom = map.getZoom(),
-        rotation = map.getRotation(),
-        tilt = map.getTilt();
-      State.set('latitude',  position.latitude.toFixed(5));
-      State.set('longitude', position.longitude.toFixed(5));
-      State.set('zoom', zoom);
-
-      State.set('rotation', rotation.toFixed(5));
-      State.set('tilt', tilt.toFixed(5));
-
       App.emit('MAP_CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
     });
 
@@ -110,6 +97,7 @@ var Map = new Events();
     App.on('POSITION_CHANGE', function(position) {
       map.setPosition(position);
    // map.setZoom(zoom);
+      buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
     });
 
     App.on('FEATURE_CHANGE', function(feature) {
