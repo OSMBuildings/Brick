@@ -66,10 +66,6 @@ var Map = new Events();
 
       return feature;
     });
-    
-    map.on('change', function() {
-      App.emit('MAP_CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
-    });
 
     map.on('pointerdown', function(e) {
       // no mouse interaction, if an object is currently edited

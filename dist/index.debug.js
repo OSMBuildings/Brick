@@ -7,19 +7,25 @@
 
 var JXON = new (function () {
   var
-    sValueProp = "keyValue", sAttributesProp = "keyAttributes", sAttrPref = "@", /* you can customize these values */
+    sValueProp = 'keyValue', sAttributesProp = 'keyAttributes', sAttrPref = '@', /* you can customize these values */
     aCache = [], rIsNull = /^\s*$/, rIsBool = /^(?:true|false)$/i;
 
   function parseText (sValue) {
     if (rIsNull.test(sValue)) { return null; }
-    if (rIsBool.test(sValue)) { return sValue.toLowerCase() === "true"; }
-    if (isFinite(sValue)) { return parseFloat(sValue); }
-    if (isFinite(Date.parse(sValue))) { return new Date(sValue); }
+    if (rIsBool.test(sValue)) { return sValue.toLowerCase() === 'true'; }
+    if (''+parseFloat(sValue) == sValue) {
+      if (isFinite(sValue)) {
+        return parseFloat(sValue);
+      }
+      if (isFinite(Date.parse(sValue))) {
+        return new Date(sValue);
+      }
+    }
     return sValue;
   }
 
   function EmptyTree () { }
-  EmptyTree.prototype.toString = function () { return "null"; };
+  EmptyTree.prototype.toString = function () { return 'null'; };
   EmptyTree.prototype.valueOf = function () { return null; };
 
   function objectify (vValue) {
@@ -32,15 +38,15 @@ var JXON = new (function () {
       bAttributes = oParentNode.hasAttributes(), bHighVerb = Boolean(nVerb & 2);
 
     var
-      sProp, vContent, nLength = 0, sCollectedTxt = "",
+      sProp, vContent, nLength = 0, sCollectedTxt = '',
       vResult = bHighVerb ? {} : /* put here the default value for empty nodes: */ true;
 
     if (bChildren) {
       for (var oNode, nItem = 0; nItem < oParentNode.childNodes.length; nItem++) {
         oNode = oParentNode.childNodes.item(nItem);
-        if (oNode.nodeType === 4) { sCollectedTxt += oNode.nodeValue; } /* nodeType is "CDATASection" (4) */
-        else if (oNode.nodeType === 3) { sCollectedTxt += oNode.nodeValue.trim(); } /* nodeType is "Text" (3) */
-        else if (oNode.nodeType === 1 && !oNode.prefix) { aCache.push(oNode); } /* nodeType is "Element" (1) */
+        if (oNode.nodeType === 4) { sCollectedTxt += oNode.nodeValue; } /* nodeType is 'CDATASection' (4) */
+        else if (oNode.nodeType === 3) { sCollectedTxt += oNode.nodeValue.trim(); } /* nodeType is 'Text' (3) */
+        else if (oNode.nodeType === 1 && !oNode.prefix) { aCache.push(oNode); } /* nodeType is 'Element' (1) */
       }
     }
 
@@ -63,11 +69,16 @@ var JXON = new (function () {
     if (bAttributes) {
       var
         nAttrLen = oParentNode.attributes.length,
-        sAPrefix = bNesteAttr ? "" : sAttrPref, oAttrParent = bNesteAttr ? {} : vResult;
+        sAPrefix = bNesteAttr ? '' : sAttrPref, oAttrParent = bNesteAttr ? {} : vResult;
 
       for (var oAttrib, nAttrib = 0; nAttrib < nAttrLen; nLength++, nAttrib++) {
         oAttrib = oParentNode.attributes.item(nAttrib);
         oAttrParent[sAPrefix + oAttrib.name.toLowerCase()] = parseText(oAttrib.value.trim());
+        if (oAttrib.value == '01067') {
+          console.log(oAttrib.value, oAttrib.value.trim(), parseText(oAttrib.value.trim()));
+          debugger
+          parseText(oAttrib.value.trim());
+        }
       }
 
       if (bNesteAttr) {
@@ -96,7 +107,7 @@ var JXON = new (function () {
     if (oParentObj instanceof String || oParentObj instanceof Number || oParentObj instanceof Boolean) {
       oParentEl.appendChild(oXMLDoc.createTextNode(oParentObj.toString())); /* verbosity level is 0 */
     } else if (oParentObj.constructor === Date) {
-      oParentEl.appendChild(oXMLDoc.createTextNode(oParentObj.toGMTString()));    
+      oParentEl.appendChild(oXMLDoc.createTextNode(oParentObj.toGMTString()));
     }
 
     for (var sName in oParentObj) {
@@ -122,17 +133,17 @@ var JXON = new (function () {
           oChild.appendChild(oXMLDoc.createTextNode(vValue.toString()));
         }
         oParentEl.appendChild(oChild);
-     }
-   }
+      }
+    }
   }
 
   this.build = function (oXMLParent, nVerbosity /* optional */, bFreeze /* optional */, bNesteAttributes /* optional */) {
-    var _nVerb = arguments.length > 1 && typeof nVerbosity === "number" ? nVerbosity & 3 : /* put here the default verbosity level: */ 1;
-    return createObjTree(oXMLParent, _nVerb, bFreeze || false, arguments.length > 3 ? bNesteAttributes : _nVerb === 3);    
+    var _nVerb = arguments.length > 1 && typeof nVerbosity === 'number' ? nVerbosity & 3 : /* put here the default verbosity level: */ 1;
+    return createObjTree(oXMLParent, _nVerb, bFreeze || false, arguments.length > 3 ? bNesteAttributes : _nVerb === 3);
   };
 
-  this.unbuild = function (oObjTree) {    
-    var oNewDoc = document.implementation.createDocument("", "", null);
+  this.unbuild = function (oObjTree) {
+    var oNewDoc = document.implementation.createDocument('', '', null);
     loadObjTree(oNewDoc, oNewDoc, oObjTree);
     return oNewDoc;
   };
@@ -141,12 +152,12 @@ var JXON = new (function () {
     return (new XMLSerializer()).serializeToString(JXON.unbuild(oObjTree));
   };
 })();
+
 // var myObject = JXON.build(doc);
 // we got our javascript object! try: alert(JSON.stringify(myObject));
 
 // var newDoc = JXON.unbuild(myObject);
 // we got our Document instance! try: alert((new XMLSerializer()).serializeToString(newDoc));
-
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.osmAuth = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
@@ -10377,7 +10388,25 @@ $(function() {
   User.init();
   Map.init();
   Editor.init();
-  Position.get();
+
+  if (!location.search) {
+    Position.get();
+  } else {
+    var
+      query = location.search.substring(1),
+      params = {};
+    query.replace(/(?:^|&)([^&=]*)=?([^&]*)/g, function($0, $1, $2) {
+      if ($1) {
+        params[$1] = decodeURIComponent($2);
+      }
+    });
+
+    if (params.lat && params.lon) {
+      App.emit('POSITION_CHANGE', { latitude: params.lat, longitude: params.lon });
+    } else {
+      Position.get();
+    }
+  }
 
   App.on('FEATURE_SELECT', function() {
     $('#intro').hide();
@@ -10388,10 +10417,6 @@ $(function() {
   //   if (history.pushState) {
   //     history.pushState(null, null, baseURL + 'feature/' + feature.id);
   //   }
-  // });
-
-  // App.on('MAP_CHANGE', function(state) {
-  //   $('#intro-link-ideditor').attr('href', 'https://www.openstreetmap.org/edit#map=' + state.zoom + '/' + state.position.latitude + '/' + state.position.longitude);
   // });
 });
 
@@ -10922,6 +10947,7 @@ var Map = new Events();
       minZoom: 16,
       maxZoom: config.map.maxZoom+2,
       effects: ['shadows'],
+      state: true,
       attribution: '© Data <a href="https://openstreetmap.org/copyright/">OpenStreetMap</a> · © Map <a href="https://mapbox.com/">Mapbox</a> · © 3D <a href="https://osmbuildings.org/copyright/">OSM Buildings</a>'
     }).appendTo(document.getElementById('map'));
 
@@ -10956,24 +10982,6 @@ var Map = new Events();
       }
 
       return feature;
-    });
-
-    // buildingLayer = map.addGeoJSONTiles('https://{s}.data.osmbuildings.org/0.2/anonymous/tile/{z}/{x}/{y}.json', { fixedZoom: 15 });
-
-    map.on('change', function() {
-      var
-        position = map.getPosition(),
-        zoom = map.getZoom(),
-        rotation = map.getRotation(),
-        tilt = map.getTilt();
-      State.set('latitude',  position.latitude.toFixed(5));
-      State.set('longitude', position.longitude.toFixed(5));
-      State.set('zoom', zoom);
-
-      State.set('rotation', rotation.toFixed(5));
-      State.set('tilt', tilt.toFixed(5));
-
-      App.emit('MAP_CHANGE', { position:position, zoom:zoom, rotation:rotation, tilt:tilt });
     });
 
     map.on('pointerdown', function(e) {
