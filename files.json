@@ -2,7 +2,6 @@
   "lib/jquery-2.1.1.min.js",
   "lib/jxon.js",
   "node_modules/osm-auth/osmauth.js",
-  "lib/OSMBuildings/OSMBuildings.debug.js",
 
   "src/config.js",
   "src/js/Events.js",

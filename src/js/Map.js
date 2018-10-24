@@ -23,16 +23,15 @@ var Map = new Events();
     // var zoom = config.map.zoom;
 
     var map = new OSMBuildings({
+      container: '#map',
       position: position,
       zoom: zoom,
       tilt: 30,
-      baseURL: 'assets', // not an ideal place, but good for now
       minZoom: 16,
       maxZoom: config.map.maxZoom+2,
-      effects: ['shadows'],
       state: true,
       attribution: '© Data <a href="https://openstreetmap.org/copyright/">OpenStreetMap</a> · © Map <a href="https://mapbox.com/">Mapbox</a> · © 3D <a href="https://osmbuildings.org/copyright/">OSM Buildings</a>'
-    }).appendTo(document.getElementById('map'));
+    });
 
     map.addMapTiles(config.map.basemapUrl);
 
@@ -67,7 +66,7 @@ var Map = new Events();
       return feature;
     });
 
-    map.on('pointerdown', function(e) {
+    map.on('pointerup', function(e) {
       // no mouse interaction, if an object is currently edited
       if (selectedBuilding) {
         return;
