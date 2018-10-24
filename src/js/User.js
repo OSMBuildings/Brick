@@ -12,38 +12,29 @@ $(function() {
     OSMAPI.login();
   });
 
+  $('#editor-button-submit').click(function () {
+    OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), config.editComment)
+      .done(function () {
+        // TODO update loadedItem
+        // TODO reset view
+        isDirty = false;
+        $('#editor-button-submit').attr('disabled', true);
+        $('#editor-button-cancel').attr('disabled', true);
 
+        // restore map view
+        App.emit('FEATURE_RESET');
+      });
+  });
 
-
-
-
-
-
-
-
-
+  $('#editor-button-cancel').click(function () {
+    App.emit('FEATURE_RESET');
+    setValues(loadedFeature);
+  });
 
 });
 
-    $('#editor-button-submit').click(function() {
-      OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), config.editComment)
-        .done(function() {
-          // TODO update loadedItem
-          // TODO reset view
-          isDirty = false;
-          $('#editor-button-submit').attr('disabled', true);
-          $('#editor-button-cancel').attr('disabled', true);
 
-          // restore map view
-          App.emit('FEATURE_RESET');
-        });
-    });
 
-    $('#editor-button-cancel').click(function() {
-      App.emit('FEATURE_RESET');
-      setValues(loadedFeature);
-    });
-  };
 
   function toggleButtons() {
     if (OSMAPI.isLoggedIn()) {
@@ -165,4 +156,5 @@ $(function() {
     return tags;
   }
 
-}());
+
+

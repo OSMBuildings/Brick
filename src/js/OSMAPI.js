@@ -148,10 +148,13 @@ var OSMAPI = {};
   };
 
   OSMAPI.login = function() {
+
     auth.authenticate(function() {
+
       if (!auth.authenticated()) {
         return;
       }
+      console.log("login2")
       App.emit('LOGIN');
     });
   };

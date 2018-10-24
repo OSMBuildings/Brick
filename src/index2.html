@@ -9,21 +9,20 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="style.css">
-  "lib/jquery-2.1.1.min.js",
-  "src/js/OSMAPI.js",
+
+  <script src="../lib/jquery-2.1.1.min.js"></script>
+  <script src="../node_modules/osm-auth/osmauth.js"></script>
+  <script src="config.js"></script>
+  <script src="../lib/jxon.js"></script>
+
+  <script src="js/OSMAPI.js"></script>
 
 
+  <script src="js/Events.js"></script>
+  <script src="js/Data.js"></script>
+  <script src="js/Editor.js"></script>
+  <script src="js/User.js"></script>
 
-
-
-  "lib/jxon.js",
-  "node_modules/osm-auth/osmauth.js",
-
-  "src/config.js",
-  "src/js/Events.js",
-  "src/js/Data.js",
-  "src/js/Editor.js",
-  "src/js/User.js",
 </head>
 
 <body>
@@ -35,16 +34,12 @@
   <div id="editor" style="display:none">
     VORAB:
 
-    - schauen ob test api existiert
+    - schauen ob test api existiert (sebbi2 mustermann unter sebastian.settgast@gmail.de) https://master.apis.dev.openstreetmap.org/user/sebbi/confirm
     - login prüfen
-    - read
+    - read                    https://wiki.openstreetmap.org/wiki/API_v0.6
     - höhe ändern
     - write
-
-
-
-
-
+    localstorage.clear()
 
     1. Gebäude anklicken -> details kommen vom event pointerup
     1b Edit buttton (per gebäude) klicken
