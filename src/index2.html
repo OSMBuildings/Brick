@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Brick</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+  <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  "lib/jquery-2.1.1.min.js",
+  "src/js/OSMAPI.js",
+
+
+
+
+
+  "lib/jxon.js",
+  "node_modules/osm-auth/osmauth.js",
+
+  "src/config.js",
+  "src/js/Events.js",
+  "src/js/Data.js",
+  "src/js/Editor.js",
+  "src/js/User.js",
+</head>
+
+<body>
+  <div id="login">
+    <p>To save your work, please log in with OpenStreetMap.</p>
+    <button id="login-button-in">Log in</button>
+  </div>
+
+  <div id="editor" style="display:none">
+    VORAB:
+
+    - schauen ob test api existiert
+    - login prüfen
+    - read
+    - höhe ändern
+    - write
+
+
+
+
+
+
+    1. Gebäude anklicken -> details kommen vom event pointerup
+    1b Edit buttton (per gebäude) klicken
+    1c prüfen ob osm login notwendig
+    2. eingabefelder erstellen für levels und höhe, values aus OSMB
+    3. nach eingabe prüfen ob wirklich änderung in höhe/levels von OSMB erfolgte + validieren
+    4. speichern: Gebaudedetails über OSM API abfragen (es muss alles komplett gespeichert werden)
+    5. heraus finden, welche osm attrib. gesetzt werden müssen
+       height -> height, building:height
+       levels -> levels, building:levels
+    6. changeset erzeugen und speichern
+
+
+    Editor.init();
+
+
+
+    <input type="number" min="0" step="1" name="levels">
+    <input type="number" min="0" name="height"> m
+
+    <button type="button" id="editor-button-cancel" class="button-close" disabled>Cancel</button>
+    <button type="submit" id="editor-button-submit" disabled>Save</button>
+  </div>
+
+</body>
+</html>
