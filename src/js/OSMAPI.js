@@ -44,10 +44,12 @@ var OSMAPI = {};
   }
 
   function itemToJXON(item, changesetId) {
+
     var res, data;
 
     if (item.relation) {
       data = item.relation;
+      console.log('bin in relation')
       res = {
         relation: {
           '@id': data['@id'],
@@ -56,9 +58,8 @@ var OSMAPI = {};
           tag: data.tag
         }
       };
-    }
-
-    if (item.way) {
+    } else if (item.way) {
+      console.log('bin in way')
       data = item.way;
       res = {
         way: {
@@ -75,7 +76,12 @@ var OSMAPI = {};
     }
 
     if (changesetId) {
-      res.way['@changeset'] = changesetId;
+      if(item.relation){
+        res.relation['@changeset'] = changesetId;
+      } else if(item.way){
+        res.way['@changeset'] = changesetId;
+      }
+
     }
 
     return res;
@@ -98,6 +104,8 @@ var OSMAPI = {};
 
   OSMAPI.writeItem = function(item, comment) {
     var promise = $.Deferred();
+
+    console.log(item)
 
     auth.xhr({
       method: 'PUT',
@@ -150,11 +158,10 @@ var OSMAPI = {};
   OSMAPI.login = function() {
 
     auth.authenticate(function() {
-
       if (!auth.authenticated()) {
         return;
       }
-      console.log("login2")
+      console.log("emit login")
       App.emit('LOGIN');
     });
   };

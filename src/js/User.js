@@ -1,160 +1,169 @@
 
+var App = new Events();
+
 $(function() {
 
-  if (OSMAPI.isLoggedIn()) {
-    $('#login').hide();
-  } else {
-    $('#login').show();
-  }
+  let feature;
 
-  $('#login-button-in').click(function(e) {
+  $('#simulate-building-click').click( () => {
+
+    $.get("assets/building.json", (json) => {
+      if(json.length <= 0) return;
+
+      feature = json[0];
+
+      $('#building-data').show();
+      $('#building-data').text(JSON.stringify(feature));
+      App.emit('FEATURE_SELECT', feature);
+    });
+
+  });
+
+  $('#login-button-in').click( (e) => {
+
     e.stopPropagation();
     OSMAPI.login();
+
+  });
+  $('#logout-button').click( (e) => {
+
+    e.stopPropagation();
+    OSMAPI.logout();
+
   });
 
-  $('#editor-button-submit').click(function () {
-    OSMAPI.writeItem(Data.write(loadedFeature.data, getValues()), config.editComment)
-      .done(function () {
-        // TODO update loadedItem
-        // TODO reset view
-        isDirty = false;
-        $('#editor-button-submit').attr('disabled', true);
-        $('#editor-button-cancel').attr('disabled', true);
 
-        // restore map view
-        App.emit('FEATURE_RESET');
-      });
+  $('#editor-button-submit').click( () =>{
+
+    App.emit('FEATURE_CHANGE', feature)
+
   });
 
-  $('#editor-button-cancel').click(function () {
-    App.emit('FEATURE_RESET');
-    setValues(loadedFeature);
+  $('#editor-button-start').click( () => {
+
+    if (!OSMAPI.isLoggedIn()) {
+      $('#login').show();
+    } else {
+      $('#editor').show();
+      $('#logout').show();
+    }
+
   });
+
+  $('#editor-button-cancel').click( () => {
+
+    $('#editor').hide();
+
+  });
+
+  App.on('FEATURE_SELECT', onFeatureSelect);
+  App.on('LOGIN', onLogin);
+  App.on('LOGOUT', onLogout);
+  App.on('FEATURE_CHANGE', featureChange);
 
 });
 
+const sendData = (data, changesetComment) => {
 
+  data.write();
+  OSMAPI.writeItem(data.feature, config.editComment + ', ' + changesetComment);
 
+}
 
-  function toggleButtons() {
-    if (OSMAPI.isLoggedIn()) {
-      $('#editor-button-submit').show();
-    } else {
-      $('#editor-button-submit').hide();
-    }
+const isNumber = (num) => { return !isNaN(parseInt(num)) && !isNaN(num - 0) }
+
+const onLogout = () => {
+
+  $('#login-button-in').show();
+  $('#logout').hide();
+  $('#editor').hide();
+
+}
+
+const onLogin = () => {
+
+  $('#login-button-in').hide();
+  $('#logout').show();
+  $('#editor').show();
+
+}
+
+const featureChange = (feature) => {
+
+  // if no values are in feature set to zero for check with values(newHeight) from user(there are zero if no values are given)
+  let OSMBheight = feature.properties.height || 0;
+  let OSMBlevel = feature.properties.levels || 0;
+
+  const minLevels = 0;
+  const maxLevels = 200;
+  const minHeight = 0;
+  const maxHeight = 1500;
+
+  let newLevel = $('#building-level').get(0).value;
+  let newHeight = $('#building-height').get(0).value;
+
+  // check if user data is valid
+  if(!(isNumber(newLevel) && newLevel >= minLevels && newLevel <= maxLevels)){
+    alert(`Are your sure the building has ${newLevel} Levels?`);
+    return;
   }
 
-  function onInputChange(e) {
-    if (!isDirty) {
-      isDirty = true;
-      $('#editor-button-submit').attr('disabled', false);
-      $('#editor-button-cancel').attr('disabled', false);
-    }
-
-    App.emit('FEATURE_CHANGE', { id:loadedFeature.id, tags:getValues(), nodes:loadedFeature.nodes, data:loadedFeature.data });
+  if(!(isNumber(newHeight) && newHeight >= minHeight && newHeight <= maxHeight)){
+    alert(`Are your sure the building is ${newHeight} meters tall?`);
+    return;
   }
 
-  function onFeatureSelect(featureId) {
-    // for now, we enable simple objects only
-    if (featureId[0] !== 'w') {
-      return;
-    }
+  newLevel = parseInt(newLevel);
+  newHeight = parseInt(newHeight);
 
-    var
-      types = { n:'node', w:'way', r:'relation' },
-      itemType = types[ featureId[0] ],
-      itemId = featureId.replace(/^\D/, '');
+  // check if user data has changed compared to OSMB data
+  const changeLevel = newLevel !== parseInt(OSMBlevel);
+  const changeHeight = newHeight !== parseInt(OSMBheight);
 
-
-    // osmb id 12345 -> node
-    // osmb id r12345 -> relation (r weg)
-
-    OSMAPI.readItem(itemType, itemId)
-      .done(function(doc) {
-        setValues(Data.read(doc));
-      });
+  // none of the values changed
+  if(!(changeLevel || changeHeight)){
+    alert('You need to change either the level of the building or the height.');
+    return;
   }
 
-  function setValues(feature) {
-    isDirty = false;
-    $('#editor-button-submit').attr('disabled', true);
-    $('#editor-button-cancel').attr('disabled', true);
+  let changesetComment = $('#changeset-comment').get(0).value;
+  $('#changeset-comment').get(0).value = '';
 
-    loadedFeature = feature;
+  let itemType = 'way';
+  let itemId = feature.id;
 
-    var
-      nameWithId = feature ? 'Building ' + feature.id : 'Select building',
-      tags = feature ? feature.tags : {};
+  if (feature.id.toString().charAt(0) === 'r'){
+    itemType = 'relation';
+    itemId = itemId.substr(1);
+  }
 
-    document.title = (tags.name ? tags.name + ' - ' : '') + config.appName;
-    $('#editor h1').text(tags.name ? tags.name : nameWithId);
+  OSMAPI.readItem(itemType, itemId)
+    .done( doc => {
 
-    var value;
-    $('#editor input, #editor select').each(function(index, input) {
-      value = tags[input.name];
-      switch(input.name) {
-        case 'building':
-          $(input).find('option').filter(function() {
-            return $(this).html() === (value || 'yes');
-          }).prop('selected', true);
-          break;
-
-        case 'roof:shape':
-          input.value = value || '';
-          break;
-
-        case 'building:levels':
-        case 'roof:levels':
-          input.value = (value !== undefined ? value : '');
-          break;
-
-        case 'building:colour':
-          input.value = value || '';
-          $('#editor *[name=building\\:colour]').css('border-right-color', (value || 'transparent'));
-          break;
-
-        case 'roof:colour':
-          input.value = value || '';
-          $('#editor *[name=roof\\:colour]').css('border-right-color', (value || 'transparent'));
-          break;
+      let data = new Data(doc);
+      if(data.addLevels(newLevel) | data.addHeight(newHeight)){
+        sendData(data, changesetComment);
       }
+
+    })
+    .fail( e => {
+      alert('Sorry internal problem. Please try again.');
+      console.error(e)
     });
 
-    $('#editor .info[name=height]').text(tags['height'] !== undefined ? '(' + tags['height'] + 'm)' : '');
-    $('#editor .info[name=roof\\:height]').text(tags['roof:height'] !== undefined ? '(' + tags['roof:height'] + 'm)' : '');
+  $('#editor').hide();
+  $('#building-data').hide();
+  $('#editor-button-start').hide();
 
-    $('#editor .info[name=building\\:material]').text(tags['building:material'] !== undefined ? '(material: ' + tags['building:material'] + ')' : '');
-    $('#editor .info[name=roof\\:material]').text(tags['roof:material'] !== undefined ? '(material: ' + tags['roof:material'] + ')' : '');
-  }
+}
 
-  function getValues() {
-    var tags = loadedFeature.tags;
+const onFeatureSelect = (feature) => {
 
-    $('#editor input, #editor select').each(function(index, input) {
-      switch(input.name) {
-        case 'building':
-          // there should always be a value
-          tags[input.name] = $(input).find('option:selected').val();
-          break;
-        case 'roof:shape':
-        case 'building:colour':
-        case 'roof:colour':
-          if (input.value) {
-            tags[input.name] = input.value;
-          }
-          break;
-        case 'building:levels':
-        case 'roof:levels':
-          var value = parseFloat(input.value);
-          if (!isNaN(value)) {
-            tags[input.name] = value;
-          }
-          break;
-      }
-    });
+  const properties = feature.properties;
 
-    return tags;
-  }
+  $('#editor-button-start').show();
+  // fill input fields with values from OSMB
+  properties.hasOwnProperty('building:levels') ? $('#building-level').val(properties['building:levels']) : $('#building-level').val('0');
+  properties.hasOwnProperty('height') ? $('#building-height').val(properties.height) : $('#building-height').val('0');
 
-
-
+}

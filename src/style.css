@@ -111,6 +111,42 @@ button:focus {
 
 /*************************************/
 
+#logout-button {
+    border: 1px solid #336699;
+    padding: 10px 20px;
+    margin: 40px 0 20px 0;
+    border-radius: 4px;
+    background: #cc3300;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#logout-button[disabled] {
+    border: 1px solid #999999;
+    background: #cccccc;
+    cursor: default;
+}
+
+
+#editor-button-cancel {
+    border: 1px solid #336699;
+    padding: 10px 20px;
+    margin: 40px 0 20px 0;
+    border-radius: 4px;
+    background: #cc3300;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#editor-button-cancel[disabled] {
+    border: 1px solid #999999;
+    background: #cccccc;
+    cursor: default;
+}
+
+
 #editor-button-submit {
     border: 1px solid #336699;
     padding: 10px 20px;

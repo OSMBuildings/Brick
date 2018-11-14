@@ -8,138 +8,56 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="../lib/leaflet-0.8/leaflet.css">
   <link rel="stylesheet" href="style.css">
-  <link href="https://cdn.osmbuildings.org/4.0.1/OSMBuildings.css" rel="stylesheet">
-  <script src="https://cdn.osmbuildings.org/4.0.1/OSMBuildings.js"></script>
-  <script src="../loader.js"></script>
+
+  <script src="../lib/jquery-2.1.1.min.js"></script>
+  <script src="../node_modules/osm-auth/osmauth.js"></script>
+  <script src="config.js"></script>
+  <script src="../lib/jxon.js"></script>
+
+  <script src="js/OSMAPI.js"></script>
+
+  <script src="js/Events.js"></script>
+  <script src="js/Data.js"></script>
+  <script src="js/User.js"></script>
+
 </head>
 
 <body>
-<div id="map"></div>
 
-<div class="panel">
+    <button type="submit" id="simulate-building-click" style="margin: 10px">Simulate Building Click</button>
 
-  <div id="intro">
-    <h1>Welcome to Brick!</h1>
-    <p>Improve building information as you go. Select an object nearby and edit its properties.</p>
-    <p>Only basic buildings can be changed.</p>
+    <div id="building-data" style="padding: 10px; display:none">  </div>
+    <button type="button" id="editor-button-start" style="display:none">Edit</button>
+
+    <div id="login" style="display:none">
+      <button id="login-button-in">Log in</button>
+    </div>
+
+    <div id="logout" style="display:none">
+        <button id="logout-button">Logout</button>
+    </div>
+
+    <div id="editor" style="display:none" >
+      Please enter the levels or the height for the chosen feature. <br>
+      <br>
+      building level:
+      <input type="number" min="0" step="1" name="levels" id="building-level">
+      <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">need help?</a>
+       <br> <br>
+      building height:
+      <input type="number" min="0" name="height" id="building-height"> in meter.
+      <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">need help?</a>
+      <br>
+      <br>
+      Changeset comment:
+        <input type="text" placeholder="comments like source,..." id="changeset-comment">
+      <br>
+
+      <button type="button" id="editor-button-cancel" >Cancel</button>
+      <button type="submit" id="editor-button-submit" >Save</button>
+
   </div>
-
-  <div id="editor" style="display:none">
-    <button type="button" id="editor-button-cancel" class="button-close" disabled>&times;</button>
-
-    <h1>Select building</h1>
-
-    <div class="row">
-      <label>Building type</label>
-      <select name="building" class="input"></select>
-    </div>
-
-    <!--div class="row">
-      <label>Building use</label>
-      <select name="building:use" class="input"></select>
-    </div-->
-
-    <div class="row">
-      <label>Number of levels <span name="height" class="info"></span></label>
-      <input type="number" min="0" step="1" name="building:levels" autocomplete="0">
-    </div>
-
-    <div class="row">
-      <label>Building color <span name="building:material" class="info"></span></label>
-      <input type="text" name="building:colour" class="color" autocomplete="0">
-    </div>
-
-    <div class="row">
-      <label>Number of roof levels <span name="roof:height" class="info"></span></label>
-      <input type="number" min="0" step="1" name="roof:levels" autocomplete="0">
-    </div>
-
-    <div class="row">
-      <label>Roof color <span name="roof:material" class="info"></span></label>
-      <input type="text" name="roof:colour" class="color" autocomplete="0">
-    </div>
-
-    <div class="row">
-      <label>Roof shape</label>
-      <input type="text" name="roof:shape" autocomplete="0">
-    </div>
-
-    <button type="submit" id="editor-button-submit" disabled>Save changes</button>
-  </div>
-
-  <div id="login">
-    <p>To save your work, please log in with OpenStreetMap.</p>
-    <button id="login-button-in">Log in</button>
-  </div>
-
-  <!--div class="logged-out">
-    <p>To save your input, please log in with OpenStreetMap.</p>
-    <button id="login-button-in">Log in</button>
-  </div-->
-
-</div>
-
-<!-- clrs.cc -->
-
-<div id="building-color-picker" class="picker">
-  <button class="button-close">&times;</button>
-  <div class="picker-option" data-value="#111111"><div style="background:#111111"></div>Black</div>
-  <div class="picker-option" data-value="#AAAAAA"><div style="background:#AAAAAA"></div>Gray</div>
-  <div class="picker-option" data-value="#DDDDDD"><div style="background:#DDDDDD"></div>Silver</div>
-  <div class="picker-option" data-value="#FFFFFF"><div style="background:#FFFFFF"></div>White</div>
-  <div class="picker-option" data-value="#001f3f"><div style="background:#001f3f"></div>Navy</div>
-  <div class="picker-option" data-value="#0074D9"><div style="background:#0074D9"></div>Blue</div>
-  <div class="picker-option" data-value="#7FDBFF"><div style="background:#7FDBFF"></div>Aqua</div>
-  <div class="picker-option" data-value="#39CCCC"><div style="background:#39CCCC"></div>Teal</div>
-  <div class="picker-option" data-value="#3D9970"><div style="background:#3D9970"></div>Olive</div>
-  <div class="picker-option" data-value="#2ECC40"><div style="background:#2ECC40"></div>Green</div>
-  <div class="picker-option" data-value="#01FF70"><div style="background:#01FF70"></div>Lime</div>
-  <div class="picker-option" data-value="#FFDC00"><div style="background:#FFDC00"></div>Yellow</div>
-  <div class="picker-option" data-value="#FF851B"><div style="background:#FF851B"></div>Orange</div>
-  <div class="picker-option" data-value="#FF4136"><div style="background:#FF4136"></div>Red</div>
-  <div class="picker-option" data-value="#85144b"><div style="background:#85144b"></div>Maroon</div>
-  <div class="picker-option" data-value="#F012BE"><div style="background:#F012BE"></div>Fuchsia</div>
-  <div class="picker-option" data-value="#B10DC9"><div style="background:#B10DC9"></div>Purple</div>
-</div>
-
-<div id="roof-color-picker" class="picker">
-  <button class="button-close">&times;</button>
-  <div class="picker-option" data-value="#111111"><div style="background:#111111"></div>Black</div>
-  <div class="picker-option" data-value="#AAAAAA"><div style="background:#AAAAAA"></div>Gray</div>
-  <div class="picker-option" data-value="#DDDDDD"><div style="background:#DDDDDD"></div>Silver</div>
-  <div class="picker-option" data-value="#FFFFFF"><div style="background:#FFFFFF"></div>White</div>
-  <div class="picker-option" data-value="#001f3f"><div style="background:#001f3f"></div>Navy</div>
-  <div class="picker-option" data-value="#0074D9"><div style="background:#0074D9"></div>Blue</div>
-  <div class="picker-option" data-value="#7FDBFF"><div style="background:#7FDBFF"></div>Aqua</div>
-  <div class="picker-option" data-value="#39CCCC"><div style="background:#39CCCC"></div>Teal</div>
-  <div class="picker-option" data-value="#3D9970"><div style="background:#3D9970"></div>Olive</div>
-  <div class="picker-option" data-value="#2ECC40"><div style="background:#2ECC40"></div>Green</div>
-  <div class="picker-option" data-value="#01FF70"><div style="background:#01FF70"></div>Lime</div>
-  <div class="picker-option" data-value="#FFDC00"><div style="background:#FFDC00"></div>Yellow</div>
-  <div class="picker-option" data-value="#FF851B"><div style="background:#FF851B"></div>Orange</div>
-  <div class="picker-option" data-value="#FF4136"><div style="background:#FF4136"></div>Red</div>
-  <div class="picker-option" data-value="#85144b"><div style="background:#85144b"></div>Maroon</div>
-  <div class="picker-option" data-value="#F012BE"><div style="background:#F012BE"></div>Fuchsia</div>
-  <div class="picker-option" data-value="#B10DC9"><div style="background:#B10DC9"></div>Purple</div>
-</div>
-
-<div id="roof-shape-picker" class="picker">
-  <button class="button-close">&times;</button>
-  <div class="picker-option" data-value="flat"><img src="images/roof-flat.png">Flat</div>
-  <div class="picker-option" data-value="skillion"><img src="images/roof-skillion.png">Skillion</div>
-  <div class="picker-option" data-value="gabled"><img src="images/roof-gabled.png">Gabled</div>
-  <div class="picker-option" data-value="half-hipped"><img src="images/roof-halfhipped.png">Half hipped</div>
-  <div class="picker-option" data-value="hipped"><img src="images/roof-hipped.png">Hipped</div>
-  <div class="picker-option" data-value="gambrel"><img src="images/roof-gambrel.png">Gambrel</div>
-  <div class="picker-option" data-value="mansard"><img src="images/roof-mansard.png">Mansard</div>
-  <div class="picker-option" data-value="pyramid"><img src="images/roof-pyramid.png">Pyramid</div>
-  <div class="picker-option" data-value="onion"><img src="images/roof-onion.png">Onion</div>
-  <div class="picker-option" data-value="dome"><img src="images/roof-dome.png">Dome</div>
-  <div class="picker-option" data-value="round"><img src="images/roof-round.png">Round</div>
-  <div class="picker-option" data-value="saltbox"><img src="images/roof-saltbox.png">Saltbox</div>
-</div>
 
 </body>
 </html>

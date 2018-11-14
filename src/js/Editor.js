@@ -1,5 +1,9 @@
 
+
+
+
 var Editor = {};
+
 
 (function() {
 
@@ -26,20 +30,20 @@ var Editor = {};
 
     // initialize pickers
 
-    var buildingColorPicker = new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
-    buildingColorPicker.on('SELECT', function(value) {
-      $('#editor *[name=building\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
-    });
-
-    var roofColorPicker = new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
-    roofColorPicker.on('SELECT', function(value) {
-      $('#editor *[name=roof\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
-    });
-
-    var roofShapePicker = new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
-    roofShapePicker.on('SELECT', function(value) {
-      $('#editor *[name=roof\\:shape]').trigger('keyup');
-    });
+    // var buildingColorPicker = new Picker($('#editor *[name=building\\:colour]'), $('#building-color-picker'));
+    // buildingColorPicker.on('SELECT', function(value) {
+    //   $('#editor *[name=building\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
+    // });
+    //
+    // var roofColorPicker = new Picker($('#editor *[name=roof\\:colour]'), $('#roof-color-picker'));
+    // roofColorPicker.on('SELECT', function(value) {
+    //   $('#editor *[name=roof\\:colour]').val(value).css('border-right-color', (value || 'transparent')).trigger('keyup');
+    // });
+    //
+    // var roofShapePicker = new Picker($('#editor *[name=roof\\:shape]'), $('#roof-shape-picker'));
+    // roofShapePicker.on('SELECT', function(value) {
+    //   $('#editor *[name=roof\\:shape]').trigger('keyup');
+    // });
 
     // toggle buttons
 
@@ -76,11 +80,12 @@ var Editor = {};
   };
 
   function toggleButtons() {
-    if (OSMAPI.isLoggedIn()) {
+
+    // if (OSMAPI.isLoggedIn()) {
       $('#editor-button-submit').show();
-    } else {
-      $('#editor-button-submit').hide();
-    }
+    // } else {
+    //   $('#editor-button-submit').hide();
+    // }
   }
 
   function onInputChange(e) {
