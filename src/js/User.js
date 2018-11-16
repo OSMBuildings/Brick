@@ -63,10 +63,10 @@ $(function() {
 
 });
 
-const sendData = (data, changesetComment) => {
+const sendData = (data) => {
 
   data.write();
-  OSMAPI.writeItem(data.feature, config.editComment + ', ' + changesetComment);
+  OSMAPI.writeItem(data.feature, config.editComment);
 
 }
 
@@ -126,8 +126,7 @@ const featureChange = (feature) => {
     return;
   }
 
-  let changesetComment = $('#changeset-comment').get(0).value;
-  $('#changeset-comment').get(0).value = '';
+
 
   let itemType = 'way';
   let itemId = feature.id;
@@ -142,7 +141,7 @@ const featureChange = (feature) => {
 
       let data = new Data(doc);
       if(data.addLevels(newLevel) | data.addHeight(newHeight)){
-        sendData(data, changesetComment);
+        sendData(data);
       }
 
     })
