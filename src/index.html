@@ -1,59 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Brick</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
-  <meta name="viewport" content="initial-scale=1.0 maximum-scale=1.0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <script src="config.js"></script>
 
   <script src="../lib/jquery-2.1.1.min.js"></script>
   <script src="../node_modules/osm-auth/osmauth.js"></script>
-  <script src="config.js"></script>
   <script src="../lib/jxon.js"></script>
-
   <script src="js/OSMAPI.js"></script>
 
   <script src="js/Events.js"></script>
   <script src="js/Data.js"></script>
   <script src="js/User.js"></script>
-
 </head>
 
 <body>
+  <button type="submit" id="simulate-building-click" style="margin: 10px">Simulate Building Click</button>
 
-    <button type="submit" id="simulate-building-click" style="margin: 10px">Simulate Building Click</button>
+  <div id="building-data" style="padding: 10px; display:none">  </div>
+  <button type="button" id="editor-button-start" style="display:none">Edit</button>
 
-    <div id="building-data" style="padding: 10px; display:none">  </div>
-    <button type="button" id="editor-button-start" style="display:none">Edit</button>
-
-    <div id="login" style="display:none">
-      <button id="login-button-in">Log in</button>
-    </div>
-
-    <div id="logout" style="display:none">
-        <button id="logout-button">Logout</button>
-    </div>
-
-    <div id="editor" style="display:none" >
-      Please enter the levels or the height for the chosen feature. <br>
-      <br>
-      building level:
-      <input type="number" min="0" step="1" name="levels" id="building-level">
-      <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">need help?</a>
-       <br> <br>
-      building height:
-      <input type="number" min="0" name="height" id="building-height"> in meter.
-      <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">need help?</a>
-      <br>
-
-      <button type="button" id="editor-button-cancel" >Cancel</button>
-      <button type="submit" id="editor-button-submit" >Save</button>
-
+  <div id="login" style="display:none">
+    <button id="login-button-in">Log in</button>
   </div>
 
+  <div id="logout" style="display:none">
+      <button id="logout-button">Logout</button>
+  </div>
+
+  <div id="editor" style="display:none" >
+    Please enter the levels or height for chosen feature.<br/><br/>
+
+    building level:
+    <input type="number" min="0" step="1" name="levels" id="building-level"/>
+    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a><br/><br/>
+
+    building height:
+    <input type="number" min="0" name="height" id="building-height"/> meters
+    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">?</a><br/><br/>
+
+    <button type="button" id="editor-button-cancel">Cancel</button>
+    <button type="submit" id="editor-button-submit">Save</button>
+  </div>
 </body>
 </html>

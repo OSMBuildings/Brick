@@ -1,6 +1,6 @@
 class Data {
 
-  constructor(doc) {
+  constructor (doc) {
     this.load(doc);
   }
 
@@ -9,11 +9,11 @@ class Data {
     var tagList = [];
     for (var k in this.tags) {
       if (this.tags[k] !== undefined && this.tags[k] !== 'undefined') {
-        tagList.push({ '@k':k, '@v':this.tags[k] });
+        tagList.push({'@k': k, '@v': this.tags[k]});
       }
     }
 
-    if(this.feature.hasOwnProperty('relation')){
+    if (this.feature.hasOwnProperty('relation')) {
       this.feature.relation.tag = tagList;
     } else {
       this.feature.way.tag = tagList;
@@ -22,7 +22,7 @@ class Data {
 
   };
 
-  addHeight(height) {
+  addHeight (height) {
 
     // same value from user and in OSM -> do nothing, consider 0 as no value
     if (this.tags['height'] === parseInt(height) || parseInt(height) === 0) {
@@ -33,7 +33,7 @@ class Data {
 
   }
 
-  addLevels(levels) {
+  addLevels (levels) {
     // same value from user and in OSM -> do nothing, consider 0 as no value
     if (this.tags['building:levels'] === parseInt(levels) || parseInt(levels) === 0) {
       return false;
@@ -42,7 +42,7 @@ class Data {
     return true;
   }
 
-  load(doc) {
+  load (doc) {
 
     this.feature = JXON.build(doc.children[0]);
     let tagList, nodeList, memberList;
@@ -50,7 +50,7 @@ class Data {
     this.tags = {};
     this.nodes = [];
 
-    if(this.feature.hasOwnProperty('relation')){
+    if (this.feature.hasOwnProperty('relation')) {
 
       this.id = this.feature.relation['@id'];
       memberList = this.feature.relation.member;
@@ -58,9 +58,13 @@ class Data {
       nodeList = this.feature.way.nd;
       this.member = [];
 
-      if(memberList){
+      if (memberList) {
         for (let i = 0, il = memberList.length; i < il; i++) {
-          this.member.push({'@ref': memberList[i]['@ref'], '@role': memberList[i]['@role'],'@type': memberList[i]['@type']});
+          this.member.push({
+            '@ref': memberList[i]['@ref'],
+            '@role': memberList[i]['@role'],
+            '@type': memberList[i]['@type']
+          });
         }
       }
 
@@ -80,7 +84,7 @@ class Data {
 
     //  if there is only a single key-value pair on tagList(aka this.feature.way.tag) we need to force it to be an array
     if (tagList) {
-      if(!tagList.length){
+      if (!tagList.length) {
         tagList = [tagList];
       }
 
@@ -103,7 +107,7 @@ class Data {
 
   }
 
-  getMeters(str) {
+  getMeters (str) {
 
     var yardToMeter = 0.9144;
     var footToMeter = 0.3048;
@@ -132,7 +136,7 @@ class Data {
     }
   }
 
-  getLevels(str) {
+  getLevels (str) {
     if (str === undefined) {
       return;
     }
