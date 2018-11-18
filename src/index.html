@@ -6,10 +6,10 @@
 
   <script src="config.js"></script>
 
-  <script src="../lib/jquery-2.1.1.min.js"></script>
-  <script src="../node_modules/osm-auth/osmauth.js"></script>
-  <script src="../lib/jxon.js"></script>
-  <script src="js/OSMAPI.js"></script>
+  <script src="js/lib/jquery-2.1.1.min.js"></script>
+  <script src="js/lib/osmauth.js"></script>
+  <script src="js/lib/jxon.js"></script>
+  <script src="js/lib/OSMAPI.js"></script>
 
   <script src="js/Events.js"></script>
   <script src="js/Data.js"></script>
@@ -33,13 +33,13 @@
   <div id="editor" style="display:none" >
     Please enter the levels or height for chosen feature.<br/><br/>
 
-    building level:
-    <input type="number" min="0" step="1" name="levels" id="building-level"/>
-    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a><br/><br/>
+    building levels:
+    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a><br/>
+    <input type="number" min="0" step="1" name="levels" id="building-level"/><br/><br/>
 
     building height:
-    <input type="number" min="0" name="height" id="building-height"/> meters
-    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">?</a><br/><br/>
+    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">?</a><br/>
+    <input type="number" min="0" name="height" id="building-height"/> meters<br/><br/>
 
     <button type="button" id="editor-button-cancel">Cancel</button>
     <button type="submit" id="editor-button-submit">Save</button>

@@ -5,9 +5,8 @@ class Data {
   }
 
   write () {
-
-    var tagList = [];
-    for (var k in this.tags) {
+    const tagList = [];
+    for (let k in this.tags) {
       if (this.tags[k] !== undefined && this.tags[k] !== 'undefined') {
         tagList.push({'@k': k, '@v': this.tags[k]});
       }
@@ -18,19 +17,15 @@ class Data {
     } else {
       this.feature.way.tag = tagList;
     }
-
-
-  };
+  }
 
   addHeight (height) {
-
     // same value from user and in OSM -> do nothing, consider 0 as no value
     if (this.tags['height'] === parseInt(height) || parseInt(height) === 0) {
       return false;
     }
     this.tags['height'] = height;
     return true;
-
   }
 
   addLevels (levels) {
@@ -43,7 +38,6 @@ class Data {
   }
 
   load (doc) {
-
     this.feature = JXON.build(doc.children[0]);
     let tagList, nodeList, memberList;
     let nodeIndex = {};
@@ -51,7 +45,6 @@ class Data {
     this.nodes = [];
 
     if (this.feature.hasOwnProperty('relation')) {
-
       this.id = this.feature.relation['@id'];
       memberList = this.feature.relation.member;
       tagList = this.feature.relation.tag;
@@ -67,13 +60,10 @@ class Data {
           });
         }
       }
-
     } else {
-
       this.id = this.feature.way['@id'];
       tagList = this.feature.way.tag;
       nodeList = this.feature.way.nd;
-
     }
 
     if (this.feature.node) {
@@ -82,7 +72,7 @@ class Data {
       }
     }
 
-    //  if there is only a single key-value pair on tagList(aka this.feature.way.tag) we need to force it to be an array
+    // if there is only a single key-value pair on tagList(aka this.feature.way.tag) we need to force it to be an array
     if (tagList) {
       if (!tagList.length) {
         tagList = [tagList];
@@ -104,19 +94,17 @@ class Data {
 
     this.tags['building:levels'] = this.getLevels(this.tags['levels'] || this.tags['building:levels']);
     delete this.tags['levels'];
-
   }
 
   getMeters (str) {
-
-    var yardToMeter = 0.9144;
-    var footToMeter = 0.3048;
-    var inchToMeter = 0.0254;
+    const yardToMeter = 0.9144;
+    const footToMeter = 0.3048;
+    const inchToMeter = 0.0254;
 
     if (str === undefined) {
       return;
     }
-    var value = parseFloat(str);
+    const value = parseFloat(str);
     // no units given
     if (value == str) {
       return Math.round(value);
@@ -131,7 +119,7 @@ class Data {
       return Math.round(value * footToMeter);
     }
     if (~str.indexOf('\'')) {
-      var footInch = str.split('\'');
+      const footInch = str.split('\'');
       return Math.round(footInch[0] * footToMeter + footInch[1] * inchToMeter);
     }
   }
@@ -142,5 +130,4 @@ class Data {
     }
     return parseInt(str, 10);
   }
-
 }

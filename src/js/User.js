@@ -7,7 +7,7 @@ $(e => {
   $('#simulate-building-click').click(e => {
     $.get('buildings.json', json => {
       if (json.length <= 0) return;
-      feature = json[0];
+      feature = json[1];
 
       $('#building-data').show();
       $('#building-data').text(JSON.stringify(feature));
@@ -118,14 +118,13 @@ const featureChange = (feature) => {
   OSMAPI.readItem(itemType, itemId)
     .done(doc => {
       let data = new Data(doc);
-      if (data.addLevels(newLevel) | data.addHeight(newHeight)) {
+      if (data.addLevels(newLevel) || data.addHeight(newHeight)) {
         sendData(data);
       }
-
     })
-    .fail(e => {
+    .fail(err => {
       alert('Sorry internal problem. Please try again.');
-      console.error(e)
+      console.error(err)
     });
 
   $('#editor').hide();
