@@ -1,48 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>OSM Buildings Web Editor</title>
   <meta charset="utf-8"/>
-  <link rel="stylesheet" href="style.css"/>
-
-  <script src="config.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
 
   <script src="js/lib/jquery-2.1.1.min.js"></script>
   <script src="js/lib/osmauth.js"></script>
   <script src="js/lib/jxon.js"></script>
   <script src="js/lib/OSMAPI.js"></script>
 
+  <script src="config.js"></script>
   <script src="js/Events.js"></script>
   <script src="js/Data.js"></script>
-  <script src="js/User.js"></script>
+  <script src="js/index.js"></script>
 </head>
 
 <body>
-  <button type="submit" id="simulate-building-click" style="margin: 10px">Simulate Building Click</button>
+  <div id="building-data" style="display:none"></div>
+  <button id="button-edit" style="display:none">Edit</button>
 
-  <div id="building-data" style="padding: 10px; display:none">  </div>
-  <button type="button" id="editor-button-start" style="display:none">Edit</button>
+  <button id="button-login" style="display:none">Log in with OSM</button>
 
-  <div id="login" style="display:none">
-    <button id="login-button-in">Log in</button>
-  </div>
+  <form id="editor" style="display:none">
+    <label>Building levels: <a href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a></label>
+    <input type="number" min="0" step="1" name="levels"/>
 
-  <div id="logout" style="display:none">
-      <button id="logout-button">Logout</button>
-  </div>
+    <label>Building height: <a href="https://wiki.openstreetmap.org/wiki/Key:height">?</a></label>
+    <input type="number" min="0" name="height"/> meters
 
-  <div id="editor" style="display:none" >
-    Please enter levels or height for chosen feature.<br/><br/>
-
-    building levels:
-    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a><br/>
-    <input type="number" min="0" step="1" name="levels" id="building-level"/><br/><br/>
-
-    building height:
-    <a target="_blank" href="https://wiki.openstreetmap.org/wiki/Key:height">?</a><br/>
-    <input type="number" min="0" name="height" id="building-height"/> meters<br/><br/>
-
-    <button type="button" id="editor-button-cancel">Cancel</button>
-    <button type="submit" id="editor-button-submit">Save</button>
-  </div>
+    <button type="button" name="button-cancel">Cancel</button>
+    <button type="submit" name="button-submit">Save</button>
+  </form>
 </body>
 </html>

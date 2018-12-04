@@ -1,9 +1,9 @@
-var config = {
+const config = {
 
-  appName: 'Brick',
-  appVersion: '0.2.0',
+  appName: 'OSM Buildings Web Editor',
+  appVersion: '0.1.0',
 
-  editComment: 'Brick edit',
+  // editComment: '',
 
   osmapi: {
     endpoint: 'https://www.openstreetmap.org', //   https://master.apis.dev.openstreetmap.org    https://www.openstreetmap.org

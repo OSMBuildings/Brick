@@ -1,140 +1,19 @@
-#login {
-  margin-top: 20px;
+button {
+  border: 1px solid #999999;
+  border-radius: 5px;
+  padding: 10px;
+  background: #cccccc;
 }
 
-#login button {
-    border: 1px solid #336699;
-    padding: 10px 20px;
-    margin: 10px 0 20px 0;
-    border-radius: 4px;
-    background: #0099cc;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
+label {
+  display: block;
 }
 
-/*************************************/
-
-.button-close {
-    border: 0;
-    font-size: 30px;
-    position: absolute;
-    top: 0;
-    right: 5px;
-    color: #000000;
-    padding: 10px;
-    background: transparent;
-    cursor: pointer;
-}
-
-.button-close[disabled] {
-    color: #cccccc;
-    cursor: default;
-}
-
-/*************************************/
-
-#logout-button {
-    border: 1px solid #336699;
-    padding: 10px 20px;
-    margin: 40px 0 20px 0;
-    border-radius: 4px;
-    background: #cc3300;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#logout-button[disabled] {
-    border: 1px solid #999999;
-    background: #cccccc;
-    cursor: default;
+input[type=number] {
+  display: block;
+  margin: 5px 0 20px 0;
 }
 
 
-#editor-button-cancel {
-    border: 1px solid #336699;
-    padding: 10px 20px;
-    margin: 40px 0 20px 0;
-    border-radius: 4px;
-    background: #cc3300;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-}
 
-#editor-button-cancel[disabled] {
-    border: 1px solid #999999;
-    background: #cccccc;
-    cursor: default;
-}
-
-
-#editor-button-submit {
-    border: 1px solid #336699;
-    padding: 10px 20px;
-    margin: 40px 0 20px 0;
-    border-radius: 4px;
-    background: #0099cc;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#editor-button-submit[disabled] {
-    border: 1px solid #999999;
-    background: #cccccc;
-    cursor: default;
-}
-
-#editor .row {
-    margin: 20px 0 0 0;
-}
-
-#editor label {
-    display: block;
-    font-size: 14px;
-    margin: 5px 0;
-    color: #666666;
-}
-
-#editor .info {
-    color: #888888;
-}
-
-#editor input,
-#editor select {
-    margin: 0;
-    padding: 5px;
-    font-size: 18px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    border-radius: 0;
-    border: 0;
-    width: 250px;
-    background: #dddddd;
-}
-
-#editor option {
-    padding: 5px;
-    font-size: 18px;
-}
-
-#editor input[type=number] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-}
-
-#editor input:focus,
-#editor select:focus {
-    outline: 0;
-    background: #BBBBBB;
-}
-
-#editor .color {
-    border-right: 15px solid transparent;
-}
+                                                                                                                                                          Building
