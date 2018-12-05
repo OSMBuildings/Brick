@@ -1,9 +1,107 @@
+* {
+  box-sizing: border-box;
+}
+
+* {
+  font-family: Arial, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.cols {
+  display: flex;
+  flex-direction: row;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.layout {
+  width: 100%;
+  height: 100%;
+}
+
+#sidebar {
+  width: 300px;
+  height: 100%;
+  box-shadow: 0 0 15px #666666;
+  z-index: 1;
+}
+
+#search {
+  width: 100%;
+  height: 50px;
+  padding: 10px 20px;
+  background-color: #000000;
+}
+
+#search input {
+  width: 150px;
+}
+
+#sidebar-content {
+  width: 100%;
+  height: 100%;
+}
+
+#building-data {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+.building-data-item {
+  position: relative;
+  margin: 5px 0 20px 0;
+}
+
+.building-data-item button[name=button-edit] {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+
+
+*:focus {
+  outline: none;
+}
+
 button {
   border: 1px solid #999999;
   border-radius: 5px;
-  padding: 10px;
+  padding: 5px 10px;
+  height: 25px;
   background: #cccccc;
 }
+
+button:hover {
+  cursor: pointer;
+}
+
+input {
+  height: 25px;
+  padding: 0 10px;
+  border: 1px solid #999999;
+  border-radius: 3px;
+}
+
+input:focus {
+  border: 1px solid #666699;
+}
+
+
+
 
 label {
   display: block;
@@ -11,9 +109,11 @@ label {
 
 input[type=number] {
   display: block;
-  margin: 5px 0 20px 0;
 }
 
 
 
-                                                                                                                                                          Building
+#map {
+  width: 100%;
+  height: 100%;
+}

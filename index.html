@@ -3,6 +3,12 @@
 <head>
   <title>OSM Buildings Web Editor</title>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <link rel="stylesheet" href="https://cdn.osmbuildings.org/4.0.1/OSMBuildings.css">
+  <script src="https://cdn.osmbuildings.org/4.0.1/OSMBuildings.js"></script>
+
   <link rel="stylesheet" type="text/css" href="style.css"/>
 
   <script src="js/lib/jquery-2.1.1.min.js"></script>
@@ -11,26 +17,43 @@
 
   <script src="config.js"></script>
   <script src="js/Events.js"></script>
+  <script src="js/Map.js"></script>
+  <script src="js/Search.js"></script>
   <script src="js/index.js"></script>
 </head>
 
 <body>
-  <div id="building-data" style="display:none"></div>
-  <button id="button-edit" style="display:none">Edit</button>
+<div class="layout cols">
+  <div id="sidebar" class="rows">
+    <div id="search">
+      <form>
+        <input type="text" autocorrect="off" placeholder="Search">
+        <button type="button">GO</button>
+      </form>
+    </div>
 
-  <div id="login" style="display:none">
-    <button name="button-login">Log in with OSM</button>
+    <div id="sidebar-content">
+      <div id="building-data"></div>
+
+      <div id="login" style="display:none">
+        <button name="button-login">Log in with OSM</button>
+      </div>
+
+      <form id="editor" style="display:none">
+        <label>Building levels: <a href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a></label>
+        <input type="number" min="0" step="1" max="500" name="levels"/>
+
+        <label>Building height: <a href="https://wiki.openstreetmap.org/wiki/Key:height">?</a></label>
+        <input type="number" min="0" step="0.5" max="1500" name="height"/> meters
+
+        <button type="button" name="button-cancel">Cancel</button>
+        <button type="button" name="button-submit">Save</button>
+      </form>
+
+    </div>
   </div>
 
-  <form id="editor" style="display:none">
-    <label>Building levels: <a href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a></label>
-    <input type="number" min="0" step="1" max="500" name="levels"/>
-
-    <label>Building height: <a href="https://wiki.openstreetmap.org/wiki/Key:height">?</a></label>
-    <input type="number" min="0" step="0.5" max="1500" name="height"/> meters
-
-    <button type="button" name="button-cancel">Cancel</button>
-    <button type="button" name="button-submit">Save</button>
-  </form>
+  <div id="map" style="width:100%"></div>
+</div>
 </body>
 </html>

@@ -5,20 +5,22 @@ $(e => {
 
   let selectedFeature;
 
-  $.ajax('buildings.json').then(json => {
-    const feature = json[1];
-    $('#building-data').show().text(JSON.stringify(feature));
-    app.emit('FEATURE_SELECT', feature);
-  });
+  new Search($('#search'));
 
-  $('#button-edit').click(e => {
-    if (!osm.isLoggedIn()) {
-      $('#login').show();
-    } else {
-      $('#editor').show();
-      $('#button-edit').hide();
-    }
-  });
+  // $.ajax('buildings.json').then(json => {
+  //   const feature = json[1];
+  //   $('#building-data').show().text(JSON.stringify(feature));
+  //   app.emit('FEATURE_SELECT', feature);
+  // });
+
+  // $('#button-edit').click(e => {
+  //   if (!osm.isLoggedIn()) {
+  //     $('#login').show();
+  //   } else {
+  //     $('#editor').show();
+  //     $('#button-edit').hide();
+  //   }
+  // });
 
   $('#login button[name=button-login]').click(e => {
     osm.login().then(() => {
@@ -97,7 +99,7 @@ function getLevels ($item) {
 function setLevels ($item, levels) {
   $item.children('tag[k=levels]').remove();
   $item.children('tag[k="building:levels"]').remove();
-  if (typeof levels !== undefined) {
+  if (typeof levels !== 'undefined') {
     $item.append(`<tag k="levels" v="${levels}"/>`);
   }
 }
@@ -138,7 +140,7 @@ function getHeight ($item) {
 function setHeight ($item, height) {
   $item.children('tag[k=height]').remove();
   $item.children('tag[k="building:height"]').remove();
-  if (typeof height !== undefined) {
+  if (typeof height !== 'undefined') {
     $item.append(`<tag k="height" v="${height}"/>`);
   }
 }
