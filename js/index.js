@@ -2,142 +2,121 @@ const App = new Events();
 
 $(e => {
 
-  let feature;
+  const osm = new OSMAPI(config.OSMAPI);
 
-  $('#simulate-building-click').click(e => {
-    $.get('buildings.json', json => {
-      if (json.length <= 0) return;
-      feature = json[1];
-
-      $('#building-data').show();
-      $('#building-data').text(JSON.stringify(feature));
-      App.emit('FEATURE_SELECT', feature);
-    });
+  $.ajax('buildings.json').then(json => {
+    const feature = json[1];
+    $('#building-data').show().text(JSON.stringify(feature));
+    App.emit('FEATURE_SELECT', feature);
   });
 
-  $('#login-button-in').click(e => {
-    e.stopPropagation();
-    OSMAPI.login();
-  });
-
-  $('#logout-button').click(e => {
-    e.stopPropagation();
-    OSMAPI.logout();
-  });
-
-  $('#editor-button-submit').click(e => {
-    App.emit('FEATURE_CHANGE', feature)
-  });
-
-  $('#editor-button-start').click(e => {
-    if (!OSMAPI.isLoggedIn()) {
+  $('#button-edit').click(e => {
+    if (!osm.isLoggedIn()) {
       $('#login').show();
     } else {
       $('#editor').show();
-      $('#logout').show();
+      $('#button-edit').hide();
     }
   });
 
-  $('#editor-button-cancel').click(e => {
-    // TODO: reset or re-fill values upon next edit
-    $('#editor').hide();
+  $('#login button[name=button-login]').click(e => {
+    osm.login().then(() => {
+      App.emit('OSM_LOGIN');
+    });
   });
 
-  App.on('FEATURE_SELECT', onFeatureSelect);
-  App.on('LOGIN', onLogin);
-  App.on('LOGOUT', onLogout);
-  App.on('FEATURE_CHANGE', featureChange);
+  $('#editor button[name=button-cancel]').click(e => {
+    // TODO: reset or re-fill values upon next edit
+    $('#editor').hide();
+    $('#button-edit').show();
+  });
+
+  $('#editor button[name=button-submit]').click(e => {
+    onSubmit();
+  });
+
+  App.on('FEATURE_SELECT', feature => {
+    const properties = feature.properties;
+    $('#button-edit').show();
+    // fill input fields with values from OSMB
+    $('input[name=levels]').val(properties['building:levels'] !== undefined ? properties['building:levels'] : '');
+    $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
+  });
+
+  App.on('OSM_LOGIN', e => {
+    $('#login').hide();
+    $('#editor').show();
+    $('#button-edit').hide();
+  });
 });
 
-const sendData = (data) => {
-  data.write();
-  OSMAPI.writeItem(data.feature, config.editComment);
-};
+function checkNumber (num, min, max) {
+  if (!isNaN(num)) {
+    return false;
+  }
 
-const isNumber = (num) => {
-  return !isNaN(parseInt(num)) && !isNaN(num - 0)
-};
+  if (num < min) {
+    return false;
+  }
 
-const onLogout = () => {
-  $('#login-button-in').show();
-  $('#logout').hide();
-  $('#editor').hide();
-};
+  if (num > max) {
+    return false;
+  }
 
-const onLogin = () => {
-  $('#login-button-in').hide();
-  $('#logout').show();
-  $('#editor').show();
-};
+  return true;
+}
 
-const featureChange = (feature) => {
-  // if no values are in feature set to zero for check with values(newHeight) from user(there are zero if no values are given)
-  let OSMBheight = feature.properties.height || 0;
-  let OSMBlevel = feature.properties.levels || 0;
-
+function onSubmit (feature) {
   const minLevels = 0;
-  const maxLevels = 200;
+  const maxLevels = 500;
   const minHeight = 0;
   const maxHeight = 1500;
 
-  let newLevel = $('#building-level').get(0).value;
-  let newHeight = $('#building-height').get(0).value;
-
-  // check if user data is valid
-  if (!(isNumber(newLevel) && newLevel >= minLevels && newLevel <= maxLevels)) {
-    alert(`Are your sure the building has ${newLevel} Levels?`);
-    return;
+  let levels;
+  if ($('#levels').val() !== '') {
+    levels = parseFloat($('#levels').val());
+    if (!checkNumber(levels, minLevels, maxLevels)) {
+      console.log('invalid levels', levels);
+      return;
+    }
   }
 
-  if (!(isNumber(newHeight) && newHeight >= minHeight && newHeight <= maxHeight)) {
-    alert(`Are your sure the building is ${newHeight} meters tall?`);
-    return;
+  let height;
+  if ($('#height').val() !== '') {
+    height = parseFloat($('#height').val());
+    if (!checkNumber(height, minHeight, maxHeight)) {
+      console.log('invalid height', height);
+      return;
+    }
   }
 
-  newLevel = parseInt(newLevel);
-  newHeight = parseInt(newHeight);
+  const osmbHeight = feature.properties.height;
+  const osmbLevels = feature.properties.levels;
 
-  // check if user data has changed compared to OSMB data
-  const changeLevel = newLevel !== parseInt(OSMBlevel);
-  const changeHeight = newHeight !== parseInt(OSMBheight);
-
-  // none of the values changed
-  if (!(changeLevel || changeHeight)) {
-    alert('You need to change either the level of the building or the height.');
+  // TODO: undefined
+  if (levels === osmbLevels && height === osmbHeight) {
     return;
   }
 
   let itemType = 'way';
   let itemId = feature.id;
-
-  if (feature.id.toString().charAt(0) === 'r') {
+  if (feature.id[0] === 'r') {
     itemType = 'relation';
     itemId = itemId.substr(1);
   }
 
-  OSMAPI.readItem(itemType, itemId)
-    .done(doc => {
+  osm.readItem(itemType, itemId)
+    .then(doc => {
       let data = new Data(doc);
-      if (data.addLevels(newLevel) || data.addHeight(newHeight)) {
-        sendData(data);
+      if (data.addLevels(levels) || data.addHeight(height)) {
+        data.write();
+        osm.writeItem(data.feature);
+        // App.emit('FEATURE_UPDATE', data.feature);
       }
-    })
-    .fail(err => {
-      alert('Sorry internal problem. Please try again.');
+    }, err => {
       console.error(err)
     });
 
   $('#editor').hide();
-  $('#building-data').hide();
-  $('#editor-button-start').hide();
-};
-
-const onFeatureSelect = (feature) => {
-
-  const properties = feature.properties;
-
-  $('#editor-button-start').show();
-  // fill input fields with values from OSMB
-  properties.hasOwnProperty('building:levels') ? $('#building-level').val(properties['building:levels']) : $('#building-level').val('0');
-  properties.hasOwnProperty('height') ? $('#building-height').val(properties.height) : $('#building-height').val('0');
-};
+  $('#button-edit').show();
+}

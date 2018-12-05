@@ -1,41 +1,43 @@
 
-var OSMAPI = {};
+class OSMAPI {
 
-(function() {
+  constructor (config) {
+    this.appName = config.appName
+    this.auth = osmAuth({
+      url: config.endpoint,
+      landing: config.auth.landingPage,
+      oauth_consumer_key: config.auth.consumerKey,
+      oauth_secret: config.auth.secret
+    });
+  }
 
-  var auth = osmAuth({
-    url: config.osmapi.endpoint,
-    landing: config.osmapi.auth.landingPage,
-    oauth_consumer_key: config.osmapi.auth.consumerKey,
-    oauth_secret: config.osmapi.auth.secret
-  });
-
-  function createChangeset(comment) {
+  createChangeset (comment) {
     return {
       osm: {
         changeset: {
           tag: [
-            { '@k':'created_by', '@v':config.appName },
-            { '@k':'comment', '@v':comment }
+            { '@k':'created_by', '@v':this.appName }//,
+            // { '@k':'comment', '@v':comment }
           ],
           '@version': 0.6,
-          '@generator': config.appName
+          '@generator': this.appName
         }
       }
     };
   }
 
-  function nest(x, order) {
-    var groups = {};
-    for (var i = 0; i < x.length; i++) {
-      var tagName = Object.keys(x[i])[0];
+  nest (x, order) {
+    const groups = {};
+    x.forEach(item => {
+      const tagName = Object.keys(item)[0];
       if (!groups[tagName]) {
         groups[tagName] = [];
       }
-      groups[tagName].push(x[i][tagName]);
-    }
-    var ordered = {};
-    order.forEach(function(o) {
+      groups[tagName].push(item[tagName]);
+    });
+
+    const ordered = {};
+    order.forEach(o => {
       if (groups[o]) {
         ordered[o] = groups[o];
       }
@@ -43,13 +45,11 @@ var OSMAPI = {};
     return ordered;
   }
 
-  function itemToJXON(item, changesetId) {
-
-    var res, data;
+  itemToJXON (item, changesetId) {
+    let res;
 
     if (item.relation) {
-      data = item.relation;
-      console.log('bin in relation')
+      const data = item.relation;
       res = {
         relation: {
           '@id': data['@id'],
@@ -59,8 +59,7 @@ var OSMAPI = {};
         }
       };
     } else if (item.way) {
-      console.log('bin in way')
-      data = item.way;
+      const data = item.way;
       res = {
         way: {
           '@id': data['@id'],
@@ -81,107 +80,105 @@ var OSMAPI = {};
       } else if(item.way){
         res.way['@changeset'] = changesetId;
       }
-
     }
 
     return res;
   }
 
   // Generate an OSM change (http://wiki.openstreetmap.org/wiki/OsmChange)
-  function createChange(item, changesetId) {
+  createChange(item, changesetId) {
     return {
       osmChange: {
         '@version': 0.6,
         '@generator': config.appName,
-        modify: nest([itemToJXON(item, changesetId)], ['node', 'way', 'relation']),
+        modify: this.nest([this.itemToJXON(item, changesetId)], ['node', 'way', 'relation']),
       }
     };
   }
 
-  OSMAPI.readItem = function(itemType, itemId) {
-    return $.ajax('https://api.openstreetmap.org/api/0.6/'+ itemType +'/'+ itemId +'/full');
-  };
+  readItem (itemType, itemId) {
+    return $.ajax(`https://api.openstreetmap.org/api/0.6/${itemType}/${itemId}/full`);
+  }
 
-  OSMAPI.writeItem = function(item, comment) {
-    var promise = $.Deferred();
-
-    console.log(item)
-
-    auth.xhr({
-      method: 'PUT',
-      path: '/api/0.6/changeset/create',
-      options: {
-        header: {
-          'Content-Type':'text/xml'
-        }
-      },
-      content: JXON.unbuild(createChangeset(comment))
-    }, function(err, changesetId) {
-      if (err) {
-        promise.reject(err);
-        return;
-      }
-      auth.xhr({
-        method: 'POST',
-        path: '/api/0.6/changeset/' + changesetId + '/upload',
+  writeItem (item, comment) {
+    return new Promise((resolve, reject) => {
+      this.auth.xhr({
+        method: 'PUT',
+        path: '/api/0.6/changeset/create',
         options: {
           header: {
-            'Content-Type':'text/xml'
+            'Content-Type': 'text/xml'
           }
         },
-        content: JXON.unbuild(createChange(item, changesetId))
-      }, function(err) {
+        content: JXON.unbuild(this.createChangeset(comment))
+      }, (err, changesetId) => {
         if (err) {
-          promise.reject(err);
+          reject(err);
           return;
         }
-        auth.xhr({
-          method: 'PUT',
-          path: '/api/0.6/changeset/' + changesetId + '/close'
-        }, function(err) {
+        this.auth.xhr({
+          method: 'POST',
+          path: `/api/0.6/changeset/${changesetId}/upload`,
+          options: {
+            header: {
+              'Content-Type': 'text/xml'
+            }
+          },
+          content: JXON.unbuild(this.createChange(item, changesetId))
+        }, err => {
           if (err) {
-            promise.resolve(err);
-          } else {
-            promise.resolve(changesetId);
+            reject(err);
+            return;
           }
+          this.auth.xhr({
+            method: 'PUT',
+            path: `/api/0.6/changeset/${changesetId}/close`
+          }, err => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(changesetId);
+            }
+          });
         });
       });
     });
+  }
 
-    return promise;
-  };
+  isLoggedIn () {
+    return this.auth.authenticated();
+  }
 
-  OSMAPI.isLoggedIn = function() {
-    return auth.authenticated();
-  };
-
-  OSMAPI.login = function() {
-
-    auth.authenticate(function() {
-      if (!auth.authenticated()) {
-        return;
-      }
-      console.log("emit login")
-      App.emit('LOGIN');
+  login () {
+    return new Promise((resolve, reject) => {
+      this.auth.authenticate(() => {
+        if (!this.auth.authenticated()) {
+          reject();
+          return;
+        }
+        resolve();
+      });
     });
-  };
+  }
 
-  OSMAPI.logout = function() {
-    auth.logout();
-    App.emit('LOGOUT');
-  };
+  logout () {
+    this.auth.logout();
+  }
 
-  OSMAPI.getUserInfo = function() {
-    var promise = $.Deferred();
-    auth.xhr({
-      method: 'GET',
-      accept: 'application/json',
-      path: '/api/0.6/user/details.json'
-    }, function(err, doc) {
-      var user = JXON.build(doc.getElementsByTagName('user')[0]);
-      promise.resolve(user);
+  getUserInfo () {
+    return new Promise((resolve, reject) => {
+      this.auth.xhr({
+        method: 'GET',
+        accept: 'application/json',
+        path: '/api/0.6/user/details.json'
+      }, (err, doc) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        const user = JXON.build(doc.getElementsByTagName('user')[0]);
+        resolve(user);
+      });
     });
-    return promise;
-  };
-
-}());
+  }
+}
