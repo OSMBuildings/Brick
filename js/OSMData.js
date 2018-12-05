@@ -1,40 +1,7 @@
-class Data {
+class OSMData {
 
   constructor (doc) {
     this.load(doc);
-  }
-
-  write () {
-    const tagList = [];
-    for (let k in this.tags) {
-      if (this.tags[k] !== undefined && this.tags[k] !== 'undefined') {
-        tagList.push({'@k': k, '@v': this.tags[k]});
-      }
-    }
-
-    if (this.feature.hasOwnProperty('relation')) {
-      this.feature.relation.tag = tagList;
-    } else {
-      this.feature.way.tag = tagList;
-    }
-  }
-
-  addHeight (height) {
-    // same value from user and in OSM -> do nothing, consider 0 as no value
-    if (this.tags['height'] === parseInt(height) || parseInt(height) === 0) {
-      return false;
-    }
-    this.tags['height'] = height;
-    return true;
-  }
-
-  addLevels (levels) {
-    // same value from user and in OSM -> do nothing, consider 0 as no value
-    if (this.tags['building:levels'] === parseInt(levels) || parseInt(levels) === 0) {
-      return false;
-    }
-    this.tags['building:levels'] = levels;
-    return true;
   }
 
   load (doc) {
@@ -49,16 +16,16 @@ class Data {
       memberList = this.feature.relation.member;
       tagList = this.feature.relation.tag;
       nodeList = this.feature.way.nd;
-      this.member = [];
 
+      this.member = [];
       if (memberList) {
-        for (let i = 0, il = memberList.length; i < il; i++) {
+        memberList.forEach(member => {
           this.member.push({
-            '@ref': memberList[i]['@ref'],
-            '@role': memberList[i]['@role'],
-            '@type': memberList[i]['@type']
+            '@ref': member['@ref'],
+            '@role': member['@role'],
+            '@type': member['@type']
           });
-        }
+        });
       }
     } else {
       this.id = this.feature.way['@id'];
@@ -94,6 +61,39 @@ class Data {
 
     this.tags['building:levels'] = this.getLevels(this.tags['levels'] || this.tags['building:levels']);
     delete this.tags['levels'];
+  }
+
+  addLevels (levels) {
+    // same value from user and in OSM -> do nothing, consider 0 as no value
+    if (this.tags['building:levels'] === parseInt(levels) || parseInt(levels) === 0) {
+      return false;
+    }
+    this.tags['building:levels'] = levels;
+    return true;
+  }
+
+  addHeight (height) {
+    // same value from user and in OSM -> do nothing, consider 0 as no value
+    if (this.tags['height'] === parseInt(height) || parseInt(height) === 0) {
+      return false;
+    }
+    this.tags['height'] = height;
+    return true;
+  }
+
+  write () {
+    const tagList = [];
+    for (let k in this.tags) {
+      if (this.tags[k] !== undefined && this.tags[k] !== 'undefined') {
+        tagList.push({'@k': k, '@v': this.tags[k]});
+      }
+    }
+
+    if (this.feature.hasOwnProperty('relation')) {
+      this.feature.relation.tag = tagList;
+    } else {
+      this.feature.way.tag = tagList;
+    }
   }
 
   getMeters (str) {

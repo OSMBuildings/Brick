@@ -1,13 +1,14 @@
-const App = new Events();
+const app = new Events();
+const osm = new OSMAPI(config.OSMAPI);
 
 $(e => {
 
-  const osm = new OSMAPI(config.OSMAPI);
+  let selectedFeature;
 
   $.ajax('buildings.json').then(json => {
     const feature = json[1];
     $('#building-data').show().text(JSON.stringify(feature));
-    App.emit('FEATURE_SELECT', feature);
+    app.emit('FEATURE_SELECT', feature);
   });
 
   $('#button-edit').click(e => {
@@ -21,7 +22,7 @@ $(e => {
 
   $('#login button[name=button-login]').click(e => {
     osm.login().then(() => {
-      App.emit('OSM_LOGIN');
+      app.emit('OSM_LOGIN');
     });
   });
 
@@ -32,25 +33,27 @@ $(e => {
   });
 
   $('#editor button[name=button-submit]').click(e => {
-    onSubmit();
+    onSubmit(selectedFeature);
   });
 
-  App.on('FEATURE_SELECT', feature => {
-    const properties = feature.properties;
-    $('#button-edit').show();
-    // fill input fields with values from OSMB
+  app.on('FEATURE_SELECT', feature => {
+    selectedFeature = feature;
+
+    const properties = selectedFeature.properties;
     $('input[name=levels]').val(properties['building:levels'] !== undefined ? properties['building:levels'] : '');
     $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
+
+    $('#button-edit').show();
   });
 
-  App.on('OSM_LOGIN', e => {
+  app.on('OSM_LOGIN', e => {
     $('#login').hide();
     $('#editor').show();
     $('#button-edit').hide();
   });
 });
 
-function checkNumber (num, min, max) {
+function checkNum (num, min, max) {
   if (!isNaN(num)) {
     return false;
   }
@@ -66,6 +69,19 @@ function checkNumber (num, min, max) {
   return true;
 }
 
+function compareNum (a, b) {
+  if (typeof a === 'undefined' && typeof b === 'undefined') {
+    return true;
+  }
+  if (typeof a === 'undefined') {
+    return false;
+  }
+  if (typeof b === 'undefined') {
+    return false;
+  }
+  return (a === b);
+}
+
 function onSubmit (feature) {
   const minLevels = 0;
   const maxLevels = 500;
@@ -75,7 +91,7 @@ function onSubmit (feature) {
   let levels;
   if ($('#levels').val() !== '') {
     levels = parseFloat($('#levels').val());
-    if (!checkNumber(levels, minLevels, maxLevels)) {
+    if (!checkNum(levels, minLevels, maxLevels)) {
       console.log('invalid levels', levels);
       return;
     }
@@ -84,17 +100,15 @@ function onSubmit (feature) {
   let height;
   if ($('#height').val() !== '') {
     height = parseFloat($('#height').val());
-    if (!checkNumber(height, minHeight, maxHeight)) {
+    if (!checkNum(height, minHeight, maxHeight)) {
       console.log('invalid height', height);
       return;
     }
   }
 
-  const osmbHeight = feature.properties.height;
   const osmbLevels = feature.properties.levels;
-
-  // TODO: undefined
-  if (levels === osmbLevels && height === osmbHeight) {
+  const osmbHeight = feature.properties.height;
+  if (compareNum(levels, osmbLevels) && compareNum(height, osmbHeight)) {
     return;
   }
 
@@ -107,11 +121,11 @@ function onSubmit (feature) {
 
   osm.readItem(itemType, itemId)
     .then(doc => {
-      let data = new Data(doc);
-      if (data.addLevels(levels) || data.addHeight(height)) {
-        data.write();
-        osm.writeItem(data.feature);
-        // App.emit('FEATURE_UPDATE', data.feature);
+      const osmData = new OSMData(doc);
+      if (osmData.addLevels(levels) || osmData.addHeight(height)) {
+        osmData.write();
+        osm.writeItem(osmData.feature);
+        // app.emit('FEATURE_UPDATE', data.feature);
       }
     }, err => {
       console.error(err)
