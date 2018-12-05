@@ -40,7 +40,7 @@ $(e => {
     selectedFeature = feature;
 
     const properties = selectedFeature.properties;
-    $('input[name=levels]').val(properties['building:levels'] !== undefined ? properties['building:levels'] : '');
+    $('input[name=levels]').val(properties['levels'] !== undefined ? properties['levels'] : '');
     $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
 
     $('#button-edit').show();
@@ -54,7 +54,7 @@ $(e => {
 });
 
 function checkNum (num, min, max) {
-  if (!isNaN(num)) {
+  if (isNaN(num)) {
     return false;
   }
 
@@ -82,6 +82,67 @@ function compareNum (a, b) {
   return (a === b);
 }
 
+function getLevels ($item) {
+  const $levelsTag = $item.children('tag[k=levels]');
+  const $buildingLevelsTag = $item.children('tag[k="building:levels"]');
+
+  const str = $levelsTag.attr('v') || $buildingLevelsTag.attr('v');
+  if (str === undefined) {
+    return;
+  }
+
+  return parseInt(str, 10);
+}
+
+function setLevels ($item, levels) {
+  $item.children('tag[k=levels]').remove();
+  $item.children('tag[k="building:levels"]').remove();
+  if (typeof levels !== undefined) {
+    $item.append(`<tag k="levels" v="${levels}"/>`);
+  }
+}
+
+function getHeight ($item) {
+  const $heightTag = $item.children('tag[k=height]');
+  const $buildingHeightTag = $item.children('tag[k="building:height"]');
+
+  const str = $heightTag.attr('v') || $buildingHeightTag.attr('v');
+
+  const yardToMeter = 0.9144;
+  const footToMeter = 0.3048;
+  const inchToMeter = 0.0254;
+
+  if (str === undefined) {
+    return;
+  }
+  const value = parseFloat(str);
+  // no units given
+  if (value == str) {
+    return Math.round(value);
+  }
+  if (~str.indexOf('m')) {
+    return Math.round(value);
+  }
+  if (~str.indexOf('yd')) {
+    return Math.round(value * yardToMeter);
+  }
+  if (~str.indexOf('ft')) {
+    return Math.round(value * footToMeter);
+  }
+  if (~str.indexOf('\'')) {
+    const footInch = str.split('\'');
+    return Math.round(footInch[0] * footToMeter + footInch[1] * inchToMeter);
+  }
+}
+
+function setHeight ($item, height) {
+  $item.children('tag[k=height]').remove();
+  $item.children('tag[k="building:height"]').remove();
+  if (typeof height !== undefined) {
+    $item.append(`<tag k="height" v="${height}"/>`);
+  }
+}
+
 function onSubmit (feature) {
   const minLevels = 0;
   const maxLevels = 500;
@@ -89,8 +150,8 @@ function onSubmit (feature) {
   const maxHeight = 1500;
 
   let levels;
-  if ($('#levels').val() !== '') {
-    levels = parseFloat($('#levels').val());
+  if ($('#editor input[name=levels]').val() !== '') {
+    levels = parseFloat($('#editor input[name=levels]').val());
     if (!checkNum(levels, minLevels, maxLevels)) {
       console.log('invalid levels', levels);
       return;
@@ -98,14 +159,15 @@ function onSubmit (feature) {
   }
 
   let height;
-  if ($('#height').val() !== '') {
-    height = parseFloat($('#height').val());
+  if ($('#editor input[name=height]').val() !== '') {
+    height = parseFloat($('#editor input[name=height]').val());
     if (!checkNum(height, minHeight, maxHeight)) {
       console.log('invalid height', height);
       return;
     }
   }
 
+  // check for changes
   const osmbLevels = feature.properties.levels;
   const osmbHeight = feature.properties.height;
   if (compareNum(levels, osmbLevels) && compareNum(height, osmbHeight)) {
@@ -119,17 +181,34 @@ function onSubmit (feature) {
     itemId = itemId.substr(1);
   }
 
-  osm.readItem(itemType, itemId)
-    .then(doc => {
-      const osmData = new OSMData(doc);
-      if (osmData.addLevels(levels) || osmData.addHeight(height)) {
-        osmData.write();
-        osm.writeItem(osmData.feature);
-        // app.emit('FEATURE_UPDATE', data.feature);
-      }
-    }, err => {
-      console.error(err)
-    });
+  osm.readItem(itemType, itemId).then(doc => {
+    const $doc = $(doc).find('osm');
+    let $item;
+    if ($doc.find('relation')) {
+      $item = $doc.find('relation');
+    } else {
+      $item = $doc.find('way');
+    }
+
+    let hasChanged = false;
+
+    if (!compareNum(levels, getLevels($item))) {
+      setLevels($item, levels);
+      hasChanged = true;
+    }
+
+    if (!compareNum(height, getHeight($item))) {
+      setHeight($item, height);
+      hasChanged = true;
+    }
+
+    if (hasChanged) {
+      osm.writeItem($doc);
+      // app.emit('FEATURE_UPDATE', data.feature);
+    }
+  }, err => {
+    console.error(err)
+  });
 
   $('#editor').hide();
   $('#button-edit').show();

@@ -20,6 +20,7 @@
     "id": "r3272134",
     "properties": {
       "height": 10,
+      "levels": 4,
       "roofShape": "gabled",
       "isPart": true,
       "roofHeight": 4,
