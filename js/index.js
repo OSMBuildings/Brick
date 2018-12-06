@@ -5,11 +5,13 @@ $(e => {
 
   let selectedFeature;
 
-  new Search($('#search'));
+  new Map('map');
+  // new Search($('#search'));
+  new Buildings($('#sidebar-content-list'));
 
   // $.ajax('buildings.json').then(json => {
   //   const feature = json[1];
-  //   $('#building-data').show().text(JSON.stringify(feature));
+  //   $('#sidebar-content-list').show().text(JSON.stringify(feature));
   //   app.emit('FEATURE_SELECT', feature);
   // });
 

@@ -6,6 +6,10 @@
   font-family: Arial, sans-serif;
 }
 
+*:focus {
+  outline: none;
+}
+
 html, body {
   width: 100%;
   height: 100%;
@@ -45,6 +49,15 @@ html, body {
 
 #search input {
   width: 150px;
+  border: 1px solid #000000;
+}
+
+#search button {
+  border: 1px solid #000000;
+}
+
+#search *:focus {
+  border: 1px solid #ff9900;
 }
 
 #sidebar-content {
@@ -52,7 +65,7 @@ html, body {
   height: 100%;
 }
 
-#building-data {
+#sidebar-content-list {
   width: 100%;
   height: 100%;
   padding: 20px;
@@ -60,22 +73,21 @@ html, body {
   font-size: 12px;
 }
 
-.building-data-item {
+.sidebar-content-list-item {
   position: relative;
   margin: 5px 0 20px 0;
 }
 
-.building-data-item button[name=button-edit] {
+.sidebar-content-list-item button[name=button-edit] {
   position: absolute;
   right: 0;
   bottom: 0;
+  padding: 3px 6px;
+  border-radius: 3px;
+  height: 20px;
 }
 
 
-
-*:focus {
-  outline: none;
-}
 
 button {
   border: 1px solid #999999;
