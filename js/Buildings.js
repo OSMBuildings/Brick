@@ -5,11 +5,7 @@ class Buildings {
     this.$list = $list;
 
     app.on('BUILDING_SELECTED', parts => {
-      this.data = parts || [];
-      this.$list.empty();
-      this.data.forEach(part => {
-        this.$list.append(this.render(part));
-      });
+      this.setData(parts);
     });
 
     this.$list.click(e => {
@@ -20,13 +16,21 @@ class Buildings {
     });
   }
 
-  render (feature) {
+  setData (data = []) {
+    this.data = data;
+    this.$list.empty();
+    this.data.forEach(item => {
+      this.$list.append(this.render(item));
+    });
+  }
+
+  render (item) {
     let html = '<div class="sidebar-content-list-item">';
 
-    html += 'ID <b>' + feature.id + '</b><br/>';
+    html += 'ID <b>' + item.id + '</b><br/>';
 
-    for (let key in feature.properties) {
-      html += key + ' <b>' + feature.properties[key] + '</b><br/>'
+    for (let key in item.properties) {
+      html += key + ' <b>' + item.properties[key] + '</b><br/>'
     }
 
     html += '<button name="button-edit">Edit</button>';

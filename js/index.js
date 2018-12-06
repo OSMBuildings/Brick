@@ -6,14 +6,8 @@ $(e => {
   let selectedFeature;
 
   new Map('map');
-  // new Search($('#search'));
+  new Search($('#search'), $('#sidebar-content-list'));
   new Buildings($('#sidebar-content-list'));
-
-  // $.ajax('buildings.json').then(json => {
-  //   const feature = json[1];
-  //   $('#sidebar-content-list').show().text(JSON.stringify(feature));
-  //   app.emit('FEATURE_SELECT', feature);
-  // });
 
   // $('#button-edit').click(e => {
   //   if (!osm.isLoggedIn()) {
@@ -40,7 +34,7 @@ $(e => {
     onSubmit(selectedFeature);
   });
 
-  app.on('FEATURE_SELECT', feature => {
+  app.on('PART_SELECT', feature => {
     selectedFeature = feature;
 
     const properties = selectedFeature.properties;

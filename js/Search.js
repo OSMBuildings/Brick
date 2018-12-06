@@ -1,55 +1,72 @@
 
 class Search {
-  constructor ($container) {
-    this.$results = $('#search-results'); // TODO
 
-    this.$input = $container.find('input');
-    this.$input.keydown(e => {
+  constructor ($container, $list) {
+    this.$container = $container;
+    this.$list = $list;
+
+    const $input = this.$container.find('input');
+
+    $input.keydown(e => {
       if (e.keyCode !== 13) {
         return;
       }
-      const query = this.$input.val();
+      const query = $input.val();
       if (query) {
-        this.$input.blur(); // for iOS in order to close the keyboard
+        $input.blur(); // for iOS in order to close the keyboard
         this.search(query);
       }
+
       e.preventDefault();
     });
 
-    $('#search button').click(e => {
-      const query = this.$input.val();
+    this.$container.find('button').click(e => {
+      const query = $input.val();
       if (query) {
         this.search(query);
       }
+      // e.preventDefault();
     });
+
+    // TODO click event
+  // .appendTo(this.$list).click(function (e) {
+  //     app.emit('PLACE_SELECTED', item);
+  //   });
+
+
   }
 
   search (query) {
-    this.$results.empty();
-    $.ajax(Search.SEARCH_URL.replace('{query}', encodeURIComponent(query))).done(res => {
-      this.showResults(res);
+    this.$list.empty();
+    $.ajax(Search.SEARCH_URL.replace('{query}', encodeURIComponent(query))).then(res => {
+      this.setData(res);
+
+      if (res.length) {
+        app.emit('PLACE_SELECTED', res[0]);
+      }
+
+      app.emit('SEARCH_RESULT', res);
     });
   }
 
-  showResults (res) {
-    if (!res.length) {
-      // $('<li class="search-error">no results</li>').appendTo(this.$results);
-      return;
-    }
-
-    res.forEach(function (item) {
-      const type = item.class === 'place' ? item.type : item.type + ' ' + item.class;
-      $('<div>' + item.display_name +  class="search-result-type" ' + type + '</div></div>')
-        .appendTo(this.$results).click(function (e) {
-        app.emit('PLACE_SELECTED', item);
-      });
+  setData (data = []) {
+    this.data = data;
+    this.$list.empty();
+    this.data.forEach(item => {
+      this.$list.append(this.render(item));
     });
+  }
 
-    if (res.length) {
-      app.emit('PLACE_SELECTED', res[0]);
-    }
+  render (item) {
+    this.$list.empty();
 
-    app.emit('SEARCH_RESULT', res);
+    // if (!res.length) {
+    //   // $('<li class="search-error">no results</li>').appendTo(this.$list);
+    //   return;
+    // }
+
+    const type = item.class === 'place' ? item.type : `${item.type} ${item.class}`;
+    return `<div>${item.display_name}<span class="search-result-type">${type}</span></div>`;
   }
 }
 
