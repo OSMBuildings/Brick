@@ -4,16 +4,20 @@ class Editor {
   constructor () {
     this.osm = new OSMAPI(config.OSMAPI);
 
-    let selectedFeature;
+    app.on('PART_SELECTED', part => {
+      this.selectedFeature = part;
+      console.log(1)
+    });
 
-    // $('#button-edit').click(e => {
+    $('#building-details button[name=button-edit]').click(e => {
+      console.log(2)
     //   if (!this.osm.isLoggedIn()) {
     //     $('#login').show();
     //   } else {
     //     $('#editor').show();
     //     $('#button-edit').hide();
     //   }
-    // });
+    });
 
     $('#login button[name=button-login]').click(e => {
       this.osm.login().then(() => {
@@ -28,13 +32,13 @@ class Editor {
     });
 
     $('#editor button[name=button-submit]').click(e => {
-      this.onSubmit(selectedFeature);
+      this.onSubmit(this.selectedFeature);
     });
 
     app.on('PART_SELECT', feature => {
-      selectedFeature = feature;
+      this.selectedFeature = feature;
 
-      const properties = selectedFeature.properties;
+      const properties = this.selectedFeature.properties;
       $('input[name=levels]').val(properties['levels'] !== undefined ? properties['levels'] : '');
       $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
 
