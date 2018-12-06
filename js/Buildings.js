@@ -9,7 +9,7 @@ class Buildings {
     });
 
     this.$list.click(e => {
-      const index = $(e.target).closest('.sidebar-content-list-item').index();
+      const index = $(e.target).closest('.list-item').index();
       if (index >= 0 && this.data[index]) {
         app.emit('PART_SELECTED', this.data[index]);
       }
@@ -25,7 +25,7 @@ class Buildings {
   }
 
   render (item) {
-    let html = '<div class="sidebar-content-list-item">';
+    let html = '<div class="list-item">';
 
     html += 'ID <b>' + item.id + '</b><br/>';
 

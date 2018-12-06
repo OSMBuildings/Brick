@@ -21,25 +21,14 @@ class Map {
       }
     });
 
-    app.on('PLACE_SELECTED', params => {
-      debugger
-      // params.zoom = 16;
-      // setState(params);
-    // if (data.lat !== undefined && data.lon !== undefined) {
-    //   this.viewer.setPosition({ latitude: parseFloat(data.lat), longitude: parseFloat(data.lon) });
-    // }
-    //
-    // if (data.zoom !== undefined) {
-    //   this.viewer.setZoom(parseFloat(data.zoom));
-    // }
-    //
-    // if (data.rotation !== undefined) {
-    //   this.viewer.setRotation(parseFloat(data.rotation));
-    // }
-    //
-    // if (data.tilt !== undefined) {
-    //   this.viewer.setTilt(parseFloat(data.tilt));
-    // }
+    app.on('PLACE_SELECTED', e => {
+      // TODO: zoom to bounds
+      const zoom = 16;
+
+      if (e.lat !== undefined && e.lon !== undefined) {
+        this.viewer.setPosition({ latitude: parseFloat(e.lat), longitude: parseFloat(e.lon) });
+        this.viewer.setZoom(zoom);
+      }
     });
 
     app.on('BUILDING_SELECTED', parts => {

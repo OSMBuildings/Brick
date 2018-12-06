@@ -25,27 +25,32 @@ class Search {
       if (query) {
         this.search(query);
       }
-      // e.preventDefault();
     });
 
-    // TODO click event
-  // .appendTo(this.$list).click(function (e) {
-  //     app.emit('PLACE_SELECTED', item);
-  //   });
-
-
+    this.$list.click(e => {
+      const index = $(e.target).closest('.list-item').index();
+      if (index >= 0 && this.data[index]) {
+        app.emit('PLACE_SELECTED', this.data[index]);
+      }
+    });
   }
 
   search (query) {
     this.$list.empty();
     $.ajax(Search.SEARCH_URL.replace('{query}', encodeURIComponent(query))).then(res => {
+      app.emit('SEARCH_RESULT', res);
+
+      if (!res.length) {
+        this.setData();
+        this.$list.append(`<div class="error">no results for <b>${query}</b></div>`);
+        return;
+      }
+
       this.setData(res);
 
       if (res.length) {
         app.emit('PLACE_SELECTED', res[0]);
       }
-
-      app.emit('SEARCH_RESULT', res);
     });
   }
 
@@ -58,15 +63,11 @@ class Search {
   }
 
   render (item) {
-    this.$list.empty();
-
-    // if (!res.length) {
-    //   // $('<li class="search-error">no results</li>').appendTo(this.$list);
-    //   return;
-    // }
-
     const type = item.class === 'place' ? item.type : `${item.type} ${item.class}`;
-    return `<div>${item.display_name}<span class="search-result-type">${type}</span></div>`;
+    return `<div class="list-item">
+      <b>${item.display_name}</b><br/>
+      ${type}
+    </div>`;
   }
 }
 
