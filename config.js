@@ -5,8 +5,9 @@ const config = {
     endpoint: 'https://www.openstreetmap.org', // https://master.apis.dev.openstreetmap.org
     auth: {
       landingPage: '/auth.html',
-      consumerKey: 'QeKxsLrW2630aRNeGNglTee4tj1PUg9Czh6ZZ7S2',
-      secret: 'C9g9MAaJHEkif59p2fKwNPFoMld3V5rgTUXOh0qp'
+      consumerKey: 'PWU6mpOH00vupqbvnkKiBp55IEv2stwg0n7xh3g2',
+      secret: 'IffLTXvPEI04BCUtE4KDgwu6fPBsJgqHkpZRhURP'
     }
   }
 };
+

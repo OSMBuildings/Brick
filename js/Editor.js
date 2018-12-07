@@ -6,17 +6,27 @@ class Editor {
 
     app.on('PART_SELECTED', part => {
       this.selectedFeature = part;
-      console.log(1)
+        if (!this.osm.isLoggedIn()) {
+          $('#login').show();
+        } else {
+          $('#editor').show();
+          // $('#button-edit').hide();
+          // $('#button-edit-cancel').show();
+        }
+
     });
 
-    $('#building-details button[name=button-edit]').click(e => {
-      console.log(2)
+    // $('#building-details button[name=button-edit]').click(e => {
     //   if (!this.osm.isLoggedIn()) {
     //     $('#login').show();
     //   } else {
     //     $('#editor').show();
     //     $('#button-edit').hide();
     //   }
+    // });
+
+    $('#login button[name=button-cancel]').click(e => {
+      $('#login').hide();
     });
 
     $('#login button[name=button-login]').click(e => {
@@ -24,6 +34,11 @@ class Editor {
         app.emit('OSM_LOGIN');
       });
     });
+
+
+
+
+
 
     $('#editor button[name=button-cancel]').click(e => {
       // TODO: reset or re-fill values upon next edit

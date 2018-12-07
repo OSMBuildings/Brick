@@ -28,8 +28,14 @@ class Search {
     });
 
     this.$list.click(e => {
-      const index = $(e.target).closest('.list-item').index();
+      const $target = $(e.target).closest('.list-item');
+      const index = $target.index();
       if (index >= 0 && this.data[index]) {
+        if (this.$selected) {
+          this.$selected.removeClass('selected');
+        }
+        this.$selected = $target;
+        this.$selected.addClass('selected');
         app.emit('PLACE_SELECTED', this.data[index]);
       }
     });
@@ -57,6 +63,7 @@ class Search {
   setData (data = []) {
     this.data = data;
     this.$list.empty();
+    this.$selected = null;
     this.data.forEach(item => {
       this.$list.append(this.render(item));
     });
