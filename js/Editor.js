@@ -46,7 +46,7 @@ class Editor {
     });
 
     $('#editor button[name=button-submit]').click(e => {
-      this.onSubmit(this.selectedFeature);
+      this.onSubmit();
     });
 
     app.on('OSM_LOGIN', e => {
@@ -152,34 +152,35 @@ class Editor {
     }
   }
 
-  onSubmit (feature) {
+  onSubmit () {
     const minLevels = 0;
     const maxLevels = 500;
     const minHeight = 0;
     const maxHeight = 1500;
 
-    let levels;
+    let newLevels;
     if ($('#editor input[name=levels]').val() !== '') {
-      levels = parseFloat($('#editor input[name=levels]').val());
-      if (!this.checkNum(levels, minLevels, maxLevels)) {
-        console.log('invalid levels', levels);
+      newLevels = parseFloat($('#editor input[name=levels]').val());
+      if (!this.checkNum(newLevels, minLevels, maxLevels)) {
+        console.log('invalid levels', newLevels);
         return;
       }
     }
 
-    let height;
+    let newHeight;
     if ($('#editor input[name=height]').val() !== '') {
-      height = parseFloat($('#editor input[name=height]').val());
-      if (!this.checkNum(height, minHeight, maxHeight)) {
-        console.log('invalid height', height);
+      newHeight = parseFloat($('#editor input[name=height]').val());
+      if (!this.checkNum(newHeight, minHeight, maxHeight)) {
+        console.log('invalid height', newHeight);
         return;
       }
     }
 
     // check for changes
-    const osmbLevels = feature.properties.levels;
-    const osmbHeight = feature.properties.height;
-    if (this.compareNum(levels, osmbLevels) && this.compareNum(height, osmbHeight)) {
+    const feature = this.selectedFeature;
+    const properties = feature.properties;
+    if (this.compareNum(newLevels, properties.levels) && this.compareNum(newHeight, properties.height)) {
+      // there are no local changes
       return;
     }
 
@@ -199,15 +200,17 @@ class Editor {
         $item = $doc.find('way');
       }
 
+      // are there changes compared to OSM?
+
       let hasChanged = false;
 
-      if (!this.compareNum(levels, this.getLevels($item))) {
-        this.setLevels($item, levels);
+      if (!this.compareNum(newLevels, this.getLevels($item))) {
+        this.setLevels($item, newLevels);
         hasChanged = true;
       }
 
-      if (!this.compareNum(height, this.getHeight($item))) {
-        this.setHeight($item, height);
+      if (!this.compareNum(newHeight, this.getHeight($item))) {
+        this.setHeight($item, newHeight);
         hasChanged = true;
       }
 
