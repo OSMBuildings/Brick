@@ -194,7 +194,7 @@ class Editor {
     this.osm.readItem(itemType, itemId).then(doc => {
       const $doc = $(doc).find('osm');
       let $item;
-      if ($doc.find('relation')) {
+      if ($doc.find('relation').length) {
         $item = $doc.find('relation');
       } else {
         $item = $doc.find('way');

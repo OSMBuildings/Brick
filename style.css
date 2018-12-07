@@ -104,7 +104,8 @@ input:focus {
 
 
 #editor {
-  height: 190px;
+  height: 140px;
+  min-height: 140px;
   background: #cccccc;
   padding: 20px;
   overflow: hidden;
