@@ -75,27 +75,8 @@ html, body {
   cursor: pointer;
 }
 
-/*.list-item.selected {*/
-  /*background: #eeeeee;*/
-/*}*/
-
-.list-item button[name=button-edit] {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 3px 6px;
-  border-radius: 3px;
-  height: 20px;
-}
-
-#login {
-  position: absolute;
-  left: 200px;
-  top: 30%;
-  padding: 20px;
-  background: #ffffff;
-  box-shadow: 0 0 30px #000000;
-  border-radius: 5px
+.list-item.selected {
+  background: #eeeeee;
 }
 
 button {
@@ -122,17 +103,34 @@ input:focus {
 }
 
 
-
-
-label {
-  display: block;
+#editor {
+  height: 190px;
+  background: #cccccc;
+  padding: 20px;
+  overflow: hidden;
+  font-size: 12px;
+  color: #000000;
 }
 
-input[type=number] {
-  display: block;
+#editor label {
+  display: inline-block;
+  width: 65px;
 }
 
+#editor label a {
+  text-decoration: none;
+  font-size: 10px;
+  background: #999999;
+  border-radius: 50%;
+  padding: 1px 3px;
+  width: 10px;
+  color: #ffffff;
+}
 
+#editor input[type=number] {
+  display: inline-block;
+  width: 85px;
+}
 
 #map {
   width: 100%;

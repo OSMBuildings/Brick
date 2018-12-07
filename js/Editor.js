@@ -4,29 +4,33 @@ class Editor {
   constructor () {
     this.osm = new OSMAPI(config.OSMAPI);
 
-    app.on('PART_SELECTED', part => {
-      this.selectedFeature = part;
-        if (!this.osm.isLoggedIn()) {
-          $('#login').show();
-        } else {
-          $('#editor').show();
-          // $('#button-edit').hide();
-          // $('#button-edit-cancel').show();
-        }
-
+    app.on('PLACE_SELECTED', place => {
+      this.selectedFeature = null;
+      $('#editor').hide();
     });
 
-    // $('#building-details button[name=button-edit]').click(e => {
-    //   if (!this.osm.isLoggedIn()) {
-    //     $('#login').show();
-    //   } else {
-    //     $('#editor').show();
-    //     $('#button-edit').hide();
-    //   }
-    // });
+    app.on('BUILDING_SELECTED', parts => {
+      this.selectedFeature = null;
+      $('#editor').hide();
+    });
 
-    $('#login button[name=button-cancel]').click(e => {
-      $('#login').hide();
+    app.on('PART_SELECTED', part => {
+      this.selectedFeature = part;
+      const properties = this.selectedFeature.properties;
+      $('input[name=levels]').val(properties['levels'] !== undefined ? properties['levels'] : '');
+      $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
+
+      $('#editor').show();
+
+      if (!this.osm.isLoggedIn()) {
+        $('#login').show();
+        $('#editor form').hide();
+        $('#message').hide();
+      } else {
+        $('#login').hide();
+        $('#editor form').show();
+        $('#message').hide();
+      }
     });
 
     $('#login button[name=button-login]').click(e => {
@@ -35,35 +39,26 @@ class Editor {
       });
     });
 
-
-
-
-
-
     $('#editor button[name=button-cancel]').click(e => {
-      // TODO: reset or re-fill values upon next edit
-      $('#editor').hide();
-      $('#button-edit').show();
+      const properties = this.selectedFeature.properties;
+      $('input[name=levels]').val(properties['levels'] !== undefined ? properties['levels'] : '');
+      $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
     });
 
     $('#editor button[name=button-submit]').click(e => {
       this.onSubmit(this.selectedFeature);
     });
 
-    app.on('PART_SELECT', feature => {
-      this.selectedFeature = feature;
-
-      const properties = this.selectedFeature.properties;
-      $('input[name=levels]').val(properties['levels'] !== undefined ? properties['levels'] : '');
-      $('input[name=height]').val(properties['height'] !== undefined ? properties['height'] : '');
-
-      $('#button-edit').show();
-    });
-
     app.on('OSM_LOGIN', e => {
       $('#login').hide();
+      $('#editor form').show();
+    });
+
+    app.on('OSM_CHANGE', e => {
       $('#editor').show();
-      $('#button-edit').hide();
+      $('#login').hide();
+      $('#editor form').hide();
+      $('#message').show();
     });
   }
 
@@ -218,13 +213,11 @@ class Editor {
 
       if (hasChanged) {
         this.osm.writeItem($doc);
-        // app.emit('FEATURE_UPDATE', data.feature);
+        // TODO: handle FAIL, NOCHANGE, update selected item
+        app.emit('OSM_CHANGE');
       }
     }, err => {
       console.error(err)
     });
-
-    $('#editor').hide();
-    $('#button-edit').show();
   }
 }

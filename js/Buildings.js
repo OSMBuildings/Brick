@@ -40,7 +40,6 @@ class Buildings {
       html += key + ' <b>' + item.properties[key] + '</b><br/>'
     }
 
-    html += '<button name="button-edit">Edit</button>';
     html += '</div>';
 
     return html;

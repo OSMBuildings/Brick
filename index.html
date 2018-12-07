@@ -37,21 +37,28 @@
     <div id="search-results" class="list" style="display:none"></div>
     <div id="building-details" class="list" style="display:none"></div>
 
-    <div id="login" style="display:none">
-      <button name="button-login">Log in with OSM</button>
-      <button name="button-cancel">Cancel</button>
+    <div id="editor" style="display:none">
+      <div id="login" style="display:none">
+        <p>In order to edit selected building part, Please log in with <a href="https://openstreetmap.org/">OpenStreetMap</a>.</p>
+        <button name="button-login">Login</button>
+      </div>
+
+      <form>
+        <label>Levels: <a href="https://wiki.openstreetmap.org/wiki/Key:building:levels" target="_blank">?</a></label>
+        <input type="number" min="0" step="1" max="500" name="levels"/><br/><br/>
+
+        <label>Height: <a href="https://wiki.openstreetmap.org/wiki/Key:height" target="_blank">?</a></label>
+        <input type="number" min="0" step="0.5" max="1500" name="height"/> meters<br/><br/>
+
+        <button type="button" name="button-cancel">Cancel</button>
+        <button type="button" name="button-submit">Save</button>
+      </form>
+
+      <div id="message" style="display:none">
+        <p>You data has been saved to OpenStreetMap.<br/>
+          It will take several minutes until your changes propagate to OSM Buildings.</p>
+      </div>
     </div>
-
-    <form id="editor" style="display:none">
-      <label>Building levels: <a href="https://wiki.openstreetmap.org/wiki/Key:building:levels">?</a></label>
-      <input type="number" min="0" step="1" max="500" name="levels"/>
-
-      <label>Building height: <a href="https://wiki.openstreetmap.org/wiki/Key:height">?</a></label>
-      <input type="number" min="0" step="0.5" max="1500" name="height"/> meters
-
-      <button type="button" name="button-cancel">Cancel</button>
-      <button type="button" name="button-submit">Save</button>
-    </form>
   </div>
 
   <div id="map" style="width:100%"></div>
