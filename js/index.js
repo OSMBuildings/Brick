@@ -8,12 +8,12 @@ $(e => {
   const editor = new Editor();
 
   app.on('SEARCH_RESULT', e => {
-    search.$list.show();
+    search.list.show();
     buildings.hide();
   });
 
   app.on('BUILDING_SELECTED', e => {
-    search.$list.hide();
+    search.list.hide();
     buildings.show();
   });
 });
