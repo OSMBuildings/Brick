@@ -41,9 +41,10 @@ class Map {
     });
 
     app.on('PART_SELECTED', part => {
+      // TODO: keep building selected
       this.viewer.highlight(p => {
         if (p.id === part.id) {
-          return '#cc0000';
+          return '#ffcc00';
         }
       });
     });

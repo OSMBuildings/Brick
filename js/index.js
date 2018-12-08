@@ -9,11 +9,11 @@ $(e => {
 
   app.on('SEARCH_RESULT', e => {
     search.$list.show();
-    buildings.$list.hide();
+    buildings.hide();
   });
 
   app.on('BUILDING_SELECTED', e => {
     search.$list.hide();
-    buildings.$list.show();
+    buildings.show();
   });
 });

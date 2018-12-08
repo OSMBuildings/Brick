@@ -83,7 +83,7 @@ button {
   border: 1px solid #999999;
   border-radius: 5px;
   padding: 5px 10px;
-  height: 25px;
+  min-height: 25px;
   background: #cccccc;
 }
 
@@ -92,7 +92,7 @@ button:hover {
 }
 
 input {
-  height: 25px;
+  min-height: 25px;
   padding: 0 10px;
   border: 1px solid #999999;
   border-radius: 3px;
@@ -131,6 +131,16 @@ input:focus {
 #editor input[type=number] {
   display: inline-block;
   width: 85px;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 #map {

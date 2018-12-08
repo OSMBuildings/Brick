@@ -107,7 +107,7 @@ class Editor {
     $item.children('tag[k=levels]').remove();
     $item.children('tag[k="building:levels"]').remove();
     if (typeof levels !== 'undefined') {
-      $item.append(`<tag k="levels" v="${levels}"/>`);
+      $item.append(`<tag k="building:levels" v="${levels}"/>`);
     }
   }
 
